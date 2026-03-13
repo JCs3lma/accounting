@@ -1,0 +1,43 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./infra/php/Dockerfile
+    container_name: php-accounting
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    volumes:
+      - ./php:/var/www/html
+      - node_modules_volume:/var/www/html/node_modules
+      - vendor_volume:/var/www/html/vendor
+  mysql:
+    build:
+      context: .
+      dockerfile: ./infra/mysql/Dockerfile
+    container_name: mysql-accounting
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: accounting
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: volume
+        source: mysql-accounting
+        target: /var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+volumes:
+  mysql-accounting:
+    driver: local
+  node_modules_volume:
+    driver: local
+  vendor_volume:
+    driver: local
