@@ -10,7 +10,7 @@
                 <div {{$icon->attributes->merge(['class' => ''])->twMerge()}}>
                     {{ $icon }}
                 </div>
-                <span>{{ $button }}</span>
+                <span class="sm:block">{{ $button }}</span>
             </div>
         @else
             {{ $button }}

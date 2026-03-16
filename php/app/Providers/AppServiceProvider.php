@@ -55,5 +55,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.feature.notification-action-component', 'notification-action');
         Blade::component('components.feature.header-controls-component', 'header-controls');
         Blade::component('components.feature.right-header-controls-component', 'right-header-controls');
+        Blade::component('components.feature.sidebar-menu-component', 'sidebar-menu');
     }
 }

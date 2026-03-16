@@ -43,7 +43,7 @@
                     sidebarWithText.classList.add('hidden');
                     navMenuText.classList.add('hidden');
                     navMenuIcon.classList.remove('hidden');
-                    textMenu.forEach(el => el.classList.add('hidden'));
+                    textMenu.forEach(el => el.classList.add('lg:hidden'));
                     dropdownIconMenu.forEach(el => el.classList.add('hidden'));
                 } else {
                     sidebar.classList.add('-translate-x-full');
@@ -52,7 +52,7 @@
                     sidebarWithText.classList.remove('hidden');
                     navMenuText.classList.remove('hidden');
                     navMenuIcon.classList.add('hidden');
-                    textMenu.forEach(el => el.classList.remove('hidden'));
+                    textMenu.forEach(el => el.classList.remove('lg:hidden'));
                     dropdownIconMenu.forEach(el => el.classList.remove('hidden'));
                 }
 

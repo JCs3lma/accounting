@@ -1,4 +1,4 @@
-<li {{ $attributes->twMerge(['class' => 'pl-5']) }}>
+<li {{ $attributes->twMerge(['class' => 'pl-10']) }}>
     @if (isset($link))
         <a
             {{ $link->attributes->merge([
@@ -10,7 +10,7 @@
                     <div {{$icon->attributes->merge(['class' => ''])->twMerge()}}>
                         {{ $icon }}
                     </div>
-                    <span>{{ $link }}</span>
+                    <span class="block">{{ $link }}</span>
                 </div>
             @else
                 {{ $link }}
