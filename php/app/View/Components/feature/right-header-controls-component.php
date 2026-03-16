@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\organisms;
+namespace App\View\Components\feature;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class dropdown-component extends Component
+class RightHeaderControlsComponent extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class dropdown-component extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.organisms.dropdown-component');
+        return view('components.feature.right-header-controls-component');
     }
 }

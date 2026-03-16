@@ -6,7 +6,7 @@
     </button>
 
     <!-- Dropdown Start -->
-    <x-card id="notification-action-card" class="hidden absolute -right-[240px] mt-[17px] max-h-[480px] w-[350px] flex-col sm:w-[361px] lg:right-0">
+    <x-card id="notification-action-card" class="hidden absolute mt-[17px] max-h-[480px] w-[350px] flex-col sm:w-[361px] lg:right-0">
         <div class="mb-3 flex items-center justify-between border-b border-gray-100 pb-3">
             <h5 class="text-lg font-semibold text-gray-800">
                 Notification

@@ -1,5 +1,5 @@
 <div class="z-99999 flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
-    <button id="menu-button" class="cursor-pointer z-99999 flex h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 lg:h-11 lg:w-11 lg:border">
+    <button id="menuButton" class="cursor-pointer z-99999 flex h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 lg:h-11 lg:w-11 lg:border">
         <x-hamburger-menu-icon id="hamburgerIcon" />
         <x-close-icon id="closeIcon" class="hidden" />
     </button>
@@ -8,15 +8,16 @@
         <x-logo-icon isWithText={{false}} iconClass="w-12 h-auto"/>
     </a>
 
-    <button class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden">
+    <button id="mobileMenuButton" class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden">
         <x-nav-menu-icon />
     </button>
 </div>
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            const hamburgerBtn = document.getElementById('menu-button');
+            const hamburgerBtn = document.getElementById('menuButton');
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenuList = document.getElementById('mobileMenuList');
             const sidebar = document.getElementById('sidebar');
             const hamburgerIcon = document.getElementById('hamburgerIcon');
             const closeIcon = document.getElementById('closeIcon');
@@ -25,7 +26,7 @@
             const navMenuText = document.getElementById('navMenuText');
             const navMenuIcon = document.getElementById('navMenuIcon');
 
-            if (!hamburgerBtn || !sidebar) return;
+            if (!hamburgerBtn || !sidebar || !mobileMenuList || !mobileMenuButton) return;
 
             hamburgerBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -50,6 +51,12 @@
 
                 hamburgerIcon.classList.toggle('hidden');
                 closeIcon.classList.toggle('hidden');
+            });
+
+            mobileMenuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileMenuList.classList.toggle('hidden');
+                mobileMenuList.classList.toggle('flex');
             });
 
             document.addEventListener('click', (event) => {

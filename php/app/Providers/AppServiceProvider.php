@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');
         Blade::component('components.atoms.avatar-component', 'avatar');
         Blade::component('components.atoms.card-component', 'card');
-        Blade::component('components.atoms.dropdown-item-component', 'dropdown-item');
+        Blade::component('components.atoms.list-item-component', 'list-item');
 
         // Molecules
         Blade::component('components.molecules.dropdown-menu-component', 'dropdown-menu');
@@ -46,5 +46,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.feature.user-action-component', 'user-action');
         Blade::component('components.feature.notification-action-component', 'notification-action');
         Blade::component('components.feature.header-controls-component', 'header-controls');
+        Blade::component('components.feature.right-header-controls-component', 'right-header-controls');
     }
 }

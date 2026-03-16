@@ -23,20 +23,24 @@
             <ul>
                 <li>
                     <x-dropdown-menu>
+                        <x-slot:icon>O</x-slot:icon>
                         <x-slot:button>Operational</x-slot:button>
-                        <x-dropdown-item>
+                        <x-list-item>
                             <x-slot:link href="#">Dashboard</x-slot:link>
-                        </x-dropdown-item>
+                        </x-list-item>
                     </x-dropdown-menu>
                 </li>
                 <li>
                     <x-dropdown-menu>
                         <x-slot:button>Accounting</x-slot:button>
-                        <x-dropdown-item>
+                        <x-list-item>
                             <x-slot:link href="#">Dashboard</x-slot:link>
-                        </x-dropdown-item>
+                        </x-list-item>
                     </x-dropdown-menu>
                 </li>
+                <x-list-item class="pl-0">
+                    <x-slot:link href="#">Settings</x-slot:link>
+                </x-list-item>
             </ul>
         </nav>
     </div>

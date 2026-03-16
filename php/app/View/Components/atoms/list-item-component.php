@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\organisms;
+namespace App\View\Components\molecules;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class accordion-component extends Component
+class ListItemComponent extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class accordion-component extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.organisms.accordion-component');
+        return view('components.molecules.dropdown-item-component');
     }
 }
