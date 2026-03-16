@@ -6,9 +6,11 @@
         data-button={{$button}}
     >
         @if(isset($icon))
-            <div>
-                {{ $icon }}
-                {{ $button }}
+            <div class="flex flex-row gap-2 items-center">
+                <div {{$icon->attributes->merge(['class' => ''])->twMerge()}}>
+                    {{ $icon }}
+                </div>
+                <span>{{ $button }}</span>
             </div>
         @else
             {{ $button }}

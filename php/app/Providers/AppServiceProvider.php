@@ -29,6 +29,14 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.svgs.sign-out-component', 'sign-out-icon');
         Blade::component('components.svgs.profile-component', 'profile-icon');
         Blade::component('components.svgs.logo-icon-component', 'logo-icon');
+        Blade::component('components.svgs.product-component', 'product-icon');
+        Blade::component('components.svgs.shop-component', 'shop-icon');
+        Blade::component('components.svgs.accounting-component', 'accounting-icon');
+        Blade::component('components.svgs.settings-component', 'settings-icon');
+        Blade::component('components.svgs.sales-component', 'sales-icon');
+        Blade::component('components.svgs.purchasing-component', 'purchasing-icon');
+        Blade::component('components.svgs.reports-component', 'reports-icon');
+        Blade::component('components.svgs.user-setting-component', 'user-setting-icon');
 
         // Atom Components
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');

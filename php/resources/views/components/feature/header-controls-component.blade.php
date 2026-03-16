@@ -25,6 +25,9 @@
             const sidebarWithText = document.getElementById('sidebarWithText');
             const navMenuText = document.getElementById('navMenuText');
             const navMenuIcon = document.getElementById('navMenuIcon');
+            const textMenu = document.querySelectorAll('.textMenu span');
+            const iconMenu = Array.from(document.getElementsByClassName('iconMenu'));
+            const dropdownIconMenu = Array.from(document.getElementsByClassName('dropdownIconMenu'));
 
             if (!hamburgerBtn || !sidebar || !mobileMenuList || !mobileMenuButton) return;
 
@@ -40,6 +43,8 @@
                     sidebarWithText.classList.add('hidden');
                     navMenuText.classList.add('hidden');
                     navMenuIcon.classList.remove('hidden');
+                    textMenu.forEach(el => el.classList.add('hidden'));
+                    dropdownIconMenu.forEach(el => el.classList.add('hidden'));
                 } else {
                     sidebar.classList.add('-translate-x-full');
                     sidebar.classList.remove('translate-x-0', 'xl:w-[90px]');
@@ -47,6 +52,8 @@
                     sidebarWithText.classList.remove('hidden');
                     navMenuText.classList.remove('hidden');
                     navMenuIcon.classList.add('hidden');
+                    textMenu.forEach(el => el.classList.remove('hidden'));
+                    dropdownIconMenu.forEach(el => el.classList.remove('hidden'));
                 }
 
                 hamburgerIcon.classList.toggle('hidden');
