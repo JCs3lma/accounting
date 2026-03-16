@@ -48,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.molecules.dropdown-menu-component', 'dropdown-menu');
 
         // Organisms
-        Blade::component('components.organisms.dropdown-component', 'dropdown');
+        Blade::component('components.organisms.table-component', 'table');
 
         // Feature Components
         Blade::component('components.feature.user-action-component', 'user-action');
