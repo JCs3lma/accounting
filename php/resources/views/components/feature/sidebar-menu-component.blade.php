@@ -1,16 +1,27 @@
-
-
+@php
+    $currentActiveMenu = '';
+    switch(request()->route()->getName()) {
+        case 'products.categories.index':
+        case 'products.brands.index':
+        case 'products.units.index':
+        case 'products.suppliers.index':
+        case 'products.list.index':
+        case 'products.pricing.index':
+            $currentActiveMenu = 'products';
+            break;
+    }
+@endphp
 <ul class="flex flex-col gap-2">
     <li>
-        <x-dropdown-menu>
-            <x-slot:icon class="iconMenu"><x-product-icon /></x-slot:icon>
-            <x-slot:button class="textMenu">Products</x-slot:button>
-            <x-list-item><x-slot:link href="#">Category</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Brand</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Units</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Suppliers</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Product List</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Pricing</x-slot:link></x-list-item>
+        <x-dropdown-menu :dropdownIconClass="$currentActiveMenu == 'products' ? 'stroke-white group-hover:stroke-gray-500' : ''">
+            <x-slot:icon class="iconMenu"><x-product-icon class="{{$currentActiveMenu == 'products' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
+            <x-slot:button class="textMenu {{$currentActiveMenu == 'products' ? 'group bg-blue-500 text-white hover:text-gray-800' : ''}}">Products</x-slot:button>
+            <x-list-item><x-slot:link href="{{ route('products.categories.index') }}" class="{{request()->routeIs('products.categories.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Category</x-slot:link></x-list-item>
+            <x-list-item><x-slot:link href="{{ route('products.brands.index') }}" class="{{request()->routeIs('products.brands.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Brand</x-slot:link></x-list-item>
+            <x-list-item><x-slot:link href="{{ route('products.units.index') }}" class="{{request()->routeIs('products.units.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Units</x-slot:link></x-list-item>
+            <x-list-item><x-slot:link href="{{ route('products.suppliers.index') }}" class="{{request()->routeIs('products.suppliers.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Suppliers</x-slot:link></x-list-item>
+            <x-list-item><x-slot:link href="{{ route('products.list.index') }}" class="{{request()->routeIs('products.list.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Product List</x-slot:link></x-list-item>
+            <x-list-item><x-slot:link href="{{ route('products.pricing.index') }}" class="{{request()->routeIs('products.pricing.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Pricing</x-slot:link></x-list-item>
         </x-dropdown-menu>
     </li>
     <li>

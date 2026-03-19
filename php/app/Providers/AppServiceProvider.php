@@ -37,18 +37,27 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.svgs.purchasing-component', 'purchasing-icon');
         Blade::component('components.svgs.reports-component', 'reports-icon');
         Blade::component('components.svgs.user-setting-component', 'user-setting-icon');
+        Blade::component('components.svgs.search-component', 'search-icon');
 
         // Atom Components
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');
         Blade::component('components.atoms.avatar-component', 'avatar');
         Blade::component('components.atoms.card-component', 'card');
         Blade::component('components.atoms.list-item-component', 'list-item');
+        Blade::component('components.atoms.card-header-component', 'card-header');
+        Blade::component('components.atoms.card-footer-component', 'card-footer');
+        Blade::component('components.atoms.input-component', 'input');
+        Blade::component('components.atoms.textarea-component', 'textarea');
+        Blade::component('components.atoms.tags-component', 'tags');
+        Blade::component('components.atoms.button-component', 'button');
+        Blade::component('components.atoms.label-component', 'label');
 
         // Molecules
         Blade::component('components.molecules.dropdown-menu-component', 'dropdown-menu');
 
         // Organisms
         Blade::component('components.organisms.table-component', 'table');
+        Blade::component('components.organisms.modal-component', 'modal');
 
         // Feature Components
         Blade::component('components.feature.user-action-component', 'user-action');
@@ -56,5 +65,12 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.feature.header-controls-component', 'header-controls');
         Blade::component('components.feature.right-header-controls-component', 'right-header-controls');
         Blade::component('components.feature.sidebar-menu-component', 'sidebar-menu');
+
+        // Forms
+        Blade::component('components.forms.category-component', 'category-form');
+        Blade::component('components.forms.unit-component', 'unit-form');
+        Blade::component('components.forms.brand-component', 'brand-form');
+        Blade::component('components.forms.supplier-component', 'supplier-form');
+        Blade::component('components.forms.product-component', 'product-form');
     }
 }

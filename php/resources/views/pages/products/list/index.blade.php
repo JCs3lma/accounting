@@ -1,23 +1,29 @@
+@extends('layouts.app')
 @php
 $thead = [
     'name' => 'Name',
-    'email' => 'Email',
-    'email_verified_at' => 'Email Verified At',
-    'remember_token' =>'Remember Token',
+    'brand' => 'Brand',
+    'category' => 'Category',
+    'price' => 'Price',
+    'quantity' => 'Quantity',
+    'is_active' => 'Active',
 ];
 @endphp
-@extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
-        <x-table :thead="$thead" :tbody="$users" title="Latest Transactions" titleClass="text-lg font-semibold text-gray-800">
+    <article>
+        <div class="flex flex-row justify-between mb-4">
+            <h1 class="text-3xl font-bold">Products</h1>
+            <x-button variant="success" data-modal-open>Add</x-button>
+        </div>
+        <x-table :thead="$thead" :tbody="$products" title="Product List" titleClass="text-lg font-semibold text-gray-800">
             <x-slot:rightPocket>
                 <form method="POST" class="relative w-full lg:w-auto">
                     @csrf
                     <x-input
                         name="search"
                         type="search"
+                        id="search"
                         placeholder="Search . . ."
                     >
                         <x-slot:icon>
@@ -30,5 +36,10 @@ $thead = [
                 <x-nav-menu-icon />
             </x-slot:dataActions>
         </x-table>
-    </div>
+    </article>
+@endsection
+@section('footer')
+    <x-modal header="Add Product">
+        <x-product-form />
+    </x-modal>
 @endsection

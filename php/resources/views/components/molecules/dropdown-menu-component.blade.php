@@ -1,3 +1,6 @@
+@props([
+    'dropdownIconClass' => ''
+])
 <div class="dropdown relative inline-block w-full">
     <button
         {{ $button->attributes->merge([
@@ -15,7 +18,10 @@
         @else
             {{ $button }}
         @endif
-        <x-arrow-down-icon class="dropdown-icon transform transition-transform duration-300 ease-in-out stroke-gray-500" />
+        <x-arrow-down-icon class="{{implode(' ', [
+            'dropdown-icon transform transition-transform duration-300 ease-in-out stroke-gray-500',
+            $dropdownIconClass
+        ])}}" />
     </button>
 
     <ul {{ $attributes->twMerge(['class' => 'dropdown-menu hidden relative left-0 mt-1 w-full bg-white rounded-lg z-50']) }}>
