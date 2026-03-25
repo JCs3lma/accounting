@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use App\Http\Services\Products\BrandService;
-use App\Http\Requests\Products\BrandRequest;
+use App\Http\Services\Products\ProductService;
+use App\Http\Requests\ProductRequest;
 
-class BrandController extends Controller
+class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->service = new BrandService();
+        $this->service = new ProductService();
     }
     /**
      * Display a listing of the resource.
@@ -20,29 +19,29 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         $params = $request->all();
-        $brands = $this->service->all($params);
 
-        return view('pages.products.brands.index', compact('brands'));
+        $products = $this->service->all($params);
+        return view('pages.products.products.index', compact('products'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BrandRequest $request)
+    public function store(ProductRequest $request)
     {
         $params = $request->validated();
         $this->service->create($params);
-        return redirect()->route('products.brands.index');
+        return redirect()->route('products.index');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(BrandRequest $request, int $id)
+    public function update(ProductRequest $request, int $id)
     {
         $params = $request->validated();
         $this->service->update($id, $params);
-        return redirect()->route('products.brands.index');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -51,6 +50,6 @@ class BrandController extends Controller
     public function destroy(int $id)
     {
         $this->service->delete($id);
-        return redirect()->route('products.brands.index');
+        return redirect()->route('products.index');
     }
 }

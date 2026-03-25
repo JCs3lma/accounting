@@ -3,12 +3,22 @@
 namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model
 {
-    // Optional: prevent Laravel from expecting a table
-    public $timestamps = false;
-    protected $table = null;
+    use SoftDeletes;
 
-    public $fillable = ['name', 'contact_person', 'email', 'phone', 'address', 'is_active'];
+    protected $table = 'suppliers';
+
+    public $fillable = [
+        'name',
+        'contact_person',
+        'logo_path',
+        'email',
+        'phone',
+        'mobile',
+        'address',
+        'is_active',
+    ];
 }

@@ -5,7 +5,7 @@
         case 'products.brands.index':
         case 'products.units.index':
         case 'products.suppliers.index':
-        case 'products.list.index':
+        case 'products.index':
         case 'products.pricing.index':
             $currentActiveMenu = 'products';
             break;
@@ -20,7 +20,7 @@
             <x-list-item><x-slot:link href="{{ route('products.brands.index') }}" class="{{request()->routeIs('products.brands.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Brand</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="{{ route('products.units.index') }}" class="{{request()->routeIs('products.units.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Units</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="{{ route('products.suppliers.index') }}" class="{{request()->routeIs('products.suppliers.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Suppliers</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="{{ route('products.list.index') }}" class="{{request()->routeIs('products.list.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Product List</x-slot:link></x-list-item>
+            <x-list-item><x-slot:link href="{{ route('products.index') }}" class="{{request()->routeIs('products.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Product List</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="{{ route('products.pricing.index') }}" class="{{request()->routeIs('products.pricing.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Pricing</x-slot:link></x-list-item>
         </x-dropdown-menu>
     </li>

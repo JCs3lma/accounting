@@ -3,12 +3,17 @@
 namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    // Optional: prevent Laravel from expecting a table
-    public $timestamps = false;
-    protected $table = null;
+    use SoftDeletes;
 
-    public $fillable = ['name', 'description', 'is_active'];
+    protected $table = 'categories';
+
+    public $fillable = [
+        'name',
+        'description',
+        'is_active'
+    ];
 }
