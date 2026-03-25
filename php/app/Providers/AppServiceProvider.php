@@ -51,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.atoms.tags-component', 'tags');
         Blade::component('components.atoms.button-component', 'button');
         Blade::component('components.atoms.label-component', 'label');
+        Blade::component('components.atoms.select-component', 'select');
 
         // Molecules
         Blade::component('components.molecules.dropdown-menu-component', 'dropdown-menu');

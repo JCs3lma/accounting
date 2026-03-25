@@ -20,13 +20,23 @@
         'absolute left-0 top-[35%] transform -translate-y-[35%] -translate-x-0',
         'text-gray-500 text-sm bg-white',
         'transition-all duration-200 ease-in-out',
+
+        // Focus
         'peer-focus:top-0',
         'peer-focus:text-xs',
         'peer-focus:text-blue-600',
         'peer-focus:-translate-y-[35%]',
-        'peer-placeholder-shown:top-0',
-        'peer-placeholder-shown:text-xs',
-        'peer-placeholder-shown:text-gray-500',
+
+        // When has value
+        'peer-not-placeholder-shown:top-[35%]',
+        'peer-not-placeholder-shown:text-xs',
+        'peer-not-placeholder-shown:text-gray-500',
+
+        // Default
+        'peer-placeholder-shown:top-[35%]',
+        'peer-placeholder-shown:text-sm',
+
+        'peer-has-*:top-0'
     ];
     $labelCheckboxClass = ['text-gray-500 text-sm peer-focus:text-blue-600'];
     $class = $inputAttributes['type'] != 'checkbox' ? $inputClass : $checkboxClass;
@@ -39,8 +49,7 @@
             {{$icon}}
         </span>
     @endif
-    <input {{$inputAttributes->twMerge(['class' => $class])}}
-    />
+    <input {{$inputAttributes->twMerge(['class' => $class])}}/>
     
     @if($label)
         <x-label :for="$attributes['name']" class="{{implode(' ', $labelClass)}}">{{$label}}</x-label>
