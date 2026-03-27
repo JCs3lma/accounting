@@ -24,8 +24,10 @@ $thead = [
                 <div class="flex gap-3">
                     <x-input
                         name="name"
-                        type="search"
+                        type="text"
                         label="Name"
+                        placeholder=" "
+                        :showPlaceHolder="true"
                     />
                     <x-select
                         name="is_active"
@@ -43,12 +45,22 @@ $thead = [
                 </div>
             </form>
         </x-card>
-        <x-table :thead="$thead" :tbody="$categories" title="Categories" titleClass="text-lg font-semibold text-gray-800">
+        <x-table
+            :thead="$thead"
+            :tbody="$categories"
+            title="Categories"
+            titleClass="text-lg font-semibold text-gray-800"
+            :booleanMessage="[0 => 'In Active', 1 => 'Active']"
+        >
             <x-slot:rightPocket>
                 <x-button variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
             </x-slot:rightPocket>
             <x-slot:dataActions class="flex items-center justify-center" dataActionsClassHeader="flex items-center justify-center">
                 <x-nav-menu-icon />
+                <x-card class="flex flex-col gap-1 justify-start items-start rounded-sm">
+                    <button class="text-sm">Edit</button>
+                    <button class="text-sm">Delete</button>
+                </x-card>
             </x-slot:dataActions>
         </x-table>
     </article>

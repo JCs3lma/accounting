@@ -8,6 +8,10 @@
     'customNoDataMessage' => 'No Data Available!',
     'showPagination' => true,
     'actionHeader' => 'Actions',
+    'booleanMessage' => [
+        0 => 'False',
+        1 => 'True'
+    ]
 ])
 @php
     $tableClass = !isset($title) ? 'p-5':'';
@@ -48,13 +52,17 @@
                 </thead>
             @endif
             <tbody class="divide-y divide-gray-100">
-                @forelse($tbody as $key => $data)
+                @forelse($tbody as $data)
                     @php
                         $fields = $data->getAttributes();
                     @endphp
                     <tr>
-                        @foreach($thead as $key => $value)
-                            <td class="py-3 pr-5 whitespace-nowrap">{{$fields[$key]}}</td>
+                        @foreach($thead as $theadKey => $value)
+                            <td class="py-3 pr-5 whitespace-nowrap">{{
+                                isset($data->getCasts()[$theadKey]) &&
+                                $data->getCasts()[$theadKey] == 'boolean'
+                                ? $booleanMessage[$fields[$theadKey]] : $fields[$theadKey]}}
+                            </td>
                         @endforeach
                         @if(isset($dataActions))
                             <td {{$dataActions->attributes->merge(['class' => 'py-3 pr-5 whitespace-nowrap', 'data-pass' => $data])->twMerge()}}>{{$dataActions}}</td>
