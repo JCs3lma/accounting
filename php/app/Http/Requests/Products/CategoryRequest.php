@@ -4,6 +4,7 @@ namespace App\Http\Requests\Products;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -22,9 +23,24 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Ensure we get the ID regardless of whether it's a string or a Model
+        $categoryId = $this->route('category')?->id ?? $this->route('category');
         return [
-            'name' => 'required|string|max:255|unique:categories,name,'.$this->route('categories'),
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categories', 'name')->ignore($categoryId),
+            ],
+            'description' => 'nullable|string',
             'is_active' => 'boolean'
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->has('is_active') ? (bool)$this->is_active : false,
+        ]);
     }
 }

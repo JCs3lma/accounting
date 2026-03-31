@@ -23,9 +23,7 @@
         id="is_active"
         name="is_active"
         label="IsActive"
-        value="1"
     />
-    <x-input type="hidden" name="is_active" value="0" class="hidden"/>
     <div class="flex justify-end gap-2">
         <x-button variant="default" data-modal-close>Cancel</x-button>
         <x-button variant="success">Save</x-button>

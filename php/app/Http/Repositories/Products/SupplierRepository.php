@@ -117,7 +117,7 @@ class SupplierRepository extends BaseRepository
 
     public function delete(int $id)
     {
-        if ($id) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 

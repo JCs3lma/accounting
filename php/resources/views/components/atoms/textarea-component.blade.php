@@ -26,16 +26,26 @@
     @if($label)
         <x-label :for="$attributes['name']" class="{{implode(' ', [
             isset($icon) ? 'ml-[42px]' : 'ml-4',
-            'absolute left-0 top-[10%] transform -translate-y-[10%] -translate-x-0',
+            'absolute left-0',
             'text-gray-500 text-sm bg-white',
             'transition-all duration-200 ease-in-out',
-            'peer-focus:-top-[5%]',
+
+            // Focus State
+            'peer-focus:top-0',
             'peer-focus:text-xs',
             'peer-focus:text-blue-600',
-            'peer-focus:-translate-y-[10%]',
-            'peer-placeholder-shown:-top-[5%]',
-            'peer-placeholder-shown:text-xs',
-            'peer-placeholder-shown:text-gray-500',
+            'peer-focus:-translate-y-[50%]',
+
+            // When Has Value (Placeholder is NOT shown)
+            'peer-[:not(:placeholder-shown)]:top-0',
+            'peer-[:not(:placeholder-shown)]:text-xs',
+            'peer-[:not(:placeholder-shown)]:text-gray-500',
+            'peer-[:not(:placeholder-shown)]:-translate-y-[50%]',
+
+            // Default / Empty State (Placeholder IS shown)
+            'peer-placeholder-shown:top-[50%]',
+            'peer-placeholder-shown:text-sm',
+            'peer-placeholder-shown:-translate-y-[50%]',
         ])}}">{{$label}}</x-label>
     @endif
     @if (isset($rightIcon))

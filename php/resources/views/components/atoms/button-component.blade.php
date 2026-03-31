@@ -32,6 +32,9 @@
         case 'close':
             $class = 'bg-white border-0 hover:opacity-50';
             break;
+        case 'plain':
+            $class = 'bg-white border-0 p-0 w-full text-left';
+            break;
         default:
             $class = 'border-gray-400 text-gray-700 hover:bg-gray-200';
             break;

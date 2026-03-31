@@ -69,7 +69,7 @@ class CategoryRepository extends BaseRepository
 
     public function update(int $id, array $params = [])
     {
-        if ($id) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 

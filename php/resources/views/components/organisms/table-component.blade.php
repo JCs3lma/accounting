@@ -11,10 +11,15 @@
     'booleanMessage' => [
         0 => 'False',
         1 => 'True'
-    ]
+    ],
+    'tableContainerClass' => ''
 ])
 @php
     $tableClass = !isset($title) ? 'p-5':'';
+    // Convert the prop into an Attribute Bag if it isn't one already
+    $tableContainerAttributes = new \Illuminate\View\ComponentAttributeBag([
+        'class' => $tableContainerClass
+    ]);
 @endphp
 <x-card class="{{isset($title) ? 'p-0':''}}">
     @if(isset($title))
@@ -32,7 +37,7 @@
             @endif
         </x-card-header>
     @endif
-    <div class="max-w-full overflow-x-auto overflow-y-visible px-5 sm:px-6">
+    <div {{$tableContainerAttributes->merge(['class' => 'max-w-full px-5 sm:px-6'])->twMerge()}}>
         <table
             {{ $attributes->twMerge(['class' => [
                 'table-base w-full min-w-full',
@@ -65,7 +70,7 @@
                             </td>
                         @endforeach
                         @if(isset($dataActions))
-                            <td {{$dataActions->attributes->merge(['class' => 'py-3 pr-5 whitespace-nowrap', 'data-pass' => $data])->twMerge()}}>{{$dataActions}}</td>
+                            <td {{$dataActions->attributes->merge(['class' => 'py-3 pr-5 whitespace-nowrap', 'data-pass' => json_encode($data)])->twMerge()}}>{{$dataActions}}</td>
                         @endif
                     </tr>
                 @empty

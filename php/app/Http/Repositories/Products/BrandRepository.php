@@ -68,7 +68,7 @@ class BrandRepository extends BaseRepository
 
     public function update(int $id, array $params = [])
     {
-        if (empty($id)) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 

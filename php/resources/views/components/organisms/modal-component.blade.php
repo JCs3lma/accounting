@@ -1,9 +1,14 @@
+@props([
+    'header' => null,
+    'headerClass' => '',
+])
 <div
-    id="modal"
-    role="dialog"
-    aria-hidden="true"
-    aria-modal="true"
-    class="hidden absolute inset-0 py-12 px-6 justify-center z-100002 h-full"
+    {{$attributes->merge([
+        'class' => 'hidden absolute inset-0 py-12 px-6 justify-center z-100002 h-full',
+        'id' => 'modal',
+        'role' => 'dialog',
+        'aria-modal' => 'true',
+    ])->twMerge()}}
 >
     <div class="absolute inset-0 bg-back-drop" aria-description="modal overlay" data-modal-close></div>
     <div class="max-w-[465px] relative w-full max-h-full z-[2] flex flex-col gap-2 items-end">
@@ -16,7 +21,7 @@
         </x-button>
         <x-card class="rounded-sm w-full">
             @if(isset($header))
-                <x-card-header class="p-0 pb-3">{{$header ?? ''}}</x-card-header>
+                <x-card-header class="p-0 pb-3 {{$headerClass}}">{{$header ?? ''}}</x-card-header>
             @endif
             {{$slot ?? ''}}
         </x-card>
@@ -28,7 +33,7 @@
         (function() {
             document.querySelectorAll('[data-modal-open]').forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    const modal = document.getElementById('modal');
+                    const modal = document.getElementById('{{$attributes['id'] ?? 'modal'}}');
                     if (!modal) return;
 
                     modal.classList.remove('hidden');
@@ -39,7 +44,7 @@
 
             document.querySelectorAll('[data-modal-close]').forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    const modal = btn.closest('#modal');
+                    const modal = btn.closest('#'+'{{$attributes['id'] ?? 'modal'}}');
                     if (!modal) return;
 
                     modal.classList.remove('flex');
