@@ -71,17 +71,45 @@
                     <tr class="hover:bg-gray-50 cursor-pointer">
                         @foreach($thead as $theadKey => $value)
                             <td class="py-3 pr-5 whitespace-nowrap {{$value['tdClass'] ?? ''}}">
-                                @if(is_array($value) && isset($value['cast']))
+                                @if(is_array($value) && isset($value['cast']) && isset($data->getCasts()[$theadKey]))
                                     @php
                                         $tag = $value['cast'];
+                                        $content = $fields[$theadKey];
+                                        $classCast = ($value['tdContentClass'] ?? '') . ' ' . ($fields[$theadKey] ? ($value['tdContentClassActive'] ?? '') : ($value['tdContentClassInactive'] ?? ''));
+                                        $currentCast = 'others';
+                                        switch ($data->getCasts()[$theadKey]) {
+                                            case 'boolean':
+                                                $content = $booleanMessage[$fields[$theadKey]];
+                                                $currentCast = 'boolean';
+                                                break;
+                                            case 'App\Casts\ImageCast':
+                                                if (!$fields[$theadKey]) {
+                                                    $photo = asset($value['defaultImage'] ?? '/images/default-avatar.png');
+                                                } else {
+                                                    $photo = asset("storage/" . $fields[$theadKey]);
+                                                }
+                                                $content = [
+                                                    'src' => $photo,
+                                                    'alt' => $value['defaultAlt'] ?? ($data->name ?? 'Image')
+                                                ];
+                                                $currentCast = 'img';
+                                                break;
+                                        }
                                     @endphp
-                                    <<?= $tag ?> class="{{$value['tdContentClass'] ?? ''}} {{$value['tdContentClassActive'] ?? ''}} {{!$fields[$theadKey] ? $value['tdContentClassInactive'] ?? '' : ''}}">
-                                        {{
-                                            isset($data->getCasts()[$theadKey]) &&
-                                            $data->getCasts()[$theadKey] == 'boolean'
-                                            ? $booleanMessage[$fields[$theadKey]] : $fields[$theadKey]
-                                        }}
-                                    </<?= $tag ?>>
+                                    @switch($currentCast)
+                                        @case('boolean')
+                                            <<?= $tag ?> class="{{$classCast}}">
+                                                {{$content}}
+                                            </<?= $tag ?>>
+                                            @break
+                                        @case('img')
+                                            <<?= $tag ?> src="{{$content['src']}}" alt="{{$content['alt']}}" class="{{$classCast}}"></<?= $tag ?>>
+                                            @break
+                                        @default
+                                            <<?= $tag ?> class="{{$classCast}}">
+                                                {{$content}}
+                                            </<?= $tag ?>>
+                                    @endswitch
                                 @else
                                     {{
                                         isset($data->getCasts()[$theadKey]) &&

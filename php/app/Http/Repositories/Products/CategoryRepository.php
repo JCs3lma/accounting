@@ -61,8 +61,12 @@ class CategoryRepository extends BaseRepository
         }
 
         try {
-            return $this->success($this->model->create($params), 'Category created successfully!');
+            DB::beginTransaction();
+            $category = $this->model->create($params);
+            DB::commit();
+            return $this->success($category, 'Category created successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -85,12 +89,14 @@ class CategoryRepository extends BaseRepository
                 return $this->error('Data not found', [], $this->notFound);
             }
 
+            DB::beginTransaction();
             $category->update($params);
 
             $newCategory = $this->model->find($id);
-
+            DB::commit();
             return $this->success($newCategory, 'Category updated successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -108,10 +114,12 @@ class CategoryRepository extends BaseRepository
             if (!isset($category)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
+            DB::beginTransaction();
             $category->delete();
-
+            DB::commit();
             return $this->success([], 'Category deleted successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }

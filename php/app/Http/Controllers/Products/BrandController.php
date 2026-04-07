@@ -20,8 +20,10 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         $params = $request->all();
+        $params = array_filter($params, function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        });
         $brands = $this->service->all($params);
-
         return view('pages.products.brands.index', compact('brands'));
     }
 
@@ -31,8 +33,17 @@ class BrandController extends Controller
     public function store(BrandRequest $request)
     {
         $params = $request->validated();
-        $this->service->create($params);
-        return redirect()->route('products.brands.index');
+        $result = $this->service->create($params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.brands.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.brands.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 
     /**
@@ -41,8 +52,17 @@ class BrandController extends Controller
     public function update(BrandRequest $request, int $id)
     {
         $params = $request->validated();
-        $this->service->update($id, $params);
-        return redirect()->route('products.brands.index');
+        $result = $this->service->update($id, $params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.brands.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.brands.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 
     /**
@@ -50,7 +70,16 @@ class BrandController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->service->delete($id);
-        return redirect()->route('products.brands.index');
+        $result = $this->service->delete($id)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.brands.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.brands.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 }

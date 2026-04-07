@@ -82,7 +82,6 @@ $thead = [
     </x-modal>
 @endsection
 
-@push('js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modalElement = document.querySelector('#modal');
@@ -171,4 +170,3 @@ $thead = [
         });
     });
 </script>
-@endpush

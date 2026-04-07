@@ -23,7 +23,7 @@
         type="checkbox"
         id="is_active"
         name="is_active"
-        label="IsActive"
+        label="Active"
         value="1"
     />
     <div class="flex justify-end gap-2">
