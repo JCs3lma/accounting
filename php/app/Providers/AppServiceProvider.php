@@ -69,7 +69,8 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.feature.action-menu-component', 'action-menu');
 
         // Forms
-        Blade::component('components.forms.category-component', 'category-form');
+        Blade::component('components.forms.Category.category-component', 'category-form');
+        Blade::component('components.forms.Category.delete-category-component', 'delete-category-form');
         Blade::component('components.forms.unit-component', 'unit-form');
         Blade::component('components.forms.brand-component', 'brand-form');
         Blade::component('components.forms.supplier-component', 'supplier-form');

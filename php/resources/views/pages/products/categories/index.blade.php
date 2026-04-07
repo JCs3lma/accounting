@@ -1,47 +1,60 @@
 @extends('layouts.app')
 @php
 $thead = [
-    'name' => 'Name',
-    'description' => 'Description',
-    'is_active' => 'Active',
+    'name' => [
+        'header' => 'Name',
+        'tdClass' => 'w-[30vw] max-w-[30vw] lg:w-[20vw] lg:max-w-[20vw]',
+    ],
+    'description' => [
+        'header' => 'Description',
+        'tdClass' => 'w-[50vw] max-w-[50vw] lg:w-[30vw] lg:max-w-[30vw] overflow-hidden text-ellipsis',
+    ],
+    'is_active' => [
+        'header' => 'Active',
+        'cast' => 'span',
+        'tdContentClass' => 'px-2 py-1 rounded-full text-xs font-semibold',
+        'tdContentClassActive' => 'bg-green-100 text-green-800',
+        'tdContentClassInactive' => 'bg-red-100 text-red-800',
+    ],
 ];
 @endphp
 
 @section('content')
-    @if ($errors->any())
-        <x-card class="bg-red-500 py-2 px-3 mb-2">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li class="text-white">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </x-card>
-    @endif
     <article>
         <x-card class="mb-4">
-            <form action="{{route('products.categories.index')}}" class="relative w-full lg:w-auto">
+            <form action="{{route('products.categories.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
                 <h3 class="mb-2">Filters</h3>
-                <div class="flex gap-3">
-                    <x-input
-                        name="name"
-                        type="text"
-                        label="Name"
-                        placeholder=" "
-                        :showPlaceHolder="true"
-                    />
-                    <x-select
-                        name="is_active"
-                        label="Is Active"
-                        :showPlaceHolder="true"
-                    >
-                        <option selected>All</option>
-                        <option value="true">Active</option>
-                        <option value="false">In active</option>
-                    </x-select>
-                    <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center">
-                        <x-search-icon class="fill-white" />
-                        <span>Search</span>
-                    </x-button>
+                <div class="flex flex-col lg:flex-row gap-3">
+                    <div class="flex gap-3 w-full">
+                        <x-input
+                            id="search_name"
+                            name="name"
+                            type="text"
+                            label="Name"
+                            placeholder=" "
+                            :showPlaceHolder="true"
+                            value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+                        />
+                        <x-select
+                            id="search_is_active"
+                            name="is_active"
+                            label="Is Active"
+                            :showPlaceHolder="true"
+                        >
+                            <option>All</option>
+                            <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
+                            <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
+                        </x-select>
+                    </div>
+                    <div class="flex gap-3 w-full flex-1">
+                        <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
+                            <x-search-icon class="fill-white" />
+                            <span>Search</span>
+                        </x-button>
+                        <x-button variant="default" href="{{ route('products.categories.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                            <span>Clear</span>
+                        </x-button>
+                    </div>
                 </div>
             </form>
         </x-card>
@@ -49,13 +62,15 @@ $thead = [
             :thead="$thead"
             :tbody="$categories"
             title="Categories"
+            cardHeaderClass="flex flex-row py-3 px-4"
             titleClass="text-lg font-semibold text-gray-800"
             :booleanMessage="[0 => 'In Active', 1 => 'Active']"
+            customNoDataMessage="No categories found. Please adjust your filters or change page."
         >
             <x-slot:rightPocket>
                 <x-button id="addCategory" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
             </x-slot:rightPocket>
-            <x-slot:dataActions class="flex items-center justify-center relative w-20" dataActionsClassHeader="flex items-center justify-center w-20">
+            <x-slot:dataActions class="flex items-center justify-center relative w-20" dataActionsClassHeader="flex items-center justify-end w-20">
                 <x-action-menu />
             </x-slot:dataActions>
         </x-table>
@@ -63,7 +78,7 @@ $thead = [
 @endsection
 @section('footer')
     <x-modal header="Add Category" headerClass="modalTitle">
-        <x-category-form id="categoryForm" action="{{route('products.categories.store')}}" method="POST"/>
+        <div id="modalContent"></div>
     </x-modal>
 @endsection
 
@@ -71,7 +86,7 @@ $thead = [
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modalElement = document.querySelector('#modal');
-        const form = document.querySelector('#categoryForm');
+        const modalContent = document.querySelector('#modalContent');
         const modalTitle = modalElement.querySelector('.modalTitle');
 
         document.addEventListener('click', function(e) {
@@ -80,10 +95,14 @@ $thead = [
             const editBtn = e.target.closest('.editActionButton');
             const deleteBtn = e.target.closest('.deleteActionButton');
 
-
             // -- ADD Logic
             if (addBtn) {
                 modalTitle.innerText = 'Add Category';
+                modalContent.innerHTML = `
+                   <x-category-form id="categoryForm" method="POST" autocomplete="off"/>
+                `;
+
+                const form = document.querySelector('#categoryForm');
                 form.querySelector('[name="name"]').value = null;
                 form.querySelector('[name="description"]').value = null;
                 form.querySelector('[name="is_active"]').value = null;
@@ -91,7 +110,9 @@ $thead = [
                 if(form.querySelector('input[name="_method"]')) {
                     form.querySelector('[name="_method"]').remove();
                 }
-                form.action = "{{route('products.categories.store')}}";
+                const baseUrl = "{{ route('products.categories.store') }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                form.action = params ? `${baseUrl}?${params}` : baseUrl; 
             }
 
             // --- EDIT Logic ---
@@ -100,9 +121,13 @@ $thead = [
                 
                 // 1. Change Modal Header
                 modalTitle.innerText = 'Edit Category: ' + rowData.name;
+                modalContent.innerHTML = `
+                   <x-category-form id="categoryForm" method="POST" autocomplete="off"/>
+                `;
+                const form = document.querySelector('#categoryForm');
                 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const urlTemplate = "{{ route('products.categories.update', ':id') }}";
+                const urlTemplate = "{{ route('products.categories.update', [':id'] + request()->query()) }}";
                 form.action = urlTemplate.replace(':id', rowData.id);
                 
                 // 3. Inject Method Spoofing for PUT
@@ -114,12 +139,10 @@ $thead = [
                     form.appendChild(methodInput);
                 }
 
-                console.log(['rowData', rowData])
-
                 // 4. Fill Form Fields
                 form.querySelector('[name="name"]').value = rowData.name;
                 form.querySelector('[name="description"]').value = rowData.description;
-                form.querySelector('[name="is_active"]').checked = rowData.is_active;
+                form.querySelector('[id="is_active"]').checked = rowData.is_active;
 
                 modalElement.classList.remove('hidden');
                 modalElement.classList.add('flex');
@@ -129,10 +152,21 @@ $thead = [
             // --- DELETE Logic ---
             if (deleteBtn) {
                 const rowData = JSON.parse(deleteBtn.closest('td').getAttribute('data-pass'));
-                if(confirm('Are you sure you want to delete ' + rowData.name + '?')) {
-                    // You can submit a hidden form here or use fetch()
-                    console.log('Deleting ID:', rowData.id);
-                }
+                
+                // 1. Change Modal Header
+                modalTitle.innerText = 'Delete Category: ' + rowData.name;
+                modalContent.innerHTML = `
+                   <x-delete-category-form id="categoryForm" method="POST"/>
+                `;
+                const form = document.querySelector('#categoryForm');
+
+                // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
+                const urlTemplate = "{{ route('products.categories.destroy', [':id'] + request()->query()) }}";
+                form.action = urlTemplate.replace(':id', rowData.id);
+
+                modalElement.classList.remove('hidden');
+                modalElement.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
             }
         });
     });

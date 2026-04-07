@@ -43,11 +43,12 @@ class CategoryRepository extends BaseRepository
         $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
         if ($nameParam) {
-            $query = $query->whereLike('name', '%'.$nameParam.'%');
+            $query->whereLike('name', '%'.$nameParam.'%');
         }
 
-        if ($isActiveParam) {
-            $query = $query->where('is_active', $isActiveParam);
+        if ($isActiveParam && $isActiveParam !== 'All') {
+            $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_active', $isActive);
         }
 
         return $query;
@@ -60,7 +61,7 @@ class CategoryRepository extends BaseRepository
         }
 
         try {
-            return $this->model->create($params);
+            return $this->success($this->model->create($params), 'Category created successfully!');
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
@@ -84,7 +85,11 @@ class CategoryRepository extends BaseRepository
                 return $this->error('Data not found', [], $this->notFound);
             }
 
-            return $category->update($params);
+            $category->update($params);
+
+            $newCategory = $this->model->find($id);
+
+            return $this->success($newCategory, 'Category updated successfully!');
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
@@ -93,7 +98,7 @@ class CategoryRepository extends BaseRepository
 
     public function delete(int $id)
     {
-        if ($id) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -103,8 +108,9 @@ class CategoryRepository extends BaseRepository
             if (!isset($category)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
+            $category->delete();
 
-            return $category->delete();
+            return $this->success([], 'Category deleted successfully!');
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);

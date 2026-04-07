@@ -21,6 +21,7 @@
     </head>
     <body class="bg-gray-100">
         <main class="flex h-screen overflow-hidden">
+            @include('layouts.messages')
             @include('layouts.aside')
             <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
                 @include('layouts.header')

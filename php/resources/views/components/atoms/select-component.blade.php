@@ -35,7 +35,7 @@
     </select>
     
     @if($label)
-        <x-label :for="$attributes['name']" class="{{implode(' ', $labelClass)}}">{{$label}}</x-label>
+        <x-label :for="$attributes['id']" class="{{implode(' ', $labelClass)}}">{{$label}}</x-label>
     @endif
     @if (isset($rightIcon))
         <span {{$rightIcon->attributes->merge(['class' => 'pointer-events-none absolute top-1/2 right-3 -translate-y-1/2'])->twMerge()}}>

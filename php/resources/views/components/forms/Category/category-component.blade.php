@@ -18,14 +18,16 @@
         rows="4"
         cols="50"
     />
+    <input type="hidden" name="is_active" value="0">
     <x-input
         type="checkbox"
         id="is_active"
         name="is_active"
         label="IsActive"
+        value="1"
     />
     <div class="flex justify-end gap-2">
-        <x-button variant="default" data-modal-close>Cancel</x-button>
-        <x-button variant="success">Save</x-button>
+        <x-button variant="default" type="button" data-modal-close>Cancel</x-button>
+        <x-button variant="success" type="submit">Save</x-button>
     </div>
 </form>

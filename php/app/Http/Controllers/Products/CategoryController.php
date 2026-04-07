@@ -20,6 +20,9 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $params = $request->all();
+        $params = array_filter($params, function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        });
         $categories = $this->service->all($params);
         return view('pages.products.categories.index', compact('categories'));
     }
@@ -30,8 +33,17 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $params = $request->validated();
-        $this->service->create($params);
-        return redirect()->route('products.categories.index');
+        $result = $this->service->create($params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.categories.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.categories.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 
     /**
@@ -40,8 +52,17 @@ class CategoryController extends Controller
     public function update(CategoryRequest $request, int $id)
     {
         $params = $request->validated();
-        $this->service->update($id, $params);
-        return redirect()->route('products.categories.index');
+        $result = $this->service->update($id, $params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.categories.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+        session()->flash('success', $result['message']);
+
+        return redirect()->route('products.categories.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 
     /**
@@ -49,7 +70,15 @@ class CategoryController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->service->delete($id);
-        return redirect()->route('products.categories.index');
+        $result = $this->service->delete($id)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.categories.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.categories.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 }

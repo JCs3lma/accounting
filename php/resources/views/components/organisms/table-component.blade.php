@@ -1,6 +1,7 @@
 @props([
     'title' => null,
     'titleClass' => '',
+    'cardHeaderClass' => '',
     'thead' => [],
     'tbody' => (object)[],
     'leftPocket' => null,
@@ -23,7 +24,7 @@
 @endphp
 <x-card class="{{isset($title) ? 'p-0':''}}">
     @if(isset($title))
-        <x-card-header>
+        <x-card-header class="{{$cardHeaderClass}}">
             @if(isset($leftPocket))
                 <x-slot:leftPocket>
                     {{$leftPocket}}
@@ -37,18 +38,24 @@
             @endif
         </x-card-header>
     @endif
-    <div {{$tableContainerAttributes->merge(['class' => 'max-w-full px-5 sm:px-6'])->twMerge()}}>
+    <div {{$tableContainerAttributes->merge(['class' => 'max-w-full px-5 sm:px-6 overflow-x-auto'])->twMerge()}}>
         <table
             {{ $attributes->twMerge(['class' => [
-                'table-base w-full min-w-full',
+                'min-w-full border-collapse',
                 $tableClass
             ]]) }}
         >
             @if(isset($thead) && count($thead) > 0)
-                <thead class="border-y border-gray-100 py-3 dark:border-gray-800">
+                <thead class="w-full border-y border-gray-100 py-3 dark:border-gray-800">
                     <tr>
-                        @foreach($thead as $head)
-                            <th class="py-3 pr-5 font-normal whitespace-nowrap text-left text-theme-sm text-gray-500">{{$head}}</th>
+                        @foreach($thead as $head => $value)
+                            @if(is_array($value))
+                                <th class="py-3 pr-5 font-normal whitespace-nowrap text-left text-theme-sm text-gray-500 {{$value['thHeaderClass'] ?? ''}}">
+                                    {{$value['header']}}
+                                </th>
+                            @else
+                                <th class="py-3 pr-5 font-normal whitespace-nowrap text-left text-theme-sm text-gray-500 {{$value['thHeaderClass'] ?? ''}}">{{$value}}</th>
+                            @endif
                         @endforeach
                         @if(isset($dataActions))
                             <th class="py-3 pr-5 font-normal whitespace-nowrap text-left text-theme-sm text-gray-500 {{$dataActions->attributes['dataActionsClassHeader'] ?? ''}}">{{$actionHeader}}</th>
@@ -56,17 +63,32 @@
                     </tr>
                 </thead>
             @endif
-            <tbody class="divide-y divide-gray-100">
+            <tbody>
                 @forelse($tbody as $data)
                     @php
                         $fields = $data->getAttributes();
                     @endphp
-                    <tr>
+                    <tr class="hover:bg-gray-50 cursor-pointer">
                         @foreach($thead as $theadKey => $value)
-                            <td class="py-3 pr-5 whitespace-nowrap">{{
-                                isset($data->getCasts()[$theadKey]) &&
-                                $data->getCasts()[$theadKey] == 'boolean'
-                                ? $booleanMessage[$fields[$theadKey]] : $fields[$theadKey]}}
+                            <td class="py-3 pr-5 whitespace-nowrap {{$value['tdClass'] ?? ''}}">
+                                @if(is_array($value) && isset($value['cast']))
+                                    @php
+                                        $tag = $value['cast'];
+                                    @endphp
+                                    <<?= $tag ?> class="{{$value['tdContentClass'] ?? ''}} {{$value['tdContentClassActive'] ?? ''}} {{!$fields[$theadKey] ? $value['tdContentClassInactive'] ?? '' : ''}}">
+                                        {{
+                                            isset($data->getCasts()[$theadKey]) &&
+                                            $data->getCasts()[$theadKey] == 'boolean'
+                                            ? $booleanMessage[$fields[$theadKey]] : $fields[$theadKey]
+                                        }}
+                                    </<?= $tag ?>>
+                                @else
+                                    {{
+                                        isset($data->getCasts()[$theadKey]) &&
+                                        $data->getCasts()[$theadKey] == 'boolean'
+                                        ? $booleanMessage[$fields[$theadKey]] : $fields[$theadKey]
+                                    }}
+                                @endif
                             </td>
                         @endforeach
                         @if(isset($dataActions))
@@ -83,7 +105,7 @@
             </tbody>
         </table>
     </div>
-    @if(method_exists($tbody, 'links') && $showPagination)
+    @if(method_exists($tbody, 'links') && $showPagination && $tbody->hasPages())
         <x-card-footer class="w-full">
             {{ $tbody->links() }}
         </x-card-footer>

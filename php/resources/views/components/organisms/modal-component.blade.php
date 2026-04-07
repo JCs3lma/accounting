@@ -42,15 +42,16 @@
                 });
             });
 
-            document.querySelectorAll('[data-modal-close]').forEach((btn) => {
-                btn.addEventListener('click', () => {
-                    const modal = btn.closest('#'+'{{$attributes['id'] ?? 'modal'}}');
-                    if (!modal) return;
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('[data-modal-close]');
+                if (!btn) return;
 
-                    modal.classList.remove('flex');
-                    modal.classList.add('hidden');
-                    document.body.classList.remove('overflow-hidden');
-                });
+                const modal = btn.closest('#'+'{{$attributes['id'] ?? 'modal'}}');
+                if (!modal) return;
+                
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
             });
         })({});
     </script>
