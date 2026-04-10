@@ -1,43 +1,198 @@
 @extends('layouts.app')
 @php
 $thead = [
-    'name' => 'Name',
-    'abbreviation' => 'Abbreviation',
-    'description' => 'Description',
-    'is_active' => 'Active',
+    'name' => [
+        'header' => 'Name',
+        'tdClass' => 'w-[30vw] max-w-[30vw] lg:w-[20vw] lg:max-w-[20vw]',
+    ],
+    'abbreviation' => [
+        'header' => 'Abbreviation',
+        'tdClass' => 'w-[20vw] max-w-[20vw] lg:w-[15vw] lg:max-w-[15vw]',
+    ],
+    'description' => [
+        'header' => 'Description',
+        'tdClass' => 'w-[30vw] max-w-[30vw] lg:w-[25vw] lg:max-w-[25vw]',
+    ],
+    'is_active' => [
+        'header' => 'Active',
+        'cast' => 'span',
+        'tdContentClass' => 'px-2 py-1 rounded-full text-xs font-semibold h-full',
+        'tdContentClassActive' => 'bg-green-100 text-green-800',
+        'tdContentClassInactive' => 'bg-red-100 text-red-800',
+    ],
 ];
 @endphp
 
 @section('content')
     <article>
-        <div class="flex flex-row justify-between mb-4">
-            <h1 class="text-3xl font-bold">Units</h1>
-            <x-button variant="success" data-modal-open>Add</x-button>
-        </div>
-        <x-table :thead="$thead" :tbody="$units" title="Product Unit List" titleClass="text-lg font-semibold text-gray-800">
+        <x-card class="mb-4">
+            <form action="{{route('products.units.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
+                <h3 class="mb-2">Filters</h3>
+                <div class="flex flex-col lg:flex-row gap-3">
+                    <div class="flex gap-3 w-full">
+                        <x-input
+                            id="search_name"
+                            name="name"
+                            type="text"
+                            label="Name"
+                            placeholder=" "
+                            :showPlaceHolder="true"
+                            value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+                        />
+                        <x-select
+                            id="search_abbreviation"
+                            name="abbreviation"
+                            label="Abbreviation"
+                            :showPlaceHolder="true"
+                        >
+                            <option>All</option>
+                            @foreach($unitsDropdown as $key => $value)
+                                <option value="{{ $value->abbreviation }}" {{ request()->get('abbreviation') === $value->abbreviation ? 'selected' : '' }}>
+                                    {{ $value->abbreviation }}
+                                </option>
+                            @endforeach
+                        </x-select>
+                        <x-select
+                            id="search_is_active"
+                            name="is_active"
+                            label="Is Active"
+                            :showPlaceHolder="true"
+                        >
+                            <option>All</option>
+                            <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
+                            <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
+                        </x-select>
+                    </div>
+                    <div class="flex gap-3 w-full flex-1">
+                        <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
+                            <x-search-icon class="fill-white" />
+                            <span>Search</span>
+                        </x-button>
+                        <x-button variant="default" href="{{ route('products.units.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                            <span>Clear</span>
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-card>
+        <x-table
+            :thead="$thead"
+            :tbody="$units"
+            title="Units"
+            cardHeaderClass="flex flex-row py-3 px-4"
+            titleClass="text-lg font-semibold text-gray-800"
+            :booleanMessage="[0 => 'In Active', 1 => 'Active']"
+            customNoDataMessage="No units found. Please adjust your filters or change page."
+        >
             <x-slot:rightPocket>
-                <form method="POST" class="relative w-full lg:w-auto">
-                    @csrf
-                    <x-input
-                        name="search"
-                        type="search"
-                        id="search"
-                        placeholder="Search . . ."
-                    >
-                        <x-slot:icon>
-                            <x-search-icon />
-                        </x-slot:icon>
-                    </x-input>
-                </form>
+                <x-button id="addUnit" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
             </x-slot:rightPocket>
-            <x-slot:dataActions class="flex items-center justify-center" dataActionsClassHeader="flex items-center justify-center">
-                <x-nav-menu-icon />
+            <x-slot:dataActions class="relative w-20 mx-auto" dataActionsClassHeader="flex items-center justify-end w-20">
+                <x-action-menu />
             </x-slot:dataActions>
         </x-table>
     </article>
 @endsection
 @section('footer')
-    <x-modal header="Add Unit">
-        <x-unit-form />
+    <x-modal header="Add Unit" headerClass="modalTitle">
+        <div id="modalContent"></div>
     </x-modal>
 @endsection
+
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalElement = document.querySelector('#modal');
+        const modalContent = document.querySelector('#modalContent');
+        const modalTitle = modalElement.querySelector('.modalTitle');
+
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.actionButton');
+            const addBtn = e.target.closest('#addUnit');
+            const editBtn = e.target.closest('.editActionButton');
+            const deleteBtn = e.target.closest('.deleteActionButton');
+
+            // -- ADD Logic
+            if (addBtn) {
+                modalTitle.innerText = 'Add Unit';
+                modalContent.innerHTML = `
+                   <x-unit-form id="unitForm" method="POST" autocomplete="off"/>
+                `;
+
+                const form = document.querySelector('#unitForm');
+                form.querySelector('[name="name"]').value = null;
+                form.querySelector('[name="abbreviation"]').value = null;
+                form.querySelector('[name="description"]').value = null;
+                form.querySelector('[name="is_active"]').value = null;
+                
+                if(form.querySelector('input[name="_method"]')) {
+                    form.querySelector('[name="_method"]').remove();
+                }
+                const baseUrl = "{{ route('products.units.store') }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                form.action = params ? `${baseUrl}?${params}` : baseUrl;
+            }
+
+            // --- EDIT Logic ---
+            if (editBtn) {
+                const rowData = JSON.parse(editBtn.closest('td').getAttribute('data-pass'));
+                
+                // 1. Change Modal Header
+                modalTitle.innerText = 'Edit Unit: ' + rowData.name;
+                modalContent.innerHTML = `
+                   <x-unit-form id="unitForm" method="POST" autocomplete="off"/>
+                `;
+                const form = document.querySelector('#unitForm');
+                
+                // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
+                
+                const baseUrl = "{{ route('products.units.update', [':id']) }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
+                form.action = urlTemplate.replace(':id', rowData.id);
+                
+                // 3. Inject Method Spoofing for PUT
+                if(!form.querySelector('input[name="_method"]')) {
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'PUT';
+                    form.appendChild(methodInput);
+                }
+
+                // 4. Fill Form Fields
+                form.querySelector('[name="name"]').value = rowData.name;
+                form.querySelector('[name="abbreviation"]').value = rowData.abbreviation;
+                form.querySelector('[name="description"]').value = rowData.description;
+                form.querySelector('[id="is_active"]').checked = rowData.is_active;
+
+                modalElement.classList.remove('hidden');
+                modalElement.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            // --- DELETE Logic ---
+            if (deleteBtn) {
+                const rowData = JSON.parse(deleteBtn.closest('td').getAttribute('data-pass'));
+                
+                // 1. Change Modal Header
+                modalTitle.innerText = 'Delete Unit: ' + rowData.name;
+                modalContent.innerHTML = `
+                   <x-delete-unit-form id="unitForm" method="POST"/>
+                `;
+                const form = document.querySelector('#unitForm');
+
+                // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
+                const baseUrl = "{{ route('products.units.destroy', [':id']) }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
+                form.action = urlTemplate.replace(':id', rowData.id);
+
+                modalElement.classList.remove('hidden');
+                modalElement.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+        });
+    });
+</script>
+@endpush

@@ -24,6 +24,7 @@ class UnitRepository extends BaseRepository
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
+
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -42,16 +43,18 @@ class UnitRepository extends BaseRepository
         $isActiveParams = isset($params['is_active']) ? $params['is_active'] : null;
 
         if ($nameParams) {
-            $query = $query->whereLike('name', '%'.$nameParams.'%');
+            $query->whereLike('name', '%'.$nameParams.'%');
         }
 
-        if ($abbreviationParams) {
-            $query = $query->where('abbreviation', $abbreviationParams);
+        if ($abbreviationParams && $abbreviationParams !== 'All') {
+            $query->where('abbreviation', $abbreviationParams);
         }
 
-        if ($isActiveParams) {
-            $query = $query->where('is_active', $isActiveParams);
+        if ($isActiveParams && $isActiveParams !== 'All') {
+            $isActive = filter_var($isActiveParams, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_active', $isActive);
         }
+
         return $query;
     }
 
@@ -63,8 +66,12 @@ class UnitRepository extends BaseRepository
         }
 
         try {
-            return $this->model->create($params);
+            DB::beginTransaction();
+            $unit = $this->model->create($params);
+            DB::commit();
+            return $this->success($unit, 'Unit created successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -87,8 +94,14 @@ class UnitRepository extends BaseRepository
                 return $this->error('Data not found', [], $this->notFound);
             }
 
-            return $unit->update($params);
+            DB::beginTransaction();
+            $unit->update($params);
+
+            $newUnit = $this->model->find($id);
+            DB::commit();
+            return $this->success($newUnit, 'Unit updated successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -96,7 +109,7 @@ class UnitRepository extends BaseRepository
 
     public function delete(int $id)
     {
-        if ($id) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -106,16 +119,32 @@ class UnitRepository extends BaseRepository
             if (!isset($unit)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
-
-            return $unit->delete();
+            DB::beginTransaction();
+            $unit->delete();
+            DB::commit();
+            return $this->success([], 'Unit deleted successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
-    public function dropdown()
+    public function dropdown(bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->model->where('is_active', true)->get();
+        $query = $this->model->query();
+        if ($isShowAll) {
+            return $query->get();
+        }
+
+        if ($isShowActiveOnly) {
+            $query = $query->where('is_active', true);
+        }
+
+        if ($isShowInactiveOnly) {
+            $query = $query->where('is_active', false);
+        }
+
+        return $query->get();
     }
 }

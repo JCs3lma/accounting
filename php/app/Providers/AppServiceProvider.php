@@ -71,7 +71,8 @@ class AppServiceProvider extends ServiceProvider
         // Forms
         Blade::component('components.forms.category.category-component', 'category-form');
         Blade::component('components.forms.category.delete-category-component', 'delete-category-form');
-        Blade::component('components.forms.unit-component', 'unit-form');
+        Blade::component('components.forms.unit.unit-component', 'unit-form');
+        Blade::component('components.forms.unit.delete-unit-component', 'delete-unit-form');
         Blade::component('components.forms.brand.brand-component', 'brand-form');
         Blade::component('components.forms.brand.delete-brand-component', 'delete-brand-form');
         Blade::component('components.forms.supplier-component', 'supplier-form');

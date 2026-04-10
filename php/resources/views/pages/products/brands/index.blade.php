@@ -24,20 +24,6 @@ $thead = [
         'tdContentClassInactive' => 'bg-red-100 text-red-800',
     ],
 ];
-    $customRenders = [
-        'price' => function($data, $value) {
-            return '<span class="font-semibold text-green-600">$' . number_format($value, 2) . '</span>';
-        },
-        'quantity' => function($data, $value) {
-            $badge = $value > 50 ? 'badge-success' : 'badge-warning';
-            return '<span class="badge ' . $badge . '">' . $value . '</span>';
-        },
-        'is_active' => function($data, $value) {
-            $status = $value ? '✓ Active' : '✗ Inactive';
-            $color = $value ? 'text-green-600' : 'text-red-600';
-            return '<span class="' . $color . '">' . $status . '</span>';
-        },
-    ];
 @endphp
 
 @section('content')
@@ -102,6 +88,8 @@ $thead = [
         <div id="modalContent"></div>
     </x-modal>
 @endsection
+
+@push('js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modalElement = document.querySelector('#modal');
@@ -151,7 +139,9 @@ $thead = [
                 const form = document.querySelector('#brandForm');
                 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const urlTemplate = "{{ route('products.brands.update', [':id'] + request()->query()) }}";
+                const baseUrl = "{{ route('products.brands.update', [':id']) }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
                 
                 // 3. Inject Method Spoofing for PUT
@@ -228,7 +218,9 @@ $thead = [
                 const form = document.querySelector('#brandForm');
 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const urlTemplate = "{{ route('products.brands.destroy', [':id'] + request()->query()) }}";
+                const baseUrl = "{{ route('products.brands.destroy', [':id']) }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
 
                 modalElement.classList.remove('hidden');
@@ -273,3 +265,4 @@ $thead = [
         });
     });
 </script>
+@endpush

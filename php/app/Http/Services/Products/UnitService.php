@@ -32,8 +32,8 @@ class UnitService Extends BaseService
         return $this->repository->delete($id);
     }
 
-    public function dropdown()
+    public function dropdown(bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->repository->dropdown();
+        return $this->repository->dropdown($isShowAll, $isShowActiveOnly, $isShowInactiveOnly);
     }
 }

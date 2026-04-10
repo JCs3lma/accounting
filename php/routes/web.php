@@ -12,7 +12,11 @@ use App\Http\Controllers\Products\PricingController;
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::resource('products', ProductController::class)->names('products')->except(['create', 'show', 'edit']);
-Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+Route::group([
+    'prefix' => 'products',
+    'as' => 'products.',
+    'middleware' => 'throttle.writes:20,1', // 20 attempts per minute only to write methods
+], function () {
     Route::resource('categories', CategoryController::class)->names('categories')->except(['create', 'show', 'edit']);
     Route::resource('brands', BrandController::class)->names('brands')->except(['create', 'show', 'edit']);
     Route::resource('units', UnitsController::class)->names('units')->except(['create', 'show', 'edit']);

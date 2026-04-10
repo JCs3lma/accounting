@@ -82,6 +82,7 @@ $thead = [
     </x-modal>
 @endsection
 
+@push('js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modalElement = document.querySelector('#modal');
@@ -126,7 +127,9 @@ $thead = [
                 const form = document.querySelector('#categoryForm');
                 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const urlTemplate = "{{ route('products.categories.update', [':id'] + request()->query()) }}";
+                const baseUrl = "{{ route('products.categories.update', [':id']) }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
                 
                 // 3. Inject Method Spoofing for PUT
@@ -160,7 +163,9 @@ $thead = [
                 const form = document.querySelector('#categoryForm');
 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const urlTemplate = "{{ route('products.categories.destroy', [':id'] + request()->query()) }}";
+                const baseUrl = "{{ route('products.categories.destroy', [':id']) }}"; // Blade generates base URL
+                const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
 
                 modalElement.classList.remove('hidden');
@@ -170,3 +175,4 @@ $thead = [
         });
     });
 </script>
+@endpush
