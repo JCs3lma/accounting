@@ -4,16 +4,19 @@ namespace App\Http\Repositories\Products;
 
 use DB;
 use Exception;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Products\Supplier;
+use App\Helper\FileHelper;
 
 class SupplierRepository extends BaseRepository
 {
     public function __construct()
     {
         $this->model = new Supplier();
+        $this->helper = new FileHelper();
     }
 
     public function all(array $params = [])
@@ -47,31 +50,32 @@ class SupplierRepository extends BaseRepository
         $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
         if ($nameParam) {
-            $query = $query->whereLike('name', '%'.$nameParam.'%');
+            $query->whereLike('name', '%'.$nameParam.'%');
         }
 
         if ($contactPersonParam) {
-            $query = $query->whereLike('contact_person', '%'.$contactPersonParam.'%');
+            $query->whereLike('contact_person', '%'.$contactPersonParam.'%');
         }
 
         if ($emailParam) {
-            $query = $query->whereLike('email', '%'.$emailParam.'%');
+            $query->whereLike('email', '%'.$emailParam.'%');
         }
 
         if ($phoneParam) {
-            $query = $query->whereLike('phone', '%'.$phoneParam.'%');
+            $query->whereLike('phone', '%'.$phoneParam.'%');
         }
 
         if ($mobileParam) {
-            $query = $query->whereLike('mobile', '%'.$mobileParam.'%');
+            $query->whereLike('mobile', '%'.$mobileParam.'%');
         }
 
         if ($addressParam) {
-            $query = $query->whereLike('address', '%'.$addressParam.'%');
+            $query->whereLike('address', '%'.$addressParam.'%');
         }
 
-        if ($isActiveParam) {
-            $query = $query->where('is_active', $isActiveParam);
+        if ($isActiveParam && $isActiveParam !== 'All') {
+            $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_active', $isActive);
         }
 
         return $query;
@@ -84,8 +88,21 @@ class SupplierRepository extends BaseRepository
         }
 
         try {
-            return $this->model->create($params);
+            DB::beginTransaction();
+            $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
+            unset($params['logo_path']);
+            unset($params['logo_path_remove']);
+            $supplier = $this->model->create($params);
+
+            if ($logoFile instanceof UploadedFile) {
+                $logoPath = $this->helper->uploadFile($logoFile, 'products/suppliers/'.$supplier->id);
+                $supplier->update(['logo_path' => $logoPath]);
+            }
+
+            DB::commit();
+            return $this->success($supplier, 'Supplier created successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -93,7 +110,7 @@ class SupplierRepository extends BaseRepository
 
     public function update(int $id, array $params = [])
     {
-        if (empty($id)) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -108,8 +125,29 @@ class SupplierRepository extends BaseRepository
                 return $this->error('Data not found', [], $this->notFound);
             }
 
-            return $supplier->update($params);
+            DB::beginTransaction();
+            $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
+            $logoPathRemove = $params['logo_path_remove'];
+
+            if ($logoPathRemove && !$logoFile) {
+                $params['logo_path'] = null;
+                if ($supplier->logo_path) {
+                    $this->helper->deleteFile($supplier->getRawOriginal('logo_path'));
+                }
+            }
+
+            if ($logoFile instanceof UploadedFile) {
+                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], 'products/suppliers/'.$id);
+                if ($supplier->logo_path) {
+                    $this->helper->deleteFile($supplier->getRawOriginal('logo_path'));
+                }
+            }
+            $supplier->update($params);
+            $newSupplier = $this->model->find($id);
+            DB::commit();
+            return $this->success($newSupplier, 'Supplier updated successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -127,9 +165,12 @@ class SupplierRepository extends BaseRepository
             if (!isset($supplier)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
-
-            return $supplier->delete();
+            DB::beginTransaction();
+            $supplier->delete();
+            DB::commit();
+            return $this->success([], 'Supplier deleted successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }

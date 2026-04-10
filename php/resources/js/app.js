@@ -27,8 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // 1. Double-check we are actually dealing with a form
         if (form.tagName !== 'FORM') return;
 
-        console.log('Submitting form:', form.id || 'No ID');
-
         // 2. Prevent double submission
         if (form.classList.contains('is-submitting')) {
             e.preventDefault();
@@ -40,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 4. Find the button. 
         // We look for [type="submit"] OR a button with NO type (which defaults to submit)
-        const btn = form.querySelector('button[type="submit"], input[type="submit"], button:not([type]):not([data-modal-close])');
+        const btn = form.querySelector('button[type="submit"]:not([id="logoClearBtn"]), input[type="submit"]:not([id="logoClearBtn"]), button:not([type]):not([data-modal-close]):not([id="logoClearBtn"])');
 
         if (btn) {
             // Give it a tiny delay so the browser actually registers the "Submit" 

@@ -4,6 +4,7 @@ namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Casts\ImageCast;
 
 class Supplier extends Model
 {
@@ -20,5 +21,10 @@ class Supplier extends Model
         'mobile',
         'address',
         'is_active',
+    ];
+
+    protected $casts = [
+        'logo_path' => ImageCast::class,
+        'is_active' => 'boolean',
     ];
 }
