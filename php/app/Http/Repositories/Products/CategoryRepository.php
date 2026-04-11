@@ -125,8 +125,21 @@ class CategoryRepository extends BaseRepository
         }
     }
 
-    public function dropdown()
+    public function dropdown(bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->model->where('is_active', true)->get();
+        $query = $this->model->query();
+        if ($isShowAll) {
+            return $query->get();
+        }
+
+        if ($isShowActiveOnly) {
+            $query = $query->where('is_active', true);
+        }
+
+        if ($isShowInactiveOnly) {
+            $query = $query->where('is_active', false);
+        }
+
+        return $query->get();
     }
 }

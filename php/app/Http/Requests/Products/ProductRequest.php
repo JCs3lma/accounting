@@ -4,6 +4,7 @@ namespace App\Http\Requests\Products;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -22,6 +23,8 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Ensure we get the ID regardless of whether it's a string or a Model
+        $productId = $this->route('product')?->id ?? $this->route('product');
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -29,10 +32,36 @@ class ProductRequest extends FormRequest
             'brand_id' => 'nullable|numeric|exists:brands,id',
             'category_id' => 'nullable|numeric|exists:categories,id',
             'unit_id' => 'nullable|numeric|exists:units,id',
-            'barcode' => 'nullable|string|max:50|unique:products,barcode,'.$this->route('product'),
-            'serial_number' => 'nullable|string|max:100|unique:products,serial_number,' . $this->route('product'),
-            'sku' => 'nullable|string|max:100|unique:products,sku,' . $this->route('product'),
-            'is_active' => 'boolean',
+            'barcode' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('products', 'barcode')->ignore($productId),
+            ],
+            'serial_number' => [
+                'nullable',
+                'string',
+                'max:100',
+                Rule::unique('products', 'serial_number')->ignore($productId),
+            ],
+            'sku' => [
+                'nullable',
+                'string',
+                'max:100',
+                Rule::unique('products', 'sku')->ignore($productId),
+            ],
+            'logo_path_remove' => 'boolean',
+            'is_active' => 'boolean'
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            // This converts 'true', '1', 'on' to a real boolean true, 
+            // and missing/null values to false.
+            'is_active' => $this->boolean('is_active'),
+            'logo_path_remove' => $this->boolean('logo_path_remove'),
+        ]);
     }
 }

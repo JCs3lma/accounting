@@ -54,25 +54,25 @@ class ProductRepository extends BaseRepository
             $query = $query->whereLike('name', '%'.$nameParam.'%');
         }
 
-        if ($brandParam) {
+        if ($brandParam && $brandParam !== 'All') {
             $query = $query->whereHas('brand', function($brandQuery) use($brandParam) {
                 $brandQuery->where('id', $brandParam);
             });
         }
 
-        if ($categoryParam) {
+        if ($categoryParam && $categoryParam !== 'All') {
             $query = $query->whereHas('brand', function($categoryQuery) use($categoryParam) {
                 $categoryQuery->where('id', $categoryParam);
             });
         }
 
-        if ($unitParam) {
+        if ($unitParam && $unitParam !== 'All') {
             $query = $query->whereHas('brand', function($unitQuery) use($unitParam) {
                 $unitQuery->where('id', $unitParam);
             });
         }
 
-        if ($isActiveParam) {
+        if ($isActiveParam && $isActiveParam !== 'All') {
             $query = $query->where('is_active', $isActiveParam);
         }
 
@@ -86,29 +86,21 @@ class ProductRepository extends BaseRepository
         }
 
         try {
-            if (isset($params['logo_path']) && $params['logo_path'] instanceof \Illuminate\Http\UploadedFile) {
-                $file = $params['logo_path'];
-                unset($params['logo_path']);
-            }
-
+            DB::beginTransaction();
+            $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
+            unset($params['logo_path']);
+            unset($params['logo_path_remove']);
             $product = $this->model->create($params);
 
-            if ($file) {
-                $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-
-                $path = $file->storeAs(
-                    config('const.product_logo_path').$product->id.'/logo',
-                    $filename,
-                    'public'
-                );
-
-                $product->update([
-                    'logo_path' => $path
-                ]);
+            if ($logoFile instanceof UploadedFile) {
+                $logoPath = $this->helper->uploadFile($logoFile, 'products/product/'.$product->id);
+                $product->update(['logo_path' => $logoPath]);
             }
-
-            return $product;
+            
+            DB::commit();
+            return $this->success($product, 'Product created successfully!');
         } catch (Exception $e) {
+            DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -126,23 +118,33 @@ class ProductRepository extends BaseRepository
 
         try {
             $product = $this->model->find($id);
-            if (isset($params['logo_path']) && $params['logo_path'] instanceof \Illuminate\Http\UploadedFile) {
-                $file = $params['logo_path'];
-                $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-
-                $path = $file->storeAs(
-                    config('const.product_logo_path').$product->id.'/logo',
-                    $filename,
-                    'public'
-                );
-            }
 
             if (!isset($product)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
+            DB::beginTransaction();
+            $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
+            $logoPathRemove = $params['logo_path_remove'];
 
-            return $product->update($params);
+            if ($logoPathRemove && !$logoFile) {
+                $params['logo_path'] = null;
+                if ($product->logo_path) {
+                    $this->helper->deleteFile($product->getRawOriginal('logo_path'));
+                }
+            }
+
+            if ($logoFile instanceof UploadedFile) {
+                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], 'products/product/'.$id);
+                if ($product->logo_path) {
+                    $this->helper->deleteFile($product->getRawOriginal('logo_path'));
+                }
+            }
+            $product->update($params);
+            $newProduct = $this->model->find($id);
+            DB::commit();
+            return $this->success($newProduct, 'Product updated successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -150,7 +152,7 @@ class ProductRepository extends BaseRepository
 
     public function delete(int $id)
     {
-        if ($id) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -161,15 +163,32 @@ class ProductRepository extends BaseRepository
                 return $this->error('Data not found', [], $this->notFound);
             }
 
-            return $product->delete();
+            DB::beginTransaction();
+            $product->delete();
+            DB::commit();
+            return $this->success([], 'Product deleted successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
-    public function dropdown()
+    public function dropdown(bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->model->where('is_active', true)->get();
+        $query = $this->model->query();
+        if ($isShowAll) {
+            return $query->get();
+        }
+
+        if ($isShowActiveOnly) {
+            $query = $query->where('is_active', true);
+        }
+
+        if ($isShowInactiveOnly) {
+            $query = $query->where('is_active', false);
+        }
+
+        return $query->get();
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Products;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Products\ProductService;
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\Products\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -19,9 +19,12 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $params = $request->all();
-
+        $params = array_filter($params, function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        });
         $products = $this->service->all($params);
-        return view('pages.products.products.index', compact('products'));
+        $dropdowns = $this->service->dropdowns();
+        return view('pages.products.products.index', compact('products', 'dropdowns'));
     }
 
     /**
@@ -30,8 +33,17 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $params = $request->validated();
-        $this->service->create($params);
-        return redirect()->route('products.index');
+        $result = $this->service->create($params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.brands.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 
     /**
@@ -40,8 +52,17 @@ class ProductController extends Controller
     public function update(ProductRequest $request, int $id)
     {
         $params = $request->validated();
-        $this->service->update($id, $params);
-        return redirect()->route('products.index');
+        $result = $this->service->update($id, $params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.brands.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 
     /**
@@ -49,7 +70,16 @@ class ProductController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->service->delete($id);
-        return redirect()->route('products.index');
+        $result = $this->service->delete($id)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('products.brands.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('products.index', array_filter(request()->query(), function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        }));
     }
 }

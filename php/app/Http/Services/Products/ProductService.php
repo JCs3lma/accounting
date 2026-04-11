@@ -3,6 +3,9 @@
 namespace App\Http\Services\Products;
 
 use App\Http\Services\BaseService;
+use App\Http\Services\Products\BrandService;
+use App\Http\Services\Products\CategoryService;
+use App\Http\Services\Products\UnitService;
 use App\Http\Repositories\Products\ProductRepository;
 
 class ProductService extends BaseService
@@ -10,6 +13,11 @@ class ProductService extends BaseService
     public function __construct()
     {
         $this->repository = new ProductRepository();
+        $this->services = [
+            'brand' => new BrandService(),
+            'category' => new CategoryService(),
+            'unit' => new UnitService(),
+        ];
     }
 
     public function all(array $params = [])
@@ -32,8 +40,17 @@ class ProductService extends BaseService
         return $this->repository->delete($id);
     }
 
-    public function dropdown()
+    public function dropdown(bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->repository->dropdown();
+        return $this->repository->dropdown($isShowAll, $isShowActiveOnly, $isShowInactiveOnly);
+    }
+
+    public function dropdowns()
+    {
+        return [
+            'brands' => $this->services['brand']->dropdown(false, true, false),
+            'categories' => $this->services['category']->dropdown(false, true, false),
+            'units' => $this->services['unit']->dropdown(false, true, false),
+        ];
     }
 }

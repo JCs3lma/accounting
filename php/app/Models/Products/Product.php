@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Products\Brand;
 use App\Models\Products\Category;
 use App\Models\Products\Unit;
+use App\Casts\ImageCast;
 
 class Product extends Model
 {
@@ -25,6 +26,11 @@ class Product extends Model
         'serial_number',
         'sku',
         'is_active',
+    ];
+
+    protected $casts = [
+        'logo_path' => ImageCast::class,
+        'is_active' => 'boolean',
     ];
 
     public function brand()
