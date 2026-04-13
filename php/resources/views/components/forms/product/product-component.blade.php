@@ -59,9 +59,23 @@
         class="mb-2"
         value="{{request()->get('serial_number') && request()->get('serial_number') !== 'null' ? request()->get('serial_number') : ''}}"
     />
-    <x-input class="mb-2" id="barcode" name="barcode" type="text" placeholder="Barcode" label="Barcode" />
-    <x-input class="mb-2" id="serial_number" name="serial_number" type="text" placeholder="Serial Number" label="Serial Number" />
-    <x-input class="mb-2" id="sku" name="sku" type="text" placeholder="SKU" label="SKU" />
+    <x-input
+        class="mb-2"
+        name="barcode"
+        type="text"
+        placeholder="Barcode"
+        label="Barcode"
+        value="{{request()->get('barcode') && request()->get('barcode') !== 'null' ? request()->get('barcode') : ''}}"
+    />
+    <x-input
+        class="mb-2"
+        id="sku"
+        name="sku"
+        type="text"
+        placeholder="SKU"
+        label="SKU"
+        value="{{request()->get('sku') && request()->get('sku') !== 'null' ? request()->get('sku') : ''}}"
+    />
     <!-- Checkbox -->
     <x-input-isactive />
     <div class="flex justify-end gap-2">

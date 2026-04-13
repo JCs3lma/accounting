@@ -66,27 +66,31 @@
             <tbody>
                 @forelse($tbody as $data)
                     @php
-                        $fields = $data->getAttributes();
+                        $fields = $data;
                     @endphp
                     <tr class="hover:bg-gray-50 cursor-pointer">
                         @foreach($thead as $theadKey => $value)
-                            <td class="py-3 pr-5 whitespace-nowrap {{$value['tdClass'] ?? ''}}">
+                            <td class="py-3 pr-5 whitespace-nowrap text-ellipsis {{$value['tdClass'] ?? ''}}">
                                 @if(is_array($value) && isset($value['cast']) && isset($data->getCasts()[$theadKey]))
                                     @php
                                         $tag = $value['cast'];
-                                        $content = $fields[$theadKey];
-                                        $classCast = ($value['tdContentClass'] ?? '') . ' ' . ($fields[$theadKey] ? ($value['tdContentClassActive'] ?? '') : ($value['tdContentClassInactive'] ?? ''));
+                                        $content = data_get($fields, $theadKey);
+                                        $classCast = ($value['tdContentClass'] ?? '') . ' ' . (data_get($fields, $theadKey) ? ($value['tdContentClassActive'] ?? '') : ($value['tdContentClassInactive'] ?? ''));
                                         $currentCast = 'others';
                                         switch ($data->getCasts()[$theadKey]) {
                                             case 'boolean':
-                                                $content = $booleanMessage[$fields[$theadKey]];
+                                                $content = $booleanMessage[data_get($fields, $theadKey)];
                                                 $currentCast = 'boolean';
                                                 break;
+                                            case 'App\Casts\BarcodeCast':
+                                                $content = data_get($fields, $theadKey);
+                                                $currentCast = 'barcode';
+                                                break;
                                             case 'App\Casts\ImageCast':
-                                                if (!$fields[$theadKey]) {
+                                                if (!data_get($fields, $theadKey)) {
                                                     $photo = asset($value['defaultImage'] ?? '/images/default-avatar.png');
                                                 } else {
-                                                    $photo = asset("storage/" . $fields[$theadKey]);
+                                                    $photo = asset("storage/" . data_get($fields, $theadKey));
                                                 }
                                                 $content = [
                                                     'src' => $photo,
@@ -102,6 +106,12 @@
                                                 {{$content}}
                                             </<?= $tag ?>>
                                             @break
+                                        @case('barcode')
+                                            <<?= $tag ?> class="flex flex-col items-center justify-center gap-1 {{$classCast}}">
+                                                {!! $content['img'] !!}
+                                                {{$content['value']}}
+                                            </<?= $tag ?>>
+                                            @break
                                         @case('img')
                                             <<?= $tag ?> src="{{$content['src']}}" alt="{{$content['alt']}}" class="{{$classCast}}"></<?= $tag ?>>
                                             @break
@@ -114,7 +124,7 @@
                                     {{
                                         isset($data->getCasts()[$theadKey]) &&
                                         $data->getCasts()[$theadKey] == 'boolean'
-                                        ? $booleanMessage[$fields[$theadKey]] : $fields[$theadKey]
+                                        ? $booleanMessage[data_get($fields, $theadKey)] : data_get($fields, $theadKey)
                                     }}
                                 @endif
                             </td>

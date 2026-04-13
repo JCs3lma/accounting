@@ -10,36 +10,24 @@ $thead = [
     ],
     'name' => [
         'header' => 'Name',
-        'tdClass' => 'w-[30vw] max-w-[30vw] lg:w-[20vw] lg:max-w-[20vw]',
     ],
-    'description' => [
-        'header' => 'Description',
-        'tdClass' => 'w-[50vw] max-w-[50vw] lg:w-[30vw] lg:max-w-[30vw] overflow-hidden text-ellipsis',
-    ],
-    'brand' => [
+    'brand.name' => [
         'header' => 'Brand',
-        'tdClass' => 'w-[20vw] max-w-[20vw] lg:w-[15vw] lg:max-w-[15vw]',
     ],
-    'category' => [
+    'category.name' => [
         'header' => 'Category',
-        'tdClass' => 'w-[20vw] max-w-[20vw] lg:w-[15vw] lg:max-w-[15vw]',
     ],
-    'unit_id' => [
+    'unit.abbreviation' => [
         'header' => 'Unit',
-        'tdClass' => 'w-[15vw] max-w-[15vw] lg:w-[10vw] lg:max-w-[10vw]',
     ],
     'barcode' => [
         'header' => 'Barcode',
-        'tdClass' => 'w-[15vw] max-w-[15vw] lg:w-[10vw] lg:max-w-[10vw]',
+        'tdClass' => 'w-[15vw] max-w-[15vw] hidden lg:block',
+        'thHeaderClass' => 'hidden lg:block',
+        'cast' => 'div',
     ],
-    'serial_number' => [
-        'header' => 'Serial Number',
-        'tdClass' => 'w-[15vw] max-w-[15vw] lg:w-[10vw] lg:max-w-[10vw]',
-    ],
-    'sku' => [
-        'header' => 'SKU',
-        'tdClass' => 'w-[15vw] max-w-[15vw] lg:w-[10vw] lg:max-w-[10vw]',
-    ],
+    'serial_number' => 'Serial Number',
+    'sku' => 'SKU',
     'is_active' => [
         'header' => 'Active',
         'cast' => 'span',
@@ -56,7 +44,7 @@ $thead = [
             <form action="{{route('products.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
                 <h3 class="mb-2">Filters</h3>
                 <div class="flex flex-col lg:flex-row gap-3">
-                    <div class="flex gap-3 w-full">
+                    <div class="flex flex-col lg:flex-row gap-3 w-full">
                         <x-input
                             id="search_name"
                             name="name"
@@ -218,10 +206,15 @@ $thead = [
                     methodInput.value = 'PUT';
                     form.appendChild(methodInput);
                 }
-
                 // 4. Fill Form Fields
                 form.querySelector('[name="name"]').value = rowData.name;
                 form.querySelector('[name="description"]').value = rowData.description;
+                form.querySelector('[name="brand_id"]').value = rowData.brand.id;
+                form.querySelector('[name="category_id"]').value = rowData.category.id;
+                form.querySelector('[name="unit_id"]').value = rowData.unit.id;
+                form.querySelector('[name="serial_number"]').value = rowData.serial_number;
+                form.querySelector('[name="barcode"]').value = rowData.barcode.value;
+                form.querySelector('[name="sku"]').value = rowData.sku;
                 form.querySelector('[id="is_active"]').checked = rowData.is_active;
 
                 modalElement.classList.remove('hidden');

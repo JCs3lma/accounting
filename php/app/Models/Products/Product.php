@@ -8,6 +8,7 @@ use App\Models\Products\Brand;
 use App\Models\Products\Category;
 use App\Models\Products\Unit;
 use App\Casts\ImageCast;
+use App\Casts\BarcodeCast;
 
 class Product extends Model
 {
@@ -31,6 +32,7 @@ class Product extends Model
     protected $casts = [
         'logo_path' => ImageCast::class,
         'is_active' => 'boolean',
+        'barcode' => BarcodeCast::class,
     ];
 
     public function brand()
