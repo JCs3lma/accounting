@@ -81,5 +81,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.forms.supplier.delete-supplier-component', 'delete-supplier-form');
         Blade::component('components.forms.product.product-component', 'product-form');
         Blade::component('components.forms.product.delete-product-component', 'delete-product-form');
+        Blade::component('components.forms.pricing.pricing-component', 'pricing-form');
+        Blade::component('components.forms.pricing.delete-pricing-component', 'delete-pricing-form');
     }
 }

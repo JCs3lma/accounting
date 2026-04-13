@@ -19,7 +19,7 @@ class PricingRepository extends BaseRepository
     public function all(array $params = [])
     {
         try {
-            $query = $this->model->with('product');
+            $query = $this->model->with(['product.brand', 'product.category']);
 
             $query = $this->filters($query, $params);
 
@@ -43,17 +43,30 @@ class PricingRepository extends BaseRepository
         $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
         if ($nameParam) {
-            $query = $query->whereHas('product', function (Builder $productQuery) use ($nameParam) {
+            $query->whereHas('product', function (Builder $productQuery) use ($nameParam) {
                 $productQuery->whereLike('name', '%'.$nameParam.'%');
             });
         }
 
         if ($productParam) {
-            $query = $query->where('product_id', '%'.$productParam.'%');
+            $query->where('product_id', '%'.$productParam.'%');
         }
 
-        if ($isActiveParam) {
-            $query = $query->where('is_active', $isActiveParam);
+        if ($brandParam && $brandParam !== 'All') {
+            $query->whereHas('product.brand', function($brandQuery) use($brandParam) {
+                $brandQuery->where('id', $brandParam);
+            });
+        }
+
+        if ($categoryParam && $categoryParam !== 'All') {
+            $query->whereHas('product.category', function($categoryQuery) use($categoryParam) {
+                $categoryQuery->where('id', $categoryParam);
+            });
+        }
+
+        if ($isActiveParam && $isActiveParam !== 'All') {
+            $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_active', $isActive);
         }
 
         return $query;
@@ -66,14 +79,19 @@ class PricingRepository extends BaseRepository
         }
 
         try {
+            DB::beginTransaction();
             if ($params['is_active']) {
                 $this->model
                     ->where('product_id', $params['product_id'])
                     ->update(['is_active', false]);
             }
 
-            return $this->model->create($params);
+            $price = $this->model->create($params);
+
+            DB::commit();
+            return $this->success($price, 'Price created successfully!');
         } catch (Exception $e) {
+            DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -92,6 +110,7 @@ class PricingRepository extends BaseRepository
         try {
             $price = $this->model->find($id);
 
+            DB::beginTransaction();
             if ($params['is_active']) {
                 $this->model
                     ->where('product_id', $params['product_id'])
@@ -101,9 +120,13 @@ class PricingRepository extends BaseRepository
             if (!isset($price)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
+            $price->update($params);
+            $newPrice = $this->model->find($id);
+            DB::commit();
 
-            return $price->update($params);
+            return $this->success($newPrice, 'Price updated successfully!');
         } catch (Exception $e) {
+            DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
@@ -111,7 +134,7 @@ class PricingRepository extends BaseRepository
 
     public function delete(int $id)
     {
-        if ($id) {
+        if (!$id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -122,8 +145,12 @@ class PricingRepository extends BaseRepository
                 return $this->error('Data not found', [], $this->notFound);
             }
 
-            return $price->delete();
+            DB::beginTransaction();
+            $price->delete();
+            DB::commit();
+            return $this->success([], 'Price deleted successfully!');
         } catch (Exception $e) {
+            DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }

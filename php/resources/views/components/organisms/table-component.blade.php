@@ -46,7 +46,7 @@
             ]]) }}
         >
             @if(isset($thead) && count($thead) > 0)
-                <thead class="w-full border-y border-gray-100 py-3 dark:border-gray-800">
+                <thead class="w-full border-y border-gray-100 py-3">
                     <tr>
                         @foreach($thead as $head => $value)
                             @if(is_array($value))

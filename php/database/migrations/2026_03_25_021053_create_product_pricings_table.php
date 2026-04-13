@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('selling_price', 10, 2)->nullable()->index();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
             // FOREIGN KEY
             $table->foreign('product_id')->references('id')->on('products')->onDelete('RESTRICT');

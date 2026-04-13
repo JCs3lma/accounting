@@ -51,29 +51,30 @@ class ProductRepository extends BaseRepository
         $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
         if ($nameParam) {
-            $query = $query->whereLike('name', '%'.$nameParam.'%');
+            $query->whereLike('name', '%'.$nameParam.'%');
         }
 
         if ($brandParam && $brandParam !== 'All') {
-            $query = $query->whereHas('brand', function($brandQuery) use($brandParam) {
+            $query->whereHas('brand', function($brandQuery) use($brandParam) {
                 $brandQuery->where('id', $brandParam);
             });
         }
 
         if ($categoryParam && $categoryParam !== 'All') {
-            $query = $query->whereHas('brand', function($categoryQuery) use($categoryParam) {
+            $query->whereHas('category', function($categoryQuery) use($categoryParam) {
                 $categoryQuery->where('id', $categoryParam);
             });
         }
 
         if ($unitParam && $unitParam !== 'All') {
-            $query = $query->whereHas('brand', function($unitQuery) use($unitParam) {
+            $query->whereHas('brand', function($unitQuery) use($unitParam) {
                 $unitQuery->where('id', $unitParam);
             });
         }
 
         if ($isActiveParam && $isActiveParam !== 'All') {
-            $query = $query->where('is_active', $isActiveParam);
+            $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_active', $isActive);
         }
 
         return $query;
