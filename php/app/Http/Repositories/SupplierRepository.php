@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Repositories\Products;
+namespace App\Http\Repositories;
 
 use DB;
 use Exception;
@@ -8,7 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
-use App\Models\Products\Supplier;
+use App\Models\Supplier;
 use App\Helper\FileHelper;
 
 class SupplierRepository extends BaseRepository

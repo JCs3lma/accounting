@@ -30,7 +30,7 @@ $thead = [
 @section('content')
     <article>
         <x-filter-form 
-            route="{{route('products.suppliers.index')}}"
+            route="{{route('suppliers.index')}}"
         >
             <div class="flex flex-col lg:flex-row gap-3 w-full">
                 <x-input
@@ -94,7 +94,7 @@ $thead = [
                     <x-search-icon class="fill-white" />
                     <span>Search</span>
                 </x-button>
-                <x-button variant="default" href="{{ route('products.suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                <x-button variant="default" href="{{ route('suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
                     <span>Clear</span>
                 </x-button>
             </div>
@@ -160,7 +160,7 @@ $thead = [
                 if(form.querySelector('input[name="_method"]')) {
                     form.querySelector('[name="_method"]').remove();
                 }
-                const baseUrl = "{{ route('products.suppliers.store') }}"; // Blade generates base URL
+                const baseUrl = "{{ route('suppliers.store') }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 form.action = params ? `${baseUrl}?${params}` : baseUrl;
             }
@@ -177,7 +177,7 @@ $thead = [
                 const form = document.querySelector('#supplierForm');
                 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const baseUrl = "{{ route('products.suppliers.update', [':id']) }}"; // Blade generates base URL
+                const baseUrl = "{{ route('suppliers.update', [':id']) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
@@ -260,7 +260,7 @@ $thead = [
                 const form = document.querySelector('#supplierForm');
 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const baseUrl = "{{ route('products.suppliers.destroy', [':id']) }}"; // Blade generates base URL
+                const baseUrl = "{{ route('suppliers.destroy', [':id']) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);

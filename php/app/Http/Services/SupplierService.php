@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Services\Products;
+namespace App\Http\Services;
 
 use App\Http\Services\BaseService;
-use App\Http\Repositories\Products\SupplierRepository;
+use App\Http\Repositories\SupplierRepository;
 
 class SupplierService extends BaseService
 {

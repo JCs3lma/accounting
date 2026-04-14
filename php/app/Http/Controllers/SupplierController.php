@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Products;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Services\Products\SupplierService;
-use App\Http\Requests\Products\SupplierRequest;
+use App\Http\Services\SupplierService;
+use App\Http\Requests\SupplierRequest;
 
 class SupplierController extends Controller
 {
@@ -23,7 +23,7 @@ class SupplierController extends Controller
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $suppliers = $this->service->all($params);
-        return view('pages.products.suppliers.index', compact('suppliers'));
+        return view('pages.suppliers.index', compact('suppliers'));
     }
 
     /**
@@ -34,13 +34,13 @@ class SupplierController extends Controller
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
         if (isset($result['error'])) {
-            return redirect()->route('products.suppliers.index')->withErrors([
+            return redirect()->route('suppliers.index')->withErrors([
                 'custom_error' => $result['error']
             ]);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.suppliers.index', array_filter(request()->query(), function($value) {
+        return redirect()->route('suppliers.index', array_filter(request()->query(), function($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         }));
     }
@@ -53,13 +53,13 @@ class SupplierController extends Controller
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
         if (isset($result['error'])) {
-            return redirect()->route('products.suppliers.index')->withErrors([
+            return redirect()->route('suppliers.index')->withErrors([
                 'custom_error' => $result['error']
             ]);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.suppliers.index', array_filter(request()->query(), function($value) {
+        return redirect()->route('suppliers.index', array_filter(request()->query(), function($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         }));
     }
@@ -71,13 +71,13 @@ class SupplierController extends Controller
     {
         $result = $this->service->delete($id)->getData(true);
         if (isset($result['error'])) {
-            return redirect()->route('products.suppliers.index')->withErrors([
+            return redirect()->route('suppliers.index')->withErrors([
                 'custom_error' => $result['error']
             ]);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.suppliers.index', array_filter(request()->query(), function($value) {
+        return redirect()->route('suppliers.index', array_filter(request()->query(), function($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         }));
     }

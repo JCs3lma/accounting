@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.svgs.user-setting-component', 'user-setting-icon');
         Blade::component('components.svgs.search-component', 'search-icon');
         Blade::component('components.svgs.filter-component', 'filter-icon');
+        Blade::component('components.svgs.supplier-component', 'supplier-icon');
 
         // Atom Components
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');

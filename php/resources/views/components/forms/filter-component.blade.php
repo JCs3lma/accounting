@@ -16,7 +16,7 @@
         </div>
         <div
             id="filterContent"
-            class="lg:flex flex-col lg:flex-row gap-3 overflow-hidden max-h-0 opacity-0 pointer-events-none transition-all duration-300 ease-in-out"
+            class="lg:flex flex-col lg:flex-row gap-3 max-h-0 opacity-0 pointer-events-none lg:pointer-events-auto transition-all duration-300 ease-in-out"
         >
             {{$slot}}
         </div>
