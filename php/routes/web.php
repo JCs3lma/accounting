@@ -8,6 +8,7 @@ use App\Http\Controllers\Products\UnitsController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Products\PricingController;
+use App\Http\Controllers\Shops\ShopController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -26,4 +27,5 @@ Route::group([
         Route::resource('pricing', PricingController::class)->names('pricing')->except(['create', 'show', 'edit']);
     });
     Route::resource('suppliers', SupplierController::class)->names('suppliers')->except(['create', 'show', 'edit']);
+    Route::resource('shops', ShopController::class)->names('shops');
 });

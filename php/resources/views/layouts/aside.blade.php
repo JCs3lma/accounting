@@ -19,7 +19,11 @@
                     <x-nav-menu-icon id="navMenuIcon" class="hidden mx-auto"/>
                 </h3>
             </div>
-            <x-sidebar-menu />
+            @if(request()->routeIs('shops.manage.*') || request()->routeIs('shops.show'))
+                <x-shop-sidebar-menu />
+            @else
+                <x-sidebar-menu />
+            @endif
         </nav>
     </div>
 </aside>

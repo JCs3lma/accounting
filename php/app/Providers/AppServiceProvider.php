@@ -71,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.feature.right-header-controls-component', 'right-header-controls');
         Blade::component('components.feature.sidebar-menu-component', 'sidebar-menu');
         Blade::component('components.feature.action-menu-component', 'action-menu');
+        Blade::component('components.feature.shop-sidebar-menu-component', 'shop-sidebar-menu');
 
         // Forms
         Blade::component('components.forms.category.category-component', 'category-form');
@@ -86,5 +87,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.forms.pricing.pricing-component', 'pricing-form');
         Blade::component('components.forms.pricing.delete-pricing-component', 'delete-pricing-form');
         Blade::component('components.forms.filter-component', 'filter-form');
+        Blade::component('components.forms.shops.shop-component', 'shop-form');
+        Blade::component('components.forms.shops.delete-shop-component', 'delete-shop-form');
     }
 }

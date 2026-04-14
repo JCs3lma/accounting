@@ -90,7 +90,7 @@
                                                 if (!data_get($fields, $theadKey)) {
                                                     $photo = asset($value['defaultImage'] ?? '/images/default-avatar.png');
                                                 } else {
-                                                    $photo = asset("storage/" . data_get($fields, $theadKey));
+                                                    $photo = data_get($fields, $theadKey);
                                                 }
                                                 $content = [
                                                     'src' => $photo,

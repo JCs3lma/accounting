@@ -11,6 +11,9 @@
         case 'suppliers.index':
             $currentActiveMenu = 'suppliers';
             break;
+        case 'shops.index':
+            $currentActiveMenu = 'shops';
+            break;
     }
 @endphp
 <ul class="flex flex-col gap-2">
@@ -29,17 +32,10 @@
         <x-slot:icon class="iconMenu"><x-supplier-icon class="{{$currentActiveMenu == 'suppliers' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
         <x-slot:link href="{{ route('suppliers.index') }}" class="textMenu {{request()->routeIs('suppliers.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Suppliers</x-slot:link>
     </x-list-item>
-    <li>
-        <x-dropdown-menu>
-            <x-slot:icon class="iconMenu"><x-shop-icon /></x-slot:icon>
-            <x-slot:button class="textMenu">Shops</x-slot:button>
-            <x-list-item><x-slot:link href="#">Shop List</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Inventory</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Stock Transfer</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Stock Adjustment</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Stock Movement History</x-slot:link></x-list-item>
-        </x-dropdown-menu>
-    </li>
+    <x-list-item class="pl-0 {{$currentActiveMenu == 'shops' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
+        <x-slot:icon class="iconMenu"><x-shop-icon class="{{$currentActiveMenu == 'shops' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
+        <x-slot:link href="{{ route('shops.index') }}" class="textMenu {{request()->routeIs('shops.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Shops/Branches</x-slot:link>
+    </x-list-item>
     <li>
         <x-dropdown-menu>
             <x-slot:icon class="iconMenu"><x-sales-icon /></x-slot:icon>

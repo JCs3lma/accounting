@@ -2,6 +2,9 @@
 <x-card class="actionMenuCard absolute top-1/2 right-1/2 mt-2 z-50 hidden flex-col gap-1 justify-start items-start rounded-sm p-2 shadow-lg">
     <x-button class="editActionButton text-sm" variant="plain">Edit</x-button>
     <x-button class="deleteActionButton text-sm" variant="plain">Delete</x-button>
+    @if(isset($isIncludeManage) && $isIncludeManage)
+        <x-button class="manageActionButton text-sm" variant="plain">Manage</x-button>
+    @endif
 </x-card>
 
 @push('js')
