@@ -24,7 +24,7 @@ class ProductRepository extends BaseRepository
             $query = $this->model->with([
                 'brand',
                 'category',
-                'unit'
+                'unitR'
             ]);
 
             $query = $this->filters($query, $params);
@@ -67,7 +67,7 @@ class ProductRepository extends BaseRepository
         }
 
         if ($unitParam && $unitParam !== 'All') {
-            $query->whereHas('brand', function($unitQuery) use($unitParam) {
+            $query->whereHas('unitR', function($unitQuery) use($unitParam) {
                 $unitQuery->where('id', $unitParam);
             });
         }

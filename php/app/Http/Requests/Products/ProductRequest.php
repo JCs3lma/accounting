@@ -31,6 +31,7 @@ class ProductRequest extends FormRequest
             'logo_path' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
             'brand_id' => 'nullable|numeric|exists:brands,id',
             'category_id' => 'nullable|numeric|exists:categories,id',
+            'unit' => 'nullable|numeric',
             'unit_id' => 'nullable|numeric|exists:units,id',
             'barcode' => [
                 'nullable',

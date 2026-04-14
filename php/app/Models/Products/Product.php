@@ -4,6 +4,7 @@ namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\Products\Brand;
 use App\Models\Products\Category;
 use App\Models\Products\Unit;
@@ -22,6 +23,7 @@ class Product extends Model
         'logo_path',
         'brand_id',
         'category_id',
+        'unit',
         'unit_id',
         'barcode',
         'serial_number',
@@ -45,8 +47,17 @@ class Product extends Model
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
-    public function unit()
+    public function unitR()
     {
         return $this->hasOne(Unit::class, 'id', 'unit_id');
+    }
+
+    protected function unitDisplay(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->unit && $this->unitR
+                ? "{$this->unit} {$this->unitR->abbreviation}"
+                : null,
+        );
     }
 }

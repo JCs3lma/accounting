@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('logo_path', 255)->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
+            $table->integer('unit')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->string('barcode', 50)->nullable()->unique();
             $table->string('serial_number', 100)->unique();

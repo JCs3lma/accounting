@@ -8,16 +8,10 @@ $thead = [
         'tdContentClass' => 'w-full h-16 object-cover rounded-md',
         'defaultAlt' => 'Product Logo',
     ],
-    'name' => [
-        'header' => 'Name',
-    ],
-    'brand.name' => [
-        'header' => 'Brand',
-    ],
-    'category.name' => [
-        'header' => 'Category',
-    ],
-    'unit.abbreviation' => [
+    'name' => 'Name',
+    'brand.name' => 'Brand',
+    'category.name' => 'Category',
+    'unitDisplay' => [
         'header' => 'Unit',
     ],
     'barcode' => [
@@ -206,9 +200,10 @@ $thead = [
                 // 4. Fill Form Fields
                 form.querySelector('[name="name"]').value = rowData.name;
                 form.querySelector('[name="description"]').value = rowData.description;
-                form.querySelector('[name="brand_id"]').value = rowData.brand.id;
-                form.querySelector('[name="category_id"]').value = rowData.category.id;
-                form.querySelector('[name="unit_id"]').value = rowData.unit.id;
+                form.querySelector('[name="brand_id"]').value = rowData.brand_id ?? '';
+                form.querySelector('[name="category_id"]').value = rowData.category_id ?? '';
+                form.querySelector('[name="unit"]').value = rowData.unit;
+                form.querySelector('[name="unit_id"]').value = rowData.unit_id ?? '';
                 form.querySelector('[name="serial_number"]').value = rowData.serial_number;
                 form.querySelector('[name="barcode"]').value = rowData.barcode.value;
                 form.querySelector('[name="sku"]').value = rowData.sku;
