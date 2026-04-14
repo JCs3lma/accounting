@@ -159,10 +159,16 @@ $thead = [
                 `;
 
                 const form = document.querySelector('#productForm');
-                form.querySelector('[name="name"]').value = null;
-                form.querySelector('[name="logo_path"]').value = null;
-                form.querySelector('[name="description"]').value = null;
-                form.querySelector('[name="is_active"]').value = null;
+                form.querySelector('[name="name"]').value = '';
+                form.querySelector('[name="description"]').value = '';
+                form.querySelector('[name="brand_id"]').value = '';
+                form.querySelector('[name="category_id"]').value = '';
+                form.querySelector('[name="unit"]').value = '';
+                form.querySelector('[name="unit_id"]').value = '';
+                form.querySelector('[name="serial_number"]').value = '';
+                form.querySelector('[name="barcode"]').value = '';
+                form.querySelector('[name="sku"]').value = '';
+                form.querySelector('[id="is_active"]').checked = '';
                 
                 if(form.querySelector('input[name="_method"]')) {
                     form.querySelector('[name="_method"]').remove();

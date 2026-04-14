@@ -23,7 +23,7 @@ class PricingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|integer|exists:product,id',
+            'product_id' => 'required|integer|exists:products,id',
             'cost_price' => 'required|numeric',
             'selling_price' => 'nullable|numeric',
             'is_active' => 'boolean',

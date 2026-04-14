@@ -40,6 +40,8 @@ class PricingRepository extends BaseRepository
 
         $nameParam = isset($params['name']) ? $params['name'] : null;
         $productParam = isset($params['product_id']) ? $params['product_id'] : null;
+        $brandParam = isset($params['brand_id']) ? $params['brand_id'] : null;
+        $categoryParam = isset($params['category_id']) ? $params['category_id'] : null;
         $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
         if ($nameParam) {
@@ -81,11 +83,11 @@ class PricingRepository extends BaseRepository
         try {
             DB::beginTransaction();
             if ($params['is_active']) {
+                Log::info('testing');
                 $this->model
                     ->where('product_id', $params['product_id'])
-                    ->update(['is_active', false]);
+                    ->update(['is_active' => false]);
             }
-
             $price = $this->model->create($params);
 
             DB::commit();
@@ -114,7 +116,7 @@ class PricingRepository extends BaseRepository
             if ($params['is_active']) {
                 $this->model
                     ->where('product_id', $params['product_id'])
-                    ->update(['is_active', false]);
+                    ->update(['is_active' => false]);
             }
 
             if (!isset($price)) {

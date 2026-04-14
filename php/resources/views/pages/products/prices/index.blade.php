@@ -1,79 +1,82 @@
 @extends('layouts.app')
 @php
 $thead = [
-    'name' => [
+    'product.name' => [
         'header' => 'Name',
         'tdClass' => 'w-[30vw] max-w-[30vw] lg:w-[20vw] lg:max-w-[20vw]',
     ],
-    'brand' => 'Brand',
-    'category' => 'Category',
-    'price' => 'Cost Price',
+    'product.brand.name' => 'Brand',
+    'product.category.name' => 'Category',
+    'cost_price' => 'Cost Price',
     'selling_price' => 'Selling Price',
-    'is_active' => 'Active',
+    'is_active' => [
+        'header' => 'Active',
+        'cast' => 'span',
+        'tdContentClass' => 'px-2 py-1 rounded-full text-xs font-semibold h-full',
+        'tdContentClassActive' => 'bg-green-100 text-green-800',
+        'tdContentClassInactive' => 'bg-red-100 text-red-800',
+    ],
 ];
 @endphp
 
 @section('content')
     <article>
-        <x-card class="mb-4">
-            <form action="{{route('products.pricing.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
-                <h3 class="mb-2">Filters</h3>
-                <div class="flex flex-col lg:flex-row gap-3">
-                    <div class="flex flex-col lg:flex-row gap-3 w-full">
-                        <x-input
-                            id="search_name"
-                            name="name"
-                            type="text"
-                            label="Name"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                        />
-                        <x-select
-                            id="search_brand_id"
-                            name="brand_id"
-                            label="Brand"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            @foreach($dropdowns['brands'] as $brand)
-                                <option value="{{ $brand->id }}" {{ request()->get('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-                            @endforeach
-                        </x-select>
-                        <x-select
-                            id="search_category_id"
-                            name="category_id"
-                            label="Category"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            @foreach($dropdowns['categories'] as $category)
-                                <option value="{{ $category->id }}" {{ request()->get('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach
-                        </x-select>
-                        <x-select
-                            id="search_is_active"
-                            name="is_active"
-                            label="Is Active"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
-                            <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
-                        </x-select>
-                    </div>
-                    <div class="flex gap-3 w-full flex-1">
-                        <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
-                            <x-search-icon class="fill-white" />
-                            <span>Search</span>
-                        </x-button>
-                        <x-button variant="default" href="{{ route('products.pricing.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
-                            <span>Clear</span>
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+        <x-filter-form
+            route="{{route('products.pricing.index')}}"
+        >
+            <div class="flex flex-col lg:flex-row gap-3 w-full">
+                <x-input
+                    id="search_name"
+                    name="name"
+                    type="text"
+                    label="Name"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+                />
+                <x-select
+                    id="search_brand_id"
+                    name="brand_id"
+                    label="Brand"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    @foreach($dropdowns['brands'] as $brand)
+                        <option value="{{ $brand->id }}" {{ request()->get('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                    @endforeach
+                </x-select>
+                <x-select
+                    id="search_category_id"
+                    name="category_id"
+                    label="Category"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    @foreach($dropdowns['categories'] as $category)
+                        <option value="{{ $category->id }}" {{ request()->get('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </x-select>
+                <x-select
+                    id="search_is_active"
+                    name="is_active"
+                    label="Is Active"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
+                    <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
+                </x-select>
+            </div>
+            <div class="flex gap-3 w-full flex-1">
+                <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
+                    <x-search-icon class="fill-white" />
+                    <span>Search</span>
+                </x-button>
+                <x-button variant="default" href="{{ route('products.pricing.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                    <span>Clear</span>
+                </x-button>
+            </div>
+        </x-filter-form>
         <x-table
             :thead="$thead"
             :tbody="$prices"
@@ -81,7 +84,7 @@ $thead = [
             cardHeaderClass="flex flex-row py-3 px-4"
             titleClass="text-lg font-semibold text-gray-800"
             :booleanMessage="[0 => 'In Active', 1 => 'Active']"
-            customNoDataMessage="No brands found. Please adjust your filters or change page."
+            customNoDataMessage="No prices found. Please adjust your filters or change page."
         >
             <x-slot:rightPocket>
                 <x-button id="addPrice" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
@@ -141,7 +144,7 @@ $thead = [
                 const rowData = JSON.parse(editBtn.closest('td').getAttribute('data-pass'));
                 
                 // 1. Change Modal Header
-                modalTitle.innerText = 'Edit Price: ' + rowData.name;
+                modalTitle.innerText = 'Edit Price: ' + rowData.product.name;
                 modalContent.innerHTML = `
                    <x-pricing-form id="pricingForm" method="POST" :dropdowns="$dropdowns" autocomplete="off"/>
                 `;
@@ -163,8 +166,9 @@ $thead = [
                 }
 
                 // 4. Fill Form Fields
-                form.querySelector('[name="name"]').value = rowData.name;
-                form.querySelector('[name="description"]').value = rowData.description;
+                form.querySelector('[name="product_id"]').value = rowData.product_id;
+                form.querySelector('[name="cost_price"]').value = rowData.cost_price;
+                form.querySelector('[name="selling_price"]').value = rowData.selling_price;
                 form.querySelector('[id="is_active"]').checked = rowData.is_active;
 
                 modalElement.classList.remove('hidden');

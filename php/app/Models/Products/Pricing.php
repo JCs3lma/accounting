@@ -4,7 +4,7 @@ namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Product\Product;
+use App\Models\Products\Product;
 
 class Pricing extends Model
 {
@@ -19,8 +19,12 @@ class Pricing extends Model
         'is_active'
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     public function product()
     {
-        return $this->hasOne(Product::class, 'id', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

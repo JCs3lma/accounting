@@ -27,7 +27,7 @@
     </li>
     <x-list-item class="pl-0 {{$currentActiveMenu == 'suppliers' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
         <x-slot:icon class="iconMenu"><x-supplier-icon class="{{$currentActiveMenu == 'suppliers' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
-        <x-slot:link href="{{ route('suppliers.index') }}" class="{{request()->routeIs('suppliers.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Suppliers</x-slot:link>
+        <x-slot:link href="{{ route('suppliers.index') }}" class="textMenu {{request()->routeIs('suppliers.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Suppliers</x-slot:link>
     </x-list-item>
     <li>
         <x-dropdown-menu>

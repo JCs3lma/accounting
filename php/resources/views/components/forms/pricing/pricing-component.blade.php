@@ -32,6 +32,6 @@
     <x-input-isactive/>
     <div class="flex justify-end gap-2">
         <x-button variant="default" data-modal-close>Cancel</x-button>
-        <x-button variant="success">Save</x-button>
+        <x-button variant="success" type="submit">Save</x-button>
     </div>
 </form>
