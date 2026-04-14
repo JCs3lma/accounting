@@ -78,7 +78,10 @@ $thead = [
             :thead="$thead"
             :tbody="$prices"
             title="Prices"
+            cardHeaderClass="flex flex-row py-3 px-4"
             titleClass="text-lg font-semibold text-gray-800"
+            :booleanMessage="[0 => 'In Active', 1 => 'Active']"
+            customNoDataMessage="No brands found. Please adjust your filters or change page."
         >
             <x-slot:rightPocket>
                 <x-button id="addPrice" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>

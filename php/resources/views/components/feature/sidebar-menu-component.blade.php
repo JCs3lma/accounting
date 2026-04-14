@@ -29,7 +29,6 @@
             <x-slot:icon class="iconMenu"><x-shop-icon /></x-slot:icon>
             <x-slot:button class="textMenu">Shops</x-slot:button>
             <x-list-item><x-slot:link href="#">Shop List</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="#">Aspiring shop</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="#">Inventory</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="#">Stock Transfer</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="#">Stock Adjustment</x-slot:link></x-list-item>

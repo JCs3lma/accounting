@@ -25,56 +25,53 @@ $thead = [
 
 @section('content')
     <article>
-        <x-card class="mb-4">
-            <form action="{{route('products.units.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
-                <h3 class="mb-2">Filters</h3>
-                <div class="flex flex-col lg:flex-row gap-3">
-                    <div class="flex gap-3 w-full">
-                        <x-input
-                            id="search_name"
-                            name="name"
-                            type="text"
-                            label="Name"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                        />
-                        <x-select
-                            id="search_abbreviation"
-                            name="abbreviation"
-                            label="Abbreviation"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            @foreach($unitsDropdown as $key => $value)
-                                <option value="{{ $value->abbreviation }}" {{ request()->get('abbreviation') === $value->abbreviation ? 'selected' : '' }}>
-                                    {{ $value->abbreviation }}
-                                </option>
-                            @endforeach
-                        </x-select>
-                        <x-select
-                            id="search_is_active"
-                            name="is_active"
-                            label="Is Active"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
-                            <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
-                        </x-select>
-                    </div>
-                    <div class="flex gap-3 w-full flex-1">
-                        <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
-                            <x-search-icon class="fill-white" />
-                            <span>Search</span>
-                        </x-button>
-                        <x-button variant="default" href="{{ route('products.units.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
-                            <span>Clear</span>
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+        <x-filter-form 
+            route="{{route('products.units.index')}}"
+        >
+            <x-input
+                id="search_name"
+                name="name"
+                type="text"
+                label="Name"
+                placeholder=" "
+                :showPlaceHolder="true"
+                value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+            />
+            <div class="flex gap-3 w-full">
+                <x-select
+                    id="search_abbreviation"
+                    name="abbreviation"
+                    label="Abbreviation"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    @foreach($unitsDropdown as $key => $value)
+                        <option value="{{ $value->abbreviation }}" {{ request()->get('abbreviation') === $value->abbreviation ? 'selected' : '' }}>
+                            {{ $value->abbreviation }}
+                        </option>
+                    @endforeach
+                </x-select>
+                <x-select
+                    id="search_is_active"
+                    name="is_active"
+                    label="Is Active"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
+                    <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
+                </x-select>
+            </div>
+            <div class="flex gap-3 w-full flex-1">
+                <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
+                    <x-search-icon class="fill-white" />
+                    <span>Search</span>
+                </x-button>
+                <x-button variant="default" href="{{ route('products.units.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                    <span>Clear</span>
+                </x-button>
+            </div>
+        </x-filter-form>
         <x-table
             :thead="$thead"
             :tbody="$units"

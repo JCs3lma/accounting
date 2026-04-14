@@ -40,84 +40,81 @@ $thead = [
 
 @section('content')
     <article>
-        <x-card class="mb-4">
-            <form action="{{route('products.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
-                <h3 class="mb-2">Filters</h3>
-                <div class="flex flex-col lg:flex-row gap-3">
-                    <div class="flex flex-col lg:flex-row gap-3 w-full">
-                        <x-input
-                            id="search_name"
-                            name="name"
-                            type="text"
-                            label="Name"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                        />
-                        <x-select
-                            id="search_brand_id"
-                            name="brand_id"
-                            label="Brand"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            @foreach($dropdowns['brands'] as $brand)
-                                <option value="{{ $brand->id }}" {{ request()->get('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-                            @endforeach
-                        </x-select>
-                        <x-select
-                            id="search_category_id"
-                            name="category_id"
-                            label="Category"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            @foreach($dropdowns['categories'] as $category)
-                                <option value="{{ $category->id }}" {{ request()->get('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach
-                        </x-select>
-                        <x-select
-                            id="search_unit_id"
-                            name="unit_id"
-                            label="Unit"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            @foreach($dropdowns['units'] as $unit)
-                                <option value="{{ $unit->id }}" {{ request()->get('unit_id') == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
-                            @endforeach
-                        </x-select>
-                        <x-input
-                            id="search_serial_number"
-                            name="serial_number"
-                            type="text"
-                            label="Serial Number"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('serial_number') && request()->get('serial_number') !== 'null' ? request()->get('serial_number') : ''}}"
-                        />
-                        <x-select
-                            id="search_is_active"
-                            name="is_active"
-                            label="Is Active"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
-                            <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
-                        </x-select>
-                    </div>
-                    <div class="flex gap-3 w-full flex-1">
-                        <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
-                            <x-search-icon class="fill-white" />
-                            <span>Search</span>
-                        </x-button>
-                        <x-button variant="default" href="{{ route('products.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
-                            <span>Clear</span>
-                        </x-button>
-                    </div>
-                </div>
-            </form>
+        <x-filter-form 
+            route="{{route('products.index')}}"
+        >
+            <div class="flex flex-col lg:flex-row gap-3 w-full">
+                <x-input
+                    id="search_name"
+                    name="name"
+                    type="text"
+                    label="Name"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+                />
+                <x-select
+                    id="search_brand_id"
+                    name="brand_id"
+                    label="Brand"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    @foreach($dropdowns['brands'] as $brand)
+                        <option value="{{ $brand->id }}" {{ request()->get('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                    @endforeach
+                </x-select>
+                <x-select
+                    id="search_category_id"
+                    name="category_id"
+                    label="Category"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    @foreach($dropdowns['categories'] as $category)
+                        <option value="{{ $category->id }}" {{ request()->get('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </x-select>
+                <x-select
+                    id="search_unit_id"
+                    name="unit_id"
+                    label="Unit"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    @foreach($dropdowns['units'] as $unit)
+                        <option value="{{ $unit->id }}" {{ request()->get('unit_id') == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
+                    @endforeach
+                </x-select>
+                <x-input
+                    id="search_serial_number"
+                    name="serial_number"
+                    type="text"
+                    label="Serial Number"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('serial_number') && request()->get('serial_number') !== 'null' ? request()->get('serial_number') : ''}}"
+                />
+                <x-select
+                    id="search_is_active"
+                    name="is_active"
+                    label="Is Active"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
+                    <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
+                </x-select>
+            </div>
+            <div class="flex gap-3 w-full flex-1">
+                <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
+                    <x-search-icon class="fill-white" />
+                    <span>Search</span>
+                </x-button>
+                <x-button variant="default" href="{{ route('products.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                    <span>Clear</span>
+                </x-button>
+            </div>
         </x-card>
         <x-table
             :thead="$thead"

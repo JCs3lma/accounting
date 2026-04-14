@@ -38,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.svgs.reports-component', 'reports-icon');
         Blade::component('components.svgs.user-setting-component', 'user-setting-icon');
         Blade::component('components.svgs.search-component', 'search-icon');
+        Blade::component('components.svgs.filter-component', 'filter-icon');
 
         // Atom Components
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');
@@ -83,5 +84,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.forms.product.delete-product-component', 'delete-product-form');
         Blade::component('components.forms.pricing.pricing-component', 'pricing-form');
         Blade::component('components.forms.pricing.delete-pricing-component', 'delete-pricing-form');
+        Blade::component('components.forms.filter-component', 'filter-form');
     }
 }

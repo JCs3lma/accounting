@@ -8,10 +8,7 @@ $thead = [
         'tdContentClass' => 'w-full h-16 object-cover rounded-md',
         'defaultAlt' => 'Supplier Logo',
     ],
-    'name' => [
-        'header' => 'Name',
-        'tdClass' => 'w-[30vw] max-w-[30vw] lg:w-[20vw] lg:max-w-[20vw]',
-    ],
+    'name' => 'Name',
     'contact_person' => 'Contact Person',
     'email' => 'Email',
     'phone' => 'Phone',
@@ -32,78 +29,75 @@ $thead = [
 
 @section('content')
     <article>
-        <x-card class="mb-4">
-            <form action="{{route('products.suppliers.index')}}" class="relative w-full lg:w-auto" autocomplete="off">
-                <h3 class="mb-2">Filters</h3>
-                <div class="flex flex-col lg:flex-row gap-3">
-                    <div class="flex gap-3 w-full">
-                        <x-input
-                            id="search_name"
-                            name="name"
-                            type="text"
-                            label="Supplier Name"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                        />
-                        <x-input
-                            id="search_contact_person"
-                            name="contact_person"
-                            type="text"
-                            label="Contact Person"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('contact_person') && request()->get('contact_person') !== 'null' ? request()->get('contact_person') : ''}}"
-                        />
-                        <x-input
-                            id="search_email"
-                            name="email"
-                            type="text"
-                            label="Email"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('email') && request()->get('email') !== 'null' ? request()->get('email') : ''}}"
-                        />
-                        <x-input
-                            id="search_phone"
-                            name="phone"
-                            type="text"
-                            label="Phone"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('phone') && request()->get('phone') !== 'null' ? request()->get('phone') : ''}}"
-                        />
-                        <x-input
-                            id="search_mobile"
-                            name="mobile"
-                            type="text"
-                            label="Mobile"
-                            placeholder=" "
-                            :showPlaceHolder="true"
-                            value="{{request()->get('mobile') && request()->get('mobile') !== 'null' ? request()->get('mobile') : ''}}"
-                        />
-                        <x-select
-                            id="search_is_active"
-                            name="is_active"
-                            label="Is Active"
-                            :showPlaceHolder="true"
-                        >
-                            <option>All</option>
-                            <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
-                            <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
-                        </x-select>
-                    </div>
-                    <div class="flex gap-3 w-full flex-1">
-                        <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
-                            <x-search-icon class="fill-white" />
-                            <span>Search</span>
-                        </x-button>
-                        <x-button variant="default" href="{{ route('products.suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
-                            <span>Clear</span>
-                        </x-button>
-                    </div>
-                </div>
-            </form>
+        <x-filter-form 
+            route="{{route('products.suppliers.index')}}"
+        >
+            <div class="flex flex-col lg:flex-row gap-3 w-full">
+                <x-input
+                    id="search_name"
+                    name="name"
+                    type="text"
+                    label="Supplier Name"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+                />
+                <x-input
+                    id="search_contact_person"
+                    name="contact_person"
+                    type="text"
+                    label="Contact Person"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('contact_person') && request()->get('contact_person') !== 'null' ? request()->get('contact_person') : ''}}"
+                />
+                <x-input
+                    id="search_email"
+                    name="email"
+                    type="text"
+                    label="Email"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('email') && request()->get('email') !== 'null' ? request()->get('email') : ''}}"
+                />
+                <x-input
+                    id="search_phone"
+                    name="phone"
+                    type="text"
+                    label="Phone"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('phone') && request()->get('phone') !== 'null' ? request()->get('phone') : ''}}"
+                />
+                <x-input
+                    id="search_mobile"
+                    name="mobile"
+                    type="text"
+                    label="Mobile"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('mobile') && request()->get('mobile') !== 'null' ? request()->get('mobile') : ''}}"
+                />
+                <x-select
+                    id="search_is_active"
+                    name="is_active"
+                    label="Is Active"
+                    :showPlaceHolder="true"
+                >
+                    <option>All</option>
+                    <option value="true" {{ request()->get('is_active') === 'true' ? 'selected' : '' }}>Active</option>
+                    <option value="false" {{ request()->get('is_active') === 'false' ? 'selected' : '' }}>In active</option>
+                </x-select>
+            </div>
+            <div class="flex gap-3 w-full flex-1">
+                <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
+                    <x-search-icon class="fill-white" />
+                    <span>Search</span>
+                </x-button>
+                <x-button variant="default" href="{{ route('products.suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                    <span>Clear</span>
+                </x-button>
+            </div>
         </x-card>
         <x-table
             :thead="$thead"
