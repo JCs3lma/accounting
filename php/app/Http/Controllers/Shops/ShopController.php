@@ -29,7 +29,7 @@ class ShopController extends Controller
 
     public function show(Shop $shop)
     {
-        return view('pages.shops.manage.index', compact('shop'));
+        return view('pages.shops.manage.dashboard', compact('shop'));
     }
 
     /**

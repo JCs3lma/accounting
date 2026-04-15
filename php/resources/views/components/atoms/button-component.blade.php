@@ -35,6 +35,9 @@
         case 'plain':
             $class = 'bg-white border-0 p-0 w-full text-left';
             break;
+        case 'transparent':
+            $class = 'border-0 p-0 w-full text-center';
+            break;
         default:
             $class = 'border-gray-400 text-gray-700 hover:bg-gray-200';
             break;
