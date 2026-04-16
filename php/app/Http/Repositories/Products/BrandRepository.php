@@ -70,7 +70,7 @@ class BrandRepository extends BaseRepository
             $brand = $this->model->create($params);
 
             if ($logoFile instanceof UploadedFile) {
-                $logoPath = $this->helper->uploadFile($logoFile, 'products/brands/'.$brand->id);
+                $logoPath = $this->helper->uploadFile($logoFile, config('const.product_logo_path').'brands/'.$brand->id);
                 $brand->update(['logo_path' => $logoPath]);
             }
             
@@ -111,7 +111,7 @@ class BrandRepository extends BaseRepository
             }
 
             if ($logoFile instanceof UploadedFile) {
-                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], 'products/brands/'.$id);
+                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], config('const.product_logo_path').'brands/'.$id);
                 if ($brand->logo_path) {
                     $this->helper->deleteFile($brand->getRawOriginal('logo_path'));
                 }

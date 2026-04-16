@@ -9,6 +9,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Products\PricingController;
 use App\Http\Controllers\Shops\ShopController;
+use App\Http\Controllers\Shops\StaffController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -28,4 +29,11 @@ Route::group([
     });
     Route::resource('suppliers', SupplierController::class)->names('suppliers')->except(['create', 'show', 'edit']);
     Route::resource('shops', ShopController::class)->names('shops');
+
+    Route::group([
+        'prefix' => 'shops/{shop}',
+        'as' => 'shops.'
+    ], function () {
+        Route::resource('staffs', StaffController::class)->names('staffs');
+    });
 });

@@ -95,7 +95,7 @@ class ShopRepository extends BaseRepository
             $shop = $this->model->create($params);
 
             if ($logoFile instanceof UploadedFile) {
-                $logoPath = $this->helper->uploadFile($logoFile, 'shops/shop/'.$shop->id);
+                $logoPath = $this->helper->uploadFile($logoFile, config('const.shops_logo_path').'shop/'.$shop->id);
                 $shop->update(['logo_path' => $logoPath]);
             }
 
@@ -137,7 +137,7 @@ class ShopRepository extends BaseRepository
             }
 
             if ($logoFile instanceof UploadedFile) {
-                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], 'shops/shop/'.$id);
+                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], config('const.shops_logo_path').'shop/'.$id);
                 if ($shop->logo_path) {
                     $this->helper->deleteFile($shop->getRawOriginal('logo_path'));
                 }

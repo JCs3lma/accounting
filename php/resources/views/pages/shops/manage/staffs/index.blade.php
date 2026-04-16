@@ -1,22 +1,17 @@
-@extends('layouts.app')
+@extends('pages.shops.manage.app')
 @php
 $thead = [
-    'logo_path' =>  [
-        'header' => 'Logo',
+    'profile_path' =>  [
+        'header' => 'Profile',
         'tdClass' => 'w-[10vw] max-w-[10vw] lg:w-[5vw] lg:max-w-[5vw] overflow-hidden text-ellipsis',
         'cast' => 'img',
         'tdContentClass' => 'w-full h-16 object-cover rounded-md',
-        'defaultAlt' => 'Shop Logo',
+        'defaultAlt' => 'Profile',
     ],
-    'shop_name' => 'Name/Branch',
-    'contact_person' => 'Contact Person',
+    'fullname' => 'Name',
     'email' => 'Email',
     'phone' => 'Phone',
-    'mobile' => 'Mobile',
-    'address' => [
-        'header' => 'Address',
-        'tdClass' => 'w-[50vw] max-w-[50vw] lg:w-[30vw] lg:max-w-[30vw] overflow-hidden text-ellipsis',
-    ],
+    'address' => 'Address',
     'is_active' => [
         'header' => 'Active',
         'cast' => 'span',
@@ -26,58 +21,21 @@ $thead = [
     ],
 ];
 @endphp
-
-@section('content')
+@section('shop_content')
     <article>
         <x-filter-form 
-            route="{{route('shops.index')}}"
+            route="{{route('shops.staffs.index', $shop->id)}}"
         >
-            <div class="flex flex-col lg:flex-row gap-3 w-full">
-                <x-input
-                    id="search_name"
-                    name="shop_name"
-                    type="text"
-                    label="Shop Name"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                />
-                <x-input
-                    id="search_contact_person"
-                    name="contact_person"
-                    type="text"
-                    label="Contact Person"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('contact_person') && request()->get('contact_person') !== 'null' ? request()->get('contact_person') : ''}}"
-                />
-                <x-input
-                    id="search_email"
-                    name="email"
-                    type="text"
-                    label="Email"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('email') && request()->get('email') !== 'null' ? request()->get('email') : ''}}"
-                />
-                <x-input
-                    id="search_phone"
-                    name="phone"
-                    type="text"
-                    label="Phone"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('phone') && request()->get('phone') !== 'null' ? request()->get('phone') : ''}}"
-                />
-                <x-input
-                    id="search_mobile"
-                    name="mobile"
-                    type="text"
-                    label="Mobile"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('mobile') && request()->get('mobile') !== 'null' ? request()->get('mobile') : ''}}"
-                />
+            <x-input
+                id="search_name"
+                name="name"
+                type="text"
+                label="Name"
+                placeholder=" "
+                :showPlaceHolder="true"
+                value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+            />
+            <div class="flex gap-3 w-full">
                 <x-select
                     id="search_is_active"
                     name="is_active"
@@ -94,32 +52,32 @@ $thead = [
                     <x-search-icon class="fill-white" />
                     <span>Search</span>
                 </x-button>
-                <x-button variant="default" href="{{ route('shops.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                <x-button variant="default" href="{{ route('shops.staffs.index', $shop->id) }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
                     <span>Clear</span>
                 </x-button>
             </div>
         </x-filter-form>
-        {{now('America/New_York')}}
         <x-table
             :thead="$thead"
-            :tbody="$shops"
-            title="Shops/Branches"
+            :tbody="$staffs"
+            title="Staffs"
             cardHeaderClass="flex flex-row py-3 px-4"
             titleClass="text-lg font-semibold text-gray-800"
             :booleanMessage="[0 => 'In Active', 1 => 'Active']"
-            customNoDataMessage="No shops found. Please adjust your filters or change page."
+            customNoDataMessage="No staffs found. Please adjust your filters or change page."
         >
             <x-slot:rightPocket>
-                <x-button id="addShop" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
+                <x-button id="addStaff" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
             </x-slot:rightPocket>
             <x-slot:dataActions class="relative w-20 mx-auto" dataActionsClassHeader="flex items-center justify-end w-20">
-                <x-action-menu :isIncludeManage="true"/>
+                <x-action-menu />
             </x-slot:dataActions>
         </x-table>
     </article>
 @endsection
+
 @section('footer')
-    <x-modal header="Add Shop" headerClass="modalTitle">
+    <x-modal header="Add Staff" headerClass="modalTitle">
         <div id="modalContent"></div>
     </x-modal>
 @endsection
@@ -133,36 +91,37 @@ $thead = [
 
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('.actionButton');
-            const addBtn = e.target.closest('#addShop');
+            const addBtn = e.target.closest('#addStaff');
             const editBtn = e.target.closest('.editActionButton');
             const deleteBtn = e.target.closest('.deleteActionButton');
-            const manageBtn = e.target.closest('.manageActionButton');
-            const logoInput = document.getElementById('logo_path');
+            const logoInput = document.getElementById('profile_path');
             const logoPreviewContainer = document.getElementById('logoPreviewContainer');
             const logoClearBtn = document.getElementById('logoClearBtn');
             const logoPreview = document.getElementById('logoPreview');
 
             // -- ADD Logic
             if (addBtn) {
-                modalTitle.innerText = 'Add Shop';
+                modalTitle.innerText = 'Add Staff';
                 modalContent.innerHTML = `
-                   <x-shop-form id="shopForm" method="POST" autocomplete="off"/>
+                   <x-staff-form id="staffForm" :shop="$shop" method="POST" autocomplete="off"/>
                 `;
 
-                const form = document.querySelector('#shopForm');
-                form.querySelector('[name="logo_path"]').value = null;
-                form.querySelector('[name="shop_name"]').value = null;
-                form.querySelector('[name="contact_person"]').value = null;
-                form.querySelector('[name="email"]').value = null;
-                form.querySelector('[name="phone"]').value = null;
-                form.querySelector('[name="mobile"]').value = null;
-                form.querySelector('[name="address"]').value = null;
-                form.querySelector('[name="is_active"]').value = null;
+                const form = document.querySelector('#staffForm');
+                form.querySelector('[name="first_name"]').value = '';
+                form.querySelector('[name="middle_name"]').value = '';
+                form.querySelector('[name="last_name"]').value = '';
+                form.querySelector('[name="email"]').value = '';
+                form.querySelector('[name="phone"]').value = '';
+                form.querySelector('[name="mobile"]').value = '';
+                form.querySelector('[name="address"]').value = '';
+                form.querySelector('[id="is_active"]').checked = false;
+                form.querySelector('[name="employment_status"]').selectedIndex = 0;
+                form.querySelector('[name="hire_date"]').value = null;
                 
                 if(form.querySelector('input[name="_method"]')) {
                     form.querySelector('[name="_method"]').remove();
                 }
-                const baseUrl = "{{ route('shops.store') }}"; // Blade generates base URL
+                const baseUrl = "{{ route('shops.staffs.store', $shop->id) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 form.action = params ? `${baseUrl}?${params}` : baseUrl;
             }
@@ -172,14 +131,15 @@ $thead = [
                 const rowData = JSON.parse(editBtn.closest('td').getAttribute('data-pass'));
                 
                 // 1. Change Modal Header
-                modalTitle.innerText = 'Edit Shop: ' + rowData.name;
+                modalTitle.innerText = 'Edit Staff: ' + rowData.fullname;
                 modalContent.innerHTML = `
-                   <x-shop-form id="shopForm" method="POST" autocomplete="off"/>
+                   <x-staff-form id="staffForm" :shop="$shop" method="POST" autocomplete="off"/>
                 `;
-                const form = document.querySelector('#shopForm');
+                const form = document.querySelector('#staffForm');
                 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const baseUrl = "{{ route('shops.update', [':id']) }}"; // Blade generates base URL
+                
+                const baseUrl = "{{ route('shops.staffs.update', [$shop->id, ':id']) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
@@ -194,25 +154,28 @@ $thead = [
                 }
 
                 // 4. Fill Form Fields
-                form.querySelector('[name="shop_name"]').value = rowData.shop_name;
-                form.querySelector('[name="contact_person"]').value = rowData.contact_person;
+                form.querySelector('[name="first_name"]').value = rowData.first_name;
+                form.querySelector('[name="middle_name"]').value = rowData.middle_name;
+                form.querySelector('[name="last_name"]').value = rowData.middle_name;
                 form.querySelector('[name="email"]').value = rowData.email;
                 form.querySelector('[name="phone"]').value = rowData.phone;
                 form.querySelector('[name="mobile"]').value = rowData.mobile;
                 form.querySelector('[name="address"]').value = rowData.address;
                 form.querySelector('[id="is_active"]').checked = rowData.is_active;
+                form.querySelector('[name="employment_status"]').value = rowData.shop.employment_status;
+                form.querySelector('[name="hire_date"]').value = rowData.shop.hire_date;
 
                 modalElement.classList.remove('hidden');
                 modalElement.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
 
-                if (rowData.logo_path) {
+                if (rowData.profile_path) {
                     const logoContainerEdit = document.getElementById('logoPreviewContainer');
                     const logoPreviewEdit = document.getElementById('logoPreview');
                     const logoClearBtnEdit = document.getElementById('logoClearBtn');
-                    const logoInputEdit = document.getElementById('logo_path');
-                    const logoPathRemove = document.getElementById('logo_path_remove');
-                    logoPreviewEdit.src = rowData.logo_path;
+                    const logoInputEdit = document.getElementById('profile_path');
+                    const logoPathRemove = document.getElementById('profile_path_remove');
+                    logoPreviewEdit.src = rowData.profile_path;
                     logoContainerEdit.classList.remove('hidden');
 
                     logoClearBtnEdit.addEventListener('click', (e) => {
@@ -255,14 +218,14 @@ $thead = [
                 const rowData = JSON.parse(deleteBtn.closest('td').getAttribute('data-pass'));
                 
                 // 1. Change Modal Header
-                modalTitle.innerText = 'Delete Shop: ' + rowData.name;
+                modalTitle.innerText = 'Delete Staff: ' + rowData.fullname;
                 modalContent.innerHTML = `
-                   <x-delete-shop-form id="shopForm" method="POST"/>
+                   <x-delete-staff-form id="staffForm" method="POST"/>
                 `;
-                const form = document.querySelector('#shopForm');
+                const form = document.querySelector('#staffForm');
 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const baseUrl = "{{ route('shops.destroy', [':id']) }}"; // Blade generates base URL
+                const baseUrl = "{{ route('shops.staffs.destroy', [$shop->id, ':id']) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
@@ -270,14 +233,6 @@ $thead = [
                 modalElement.classList.remove('hidden');
                 modalElement.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
-            }
-
-            // --- MANAGE Logic ---
-            if (manageBtn) {
-                const rowData = JSON.parse(manageBtn.closest('td').getAttribute('data-pass'));
-                const baseUrl = "{{ route('shops.show', [':id']) }}";
-                const newURL = baseUrl.replace(':id', rowData.id);
-                window.location.href = newURL;
             }
 
             // --- LOGO PREVIEW Logic ---

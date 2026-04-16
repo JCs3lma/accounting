@@ -19,8 +19,8 @@
                     <x-nav-menu-icon id="navMenuIcon" class="hidden mx-auto"/>
                 </h3>
             </div>
-            @if(request()->routeIs('shops.manage.*') || request()->routeIs('shops.show'))
-                <x-shop-sidebar-menu />
+            @if(isset($shop) && (request()->routeIs('shops.*') || request()->routeIs('shops.show')))
+                <x-shop-sidebar-menu :shop="$shop"/>
             @else
                 <x-sidebar-menu />
             @endif

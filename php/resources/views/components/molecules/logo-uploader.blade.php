@@ -1,16 +1,21 @@
+@props([
+    'label' => 'Upload Logo',
+    'imageUploadNameAndID' => 'logo_path',
+    'imageUploadNameAndIDHidden' => 'logo_path_remove'
+])
 <!-- Logo Upload -->
 <div class="mb-2">
     <x-input 
-        id="logo_path" 
-        name="logo_path" 
+        :id="$imageUploadNameAndID" 
+        :name="$imageUploadNameAndID" 
         type="file" 
         accept="image/*"
-        label="Upload Logo"
+        :label="$label"
     />
     <x-input 
         type="hidden" 
-        id="logo_path_remove" 
-        name="logo_path_remove"
+        :id="$imageUploadNameAndIDHidden" 
+        :name="$imageUploadNameAndIDHidden"
         value="0"
     />
     <!-- Preview container -->

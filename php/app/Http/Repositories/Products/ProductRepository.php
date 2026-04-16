@@ -94,7 +94,7 @@ class ProductRepository extends BaseRepository
             $product = $this->model->create($params);
 
             if ($logoFile instanceof UploadedFile) {
-                $logoPath = $this->helper->uploadFile($logoFile, 'products/product/'.$product->id);
+                $logoPath = $this->helper->uploadFile($logoFile, config('const.product_logo_path').'product/'.$product->id);
                 $product->update(['logo_path' => $logoPath]);
             }
             
@@ -135,7 +135,7 @@ class ProductRepository extends BaseRepository
             }
 
             if ($logoFile instanceof UploadedFile) {
-                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], 'products/product/'.$id);
+                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], config('const.product_logo_path').'product/'.$id);
                 if ($product->logo_path) {
                     $this->helper->deleteFile($product->getRawOriginal('logo_path'));
                 }

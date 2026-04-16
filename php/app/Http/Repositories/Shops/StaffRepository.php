@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Repositories;
+namespace App\Http\Repositories\Shops;
 
 use DB;
 use Exception;
@@ -8,21 +8,25 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
-use App\Models\Supplier;
+use App\Models\Shops\Staff;
 use App\Helper\FileHelper;
 
-class SupplierRepository extends BaseRepository
+class StaffRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Supplier();
+        $this->model = new Staff();
         $this->helper = new FileHelper();
     }
 
-    public function all(array $params = [])
+    public function all(array $params = [], int $shopId)
     {
         try {
-            $query = $this->model->query();
+            $query = $this->model->with([
+                'shop'
+            ])->whereHas('shop', function($shopQuery) use($shopId) {
+                $shopQuery->where('shop_id', $shopId);
+            });
 
             $query = $this->filters($query, $params);
 
@@ -41,20 +45,21 @@ class SupplierRepository extends BaseRepository
             return $query;
         }
 
-        $nameParam = isset($params['name']) ? $params['name'] : null;
-        $contactPersonParam = isset($params['contact_person']) ? $params['contact_person'] : null;
+        $shopIDParam = isset($params['shop_id']) ? $params['shop_id'] : null;
+        $firstNameParam = isset($params['first_name']) ? $params['first_name'] : null;
+        $lastNameParam = isset($params['last_name']) ? $params['last_name'] : null;
         $emailParam = isset($params['email']) ? $params['email'] : null;
         $phoneParam = isset($params['phone']) ? $params['phone'] : null;
         $mobileParam = isset($params['mobile']) ? $params['mobile'] : null;
         $addressParam = isset($params['address']) ? $params['address'] : null;
         $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
-        if ($nameParam) {
-            $query->whereLike('name', '%'.$nameParam.'%');
+        if ($firstNameParam) {
+            $query->whereLike('first_name', '%'.$firstNameParam.'%');
         }
 
-        if ($contactPersonParam) {
-            $query->whereLike('contact_person', '%'.$contactPersonParam.'%');
+        if ($lastNameParam) {
+            $query->whereLike('last_name', '%'.$lastNameParam.'%');
         }
 
         if ($emailParam) {
@@ -89,18 +94,18 @@ class SupplierRepository extends BaseRepository
 
         try {
             DB::beginTransaction();
-            $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
-            unset($params['logo_path']);
-            unset($params['logo_path_remove']);
-            $supplier = $this->model->create($params);
+            $logoFile = isset($params['profile_path']) ? $params['profile_path'] : null;
+            unset($params['profile_path']);
+            unset($params['profile_path_remove']);
+            $staff = $this->model->create($params);
 
             if ($logoFile instanceof UploadedFile) {
-                $logoPath = $this->helper->uploadFile($logoFile, config('const.product_logo_path').'suppliers/'.$supplier->id);
-                $supplier->update(['logo_path' => $logoPath]);
+                $logoPath = $this->helper->uploadFile($logoFile, config('const.shops_logo_path').'staff/'.$staff->id);
+                $staff->update(['profile_path' => $logoPath]);
             }
 
             DB::commit();
-            return $this->success($supplier, 'Supplier created successfully!');
+            return $this->success($staff, 'Staff created successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -119,33 +124,33 @@ class SupplierRepository extends BaseRepository
         }
 
         try {
-            $supplier = $this->model->find($id);
+            $staff = $this->model->find($id);
 
-            if (!isset($supplier)) {
+            if (!isset($staff)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
             DB::beginTransaction();
-            $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
-            $logoPathRemove = $params['logo_path_remove'];
+            $logoFile = isset($params['profile_path']) ? $params['profile_path'] : null;
+            $logoPathRemove = $params['profile_path_remove'];
 
             if ($logoPathRemove && !$logoFile) {
-                $params['logo_path'] = null;
-                if ($supplier->logo_path) {
-                    $this->helper->deleteFile($supplier->getRawOriginal('logo_path'));
+                $params['profile_path'] = null;
+                if ($staff->profile_path) {
+                    $this->helper->deleteFile($staff->getRawOriginal('profile_path'));
                 }
             }
 
             if ($logoFile instanceof UploadedFile) {
-                $params['logo_path'] = $this->helper->uploadFile($params['logo_path'], config('const.product_logo_path').'suppliers/'.$id);
-                if ($supplier->logo_path) {
-                    $this->helper->deleteFile($supplier->getRawOriginal('logo_path'));
+                $params['profile_path'] = $this->helper->uploadFile($params['profile_path'], config('const.shops_logo_path').'staff/'.$id);
+                if ($staff->profile_path) {
+                    $this->helper->deleteFile($staff->getRawOriginal('profile_path'));
                 }
             }
-            $supplier->update($params);
-            $newSupplier = $this->model->find($id);
+            $staff->update($params);
+            $newStaff = $this->model->find($id);
             DB::commit();
-            return $this->success($newSupplier, 'Supplier updated successfully!');
+            return $this->success($newStaff, 'Staff updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -160,24 +165,19 @@ class SupplierRepository extends BaseRepository
         }
 
         try {
-            $supplier = $this->model->find($id);
+            $staff = $this->model->find($id);
 
-            if (!isset($supplier)) {
+            if (!isset($staff)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
-            $supplier->delete();
+            $staff->delete();
             DB::commit();
-            return $this->success([], 'Supplier deleted successfully!');
+            return $this->success([], 'Staff deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
-    }
-
-    public function dropdown()
-    {
-        return $this->model->where('is_active', true)->get();
     }
 }
