@@ -99,7 +99,6 @@ $thead = [
                 </x-button>
             </div>
         </x-filter-form>
-        {{now('America/New_York')}}
         <x-table
             :thead="$thead"
             :tbody="$shops"
