@@ -23,17 +23,29 @@ class StaffRepository extends BaseRepository
     {
         try {
             $query = $this->model->with([
-                'shop' => function ($q) use ($shopId) {
+                'shop' => function ($q) use ($shopId, $params) {
+                    $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
+
                     $q->where('shop_id', $shopId);
+
+                    if ($isActiveParam !== null && $isActiveParam !== 'All') {
+                        $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
+                        $q->where('is_active', $isActive);
+                    }
                 }
-            ])->whereHas('shop', function($shopQuery) use($shopId) {
+            ])->whereHas('shop', function($shopQuery) use($shopId, $params) {
+                $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
                 $shopQuery->where('shop_id', $shopId);
+
+                if ($isActiveParam !== null && $isActiveParam !== 'All') {
+                    $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
+                    $shopQuery->where('is_active', $isActive);
+                }
             });
 
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
-            
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -47,21 +59,16 @@ class StaffRepository extends BaseRepository
             return $query;
         }
 
-        $shopIDParam = isset($params['shop_id']) ? $params['shop_id'] : null;
-        $firstNameParam = isset($params['first_name']) ? $params['first_name'] : null;
-        $lastNameParam = isset($params['last_name']) ? $params['last_name'] : null;
+        $nameParam = isset($params['name']) ? $params['name'] : null;
         $emailParam = isset($params['email']) ? $params['email'] : null;
         $phoneParam = isset($params['phone']) ? $params['phone'] : null;
         $mobileParam = isset($params['mobile']) ? $params['mobile'] : null;
         $addressParam = isset($params['address']) ? $params['address'] : null;
-        $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
 
-        if ($firstNameParam) {
-            $query->whereLike('first_name', '%'.$firstNameParam.'%');
-        }
-
-        if ($lastNameParam) {
-            $query->whereLike('last_name', '%'.$lastNameParam.'%');
+        if ($nameParam) {
+            $query->whereLike('first_name', '%'.$nameParam.'%')
+                ->orWhereLike('middle_name', '%'.$nameParam.'%')
+                ->orWhereLike('last_name', '%'.$nameParam.'%');
         }
 
         if ($emailParam) {
@@ -78,11 +85,6 @@ class StaffRepository extends BaseRepository
 
         if ($addressParam) {
             $query->whereLike('address', '%'.$addressParam.'%');
-        }
-
-        if ($isActiveParam && $isActiveParam !== 'All') {
-            $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
-            $query->where('is_active', $isActive);
         }
 
         return $query;

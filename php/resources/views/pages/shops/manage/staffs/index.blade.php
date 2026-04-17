@@ -34,19 +34,10 @@ $thead = [
                     id="search_name"
                     name="name"
                     type="text"
-                    label="Supplier Name"
+                    label="Name"
                     placeholder=" "
                     :showPlaceHolder="true"
                     value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                />
-                <x-input
-                    id="search_contact_person"
-                    name="contact_person"
-                    type="text"
-                    label="Contact Person"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('contact_person') && request()->get('contact_person') !== 'null' ? request()->get('contact_person') : ''}}"
                 />
                 <x-input
                     id="search_email"
@@ -91,7 +82,7 @@ $thead = [
                     <x-search-icon class="fill-white" />
                     <span>Search</span>
                 </x-button>
-                <x-button variant="default" href="{{ route('suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                <x-button variant="default" href="{{route('shops.staffs.index', $shop->id)}}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
                     <span>Clear</span>
                 </x-button>
             </div>

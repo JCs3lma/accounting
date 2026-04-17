@@ -64,6 +64,9 @@ class StaffService extends BaseService
             'address' => $params['address'] ?? null,
             'profile_path_remove' => $params['profile_path_remove'] ?? null,
         ];
+        $staffParams = array_filter($staffParams, function($value) {
+            return $value !== null && $value !== '' && $value !== 'null';
+        });
         $staffResult = $this->repository->update($id, $staffParams)->getData(true);
         if (isset($staffResult['error'])) {
             return $this->repository->error('Failed to update staff', [], $this->repository->internalServerError);
