@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="flex flex-col flex-1 overflow-auto">
+    <section class="flex flex-col flex-1 overflow-hidden max-h-screen">
         <x-filter-form 
             route="{{route('suppliers.index')}}"
         >
@@ -30,8 +30,77 @@
             <x-card class="w-full lg:w-[20vw] order-1 lg:order-2">
                 <x-card-header class="p-0">Add Products</x-card-header>
             </x-card>
-            <x-card class="w-full order-2 lg:order-1">
-                <x-card-header class="p-0">Suppliers Products</x-card-header>
+            <x-card class="flex flex-col w-full order-2 lg:order-1 overflow-hidden">
+                <x-card-header class="shrink-0 p-0">Suppliers Products</x-card-header>
+                <div class="h-full flex-1 overflow-y-auto">
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1><h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                    <h1>Juls</h1>
+                </div>
             </x-card>
         </div>
     </section>
