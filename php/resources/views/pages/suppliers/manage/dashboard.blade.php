@@ -1,39 +1,19 @@
 @extends('pages.suppliers.manage.app')
 @section('supplier_content')
-    <section class="flex flex-col flex-1 overflow-hidden min-h-0">
-        <x-filter-form 
-            route="{{route('suppliers.index')}}"
-        >
-            <div class="flex flex-col lg:flex-row gap-3 w-full">
-                <x-input
-                    id="search_name"
-                    name="name"
-                    type="text"
-                    label="Product Name"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-                />
-            </div>
-            <div class="flex gap-3 w-full flex-1">
-                <x-button variant="info" type="submit" class="rounded-md flex gap-2 items-center justify-center flex-1 lg:flex-initial">
-                    <x-search-icon class="fill-white" />
-                    <span>Search</span>
-                </x-button>
-                <x-button variant="default" href="{{ route('suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
-                    <span>Clear</span>
-                </x-button>
-            </div>
-        </x-filter-form>
-        <div class="flex-1 flex flex-col lg:flex-row gap-4 min-h-0">
-            <x-card class="w-full lg:w-[20vw] order-1 lg:order-2">
-                <x-card-header class="p-0">Add Products</x-card-header>
-            </x-card>
-            <x-card class="flex flex-col w-full order-2 lg:order-1 overflow-hidden min-h-0">
-                <x-card-header class="shrink-0 p-0">Suppliers Products</x-card-header>
-                <div class="flex-1 overflow-auto min-h-0">
-                </div>
-            </x-card>
-        </div>
-    </section>
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <x-card class="rounded-md leading-none border-l-6 border-l-green-800 bg-green-500 text-white">
+            <h1 class="uppercase font-bold text-lg mb-0">20</h1>
+            <span class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">No. of Assigned Prices</span>
+            <x-card-footer class="p-0 mt-1"><x-button href="" variant="transparent">Show Info</x-button></x-card-footer>
+        </x-card>
+
+        <!-- Inventory Value -->
+        <x-card class="rounded-md leading-none border-l-6 border-l-blue-700 bg-blue-500 text-white">
+            <h1 class="uppercase font-bold text-lg mb-0">20</h1>
+            <span class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">No. of assigned products</span>
+            <x-card-footer class="p-0 mt-1">
+                <x-button href="" variant="transparent">View Inventory</x-button>
+            </x-card-footer>
+        </x-card>
+    </div>
 @endsection

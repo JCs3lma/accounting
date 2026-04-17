@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <article>
+    <article class="flex flex-col flex-1 min-h-0">
         <div class="flex justify-between items-center">
             <div class="flex gap-2 items-center">
                 <img src="{{asset($supplier->logo_path ?? 'images/default-avatar.png')}}" class="w-[3vw] max-w-[3vw] img-cover rounded-md" />

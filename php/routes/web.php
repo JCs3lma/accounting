@@ -10,6 +10,7 @@ use App\Http\Controllers\Products\ProductController;
 
 use App\Http\Controllers\Suppliers\SupplierController;
 use App\Http\Controllers\Suppliers\PricingController;
+use App\Http\Controllers\Suppliers\ProductController as SupplierProductController;
 
 use App\Http\Controllers\Shops\ShopController;
 use App\Http\Controllers\Shops\StaffController;
@@ -35,6 +36,7 @@ Route::group([
         'as' => 'suppliers.'
     ], function () {
         Route::resource('pricing', PricingController::class)->names('pricing')->except(['create', 'show', 'edit']);
+        Route::resource('product', SupplierProductController::class)->names('product')->except(['create', 'show', 'edit']);
     });
     Route::resource('shops', ShopController::class)->names('shops');
     Route::group([
