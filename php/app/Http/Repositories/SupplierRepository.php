@@ -8,7 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
-use App\Models\Supplier;
+use App\Models\Suppliers\Supplier;
 use App\Helper\FileHelper;
 
 class SupplierRepository extends BaseRepository

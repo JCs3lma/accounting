@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Suppliers\Supplier;
 use App\Http\Services\SupplierService;
 use App\Http\Requests\SupplierRequest;
 
@@ -24,6 +25,11 @@ class SupplierController extends Controller
         });
         $suppliers = $this->service->all($params);
         return view('pages.suppliers.index', compact('suppliers'));
+    }
+
+    public function show(Supplier $supplier)
+    {
+        return view('pages.suppliers.manage.index', compact('supplier'));
     }
 
     /**

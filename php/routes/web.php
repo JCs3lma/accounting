@@ -27,7 +27,7 @@ Route::group([
         Route::resource('units', UnitsController::class)->names('units')->except(['create', 'show', 'edit']);
         Route::resource('pricing', PricingController::class)->names('pricing')->except(['create', 'show', 'edit']);
     });
-    Route::resource('suppliers', SupplierController::class)->names('suppliers')->except(['create', 'show', 'edit']);
+    Route::resource('suppliers', SupplierController::class)->names('suppliers')->except(['create', 'edit']);
     Route::resource('shops', ShopController::class)->names('shops');
 
     Route::group([

@@ -112,7 +112,7 @@ $thead = [
                 <x-button id="addSupplier" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
             </x-slot:rightPocket>
             <x-slot:dataActions class="relative w-20 mx-auto" dataActionsClassHeader="flex items-center justify-end w-20">
-                <x-action-menu />
+                <x-action-menu :isIncludeManage="true"/>
             </x-slot:dataActions>
         </x-table>
     </article>
@@ -135,6 +135,7 @@ $thead = [
             const addBtn = e.target.closest('#addSupplier');
             const editBtn = e.target.closest('.editActionButton');
             const deleteBtn = e.target.closest('.deleteActionButton');
+            const manageBtn = e.target.closest('.manageActionButton');
             const logoInput = document.getElementById('logo_path');
             const logoPreviewContainer = document.getElementById('logoPreviewContainer');
             const logoClearBtn = document.getElementById('logoClearBtn');
@@ -268,6 +269,14 @@ $thead = [
                 modalElement.classList.remove('hidden');
                 modalElement.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
+            }
+
+                        // --- MANAGE Logic ---
+            if (manageBtn) {
+                const rowData = JSON.parse(manageBtn.closest('td').getAttribute('data-pass'));
+                const baseUrl = "{{ route('suppliers.show', [':id']) }}";
+                const newURL = baseUrl.replace(':id', rowData.id);
+                window.location.href = newURL;
             }
 
             // --- LOGO PREVIEW Logic ---
