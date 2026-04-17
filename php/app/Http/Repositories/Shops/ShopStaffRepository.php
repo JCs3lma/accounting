@@ -35,6 +35,15 @@ class ShopStaffRepository extends BaseRepository
         }
     }
 
+    public function findOneByStaffAndShopId(int $id, int $shopId)
+    {
+        return $this->model
+            ->where('staff_id', $id)
+            ->where('shop_id', $shopId)
+            ->first();
+    }
+
+    
     public function findManyByStaffId(int $id)
     {
         return $this->model->where('staff_id', $id)->get();
@@ -96,17 +105,33 @@ class ShopStaffRepository extends BaseRepository
         try {
             DB::beginTransaction();
             $shopStaff = [];
+            $message = 'Shop Staff added successfully!';
             if (isset($params['shop_ids']) && !empty($params['shop_ids'])) {
                 $shop_ids = $params['shop_ids'];
-                foreach ($shop_ids as $ids) {
+                foreach ($shop_ids as $id) {
+                    $record = $this->model
+                        ->withTrashed()
+                        ->where('staff_id', $params['staff_id'])
+                        ->where('shop_id', $id)
+                        ->first();
+
                     $newParam = [
-                        'shop_id' => $ids,
+                        'shop_id' => $id,
                         'staff_id' => $params['staff_id'],
                         'employment_status' => $params['employment_status'],
                         'hire_date' => $params['hire_date'],
                         'is_active' => true,
                     ];
-                    $this->model->create($newParam);
+
+                    if ($record) {
+                        if ($record->trashed()) {
+                            $record->restore();
+                        }
+                        $record->update($newParam);
+                        $message = 'Shop staff was restored and updated its data successfully!';
+                    } else {
+                        $this->model->create($newParam);
+                    }
                 }
             } else if (isset($params['shop_id'])) {
                 unset($params['shop_ids']);
@@ -115,7 +140,7 @@ class ShopStaffRepository extends BaseRepository
             DB::commit();
 
             $staffs = $this->model->where('staff_id', $params['staff_id'])->get();
-            return $this->success($staffs, 'Shop Staff added successfully!');
+            return $this->success($staffs, $message);
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -134,31 +159,21 @@ class ShopStaffRepository extends BaseRepository
         }
 
         try {
-            $shopStaff = $this->model->find($id);
+            if (isset($params['shop_id'])) {
+                $shopStaff = $this->model
+                    ->where('shop_id', $params['shop_id'])
+                    ->where('staff_id', $id)
+                    ->first();
+            } else {
+                $shopStaff = $this->model->where('staff_id', $id)->first();
+            }
 
             if (!isset($shopStaff)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
             DB::beginTransaction();
-            $logoFile = isset($params['profile_path']) ? $params['profile_path'] : null;
-            $logoPathRemove = $params['profile_path_remove'];
-
-            if ($logoPathRemove && !$logoFile) {
-                $params['profile_path'] = null;
-                if ($shopStaff->profile_path) {
-                    $this->helper->deleteFile($shopStaff->getRawOriginal('profile_path'));
-                }
-            }
-
-            if ($logoFile instanceof UploadedFile) {
-                $params['profile_path'] = $this->helper->uploadFile($params['profile_path'], config('const.shops_logo_path').'staff/'.$id);
-                if ($shopStaff->profile_path) {
-                    $this->helper->deleteFile($shopStaff->getRawOriginal('profile_path'));
-                }
-            }
-
-            
+            // TODO::shop_ids not working perfectly
             if (isset($params['shop_ids']) && !empty($params['shop_ids'])) {
                 $shop_ids = $params['shop_ids'];
                 foreach ($shop_ids as $ids) {
@@ -185,14 +200,16 @@ class ShopStaffRepository extends BaseRepository
         }
     }
 
-    public function delete(int $id)
+    public function delete(int $id, int $shopId)
     {
-        if (!$id) {
-            return $this->error('ID should be present', [], $this->badRequest);
+        if (!$id && !$shopId) {
+            return $this->error('ID and Shop ID should be present', [], $this->badRequest);
         }
 
         try {
-            $shopStaff = $this->model->find($id);
+            $shopStaff = $this->model->where('staff_id', $id)
+                ->where('shop_id', $shopId)
+                ->first();
 
             if (!isset($shopStaff)) {
                 return $this->error('Data not found', [], $this->notFound);

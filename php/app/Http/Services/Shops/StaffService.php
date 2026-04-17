@@ -21,27 +21,32 @@ class StaffService extends BaseService
 
     public function create(array $params = [])
     {
-        $staffParams = [
-            'first_name' => $params['first_name'],
-            'middle_name' => $params['middle_name'] ?? null,
-            'last_name' => $params['last_name'] ?? null,
-            'profile_path' => $params['profile_path'] ?? null,
-            'email' => $params['email'] ?? null,
-            'phone' => $params['phone'] ?? null,
-            'mobile' => $params['mobile'] ?? null,
-            'address' => $params['address'] ?? null,
-            'profile_path_remove' => $params['profile_path_remove'] ?? null,
-            'is_active' => $params['is_active'] ?? null,
-        ];
-        $staffResult = $this->repository->create($staffParams)->getData(true);
-        if (isset($staffResult['error'])) {
-            return $this->repository->error('Failed to create staff', [], $this->repository->internalServerError);
+        $staffId = $params['staff_id'] ?? null;
+        if (!isset($staffId)) {
+            $staffParams = [
+                'first_name' => $params['first_name'],
+                'middle_name' => $params['middle_name'] ?? null,
+                'last_name' => $params['last_name'] ?? null,
+                'profile_path' => $params['profile_path'] ?? null,
+                'email' => $params['email'] ?? null,
+                'phone' => $params['phone'] ?? null,
+                'mobile' => $params['mobile'] ?? null,
+                'address' => $params['address'] ?? null,
+                'profile_path_remove' => $params['profile_path_remove'] ?? null,
+                'is_active' => true,
+            ];
+            $staffResult = $this->repository->create($staffParams)->getData(true);
+            if (isset($staffResult['error'])) {
+                return $this->repository->error('Failed to create staff', [], $this->repository->internalServerError);
+            }
+            $staffId = $staffResult['data']['id'];
         }
         $shopStaffParams = [
             'shop_ids' => $params['shop_ids'],
-            'staff_id' => $staffResult['data']['id'],
+            'staff_id' => $staffId,
             'employment_status' => $params['employment_status'],
             'hire_date' => $params['hire_date'],
+            'is_active' => $params['is_active'] ?? null,
         ];
         return $this->service->create($shopStaffParams);
     }
@@ -58,7 +63,6 @@ class StaffService extends BaseService
             'mobile' => $params['mobile'] ?? null,
             'address' => $params['address'] ?? null,
             'profile_path_remove' => $params['profile_path_remove'] ?? null,
-            'is_active' => $params['is_active'] ?? null,
         ];
         $staffResult = $this->repository->update($id, $staffParams)->getData(true);
         if (isset($staffResult['error'])) {
@@ -69,28 +73,24 @@ class StaffService extends BaseService
             'staff_id' => $staffResult['data']['id'],
             'employment_status' => $params['employment_status'],
             'hire_date' => $params['hire_date'],
+            'is_active' => $params['is_active'] ?? null,
         ];
-        return $this->service->update($id, $params);
+        return $this->service->update($id, $shopStaffParams);
     }
 
-    public function delete(int $id)
+    public function delete(int $id, int $shopId)
     {
-        $result = null;
+        $result = $this->service->delete($id, $shopId);
         $staffShops = $this->service->findManyByStaffId($id);
-        if (count($staffShops) >= 1) {
-            $fistShop = $staffShops[0];
-            $result = $this->service->delete($fistShop->id);
-        }
-        $staffShops2 = $this->service->findManyByStaffId($id);
-        if (count($staffShops2) === 0) {
-            return $this->repository->delete($id);
+        if (count($staffShops) === 0) {
+            return $this->repository->delete($id, $shopId);
         }
 
         return $result;
     }
 
-    public function dropdown()
+    public function dropdown(int $shopId, bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->repository->dropdown();
+        return $this->repository->dropdown($shopId, $isShowAll, $isShowActiveOnly, $isShowInactiveOnly);
     }
 }

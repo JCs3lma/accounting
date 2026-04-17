@@ -71,13 +71,28 @@
                     <tr class="hover:bg-gray-50 cursor-pointer">
                         @foreach($thead as $theadKey => $value)
                             <td class="py-3 pr-5 whitespace-nowrap text-ellipsis {{$value['tdClass'] ?? ''}}">
-                                @if(is_array($value) && isset($value['cast']) && isset($data->getCasts()[$theadKey]))
+                                @php
+                                    $castField = $theadKey;
+                                    $modelForCast = $data;
+
+                                    if (str_contains($theadKey, '.')) {
+                                        [$relation, $field] = explode('.', $theadKey);
+                                        $modelForCast = data_get($data, $relation);
+                                        $castField = $field;
+                                    }
+                                @endphp
+                                @if(
+                                    is_array($value) &&
+                                    isset($value['cast']) &&
+                                    $modelForCast &&
+                                    isset($modelForCast->getCasts()[$castField])
+                                )
                                     @php
                                         $tag = $value['cast'];
                                         $content = data_get($fields, $theadKey);
                                         $classCast = ($value['tdContentClass'] ?? '') . ' ' . (data_get($fields, $theadKey) ? ($value['tdContentClassActive'] ?? '') : ($value['tdContentClassInactive'] ?? ''));
                                         $currentCast = 'others';
-                                        switch ($data->getCasts()[$theadKey]) {
+                                        switch ($modelForCast->getCasts()[$castField]) {
                                             case 'boolean':
                                                 $content = $booleanMessage[data_get($fields, $theadKey)];
                                                 $currentCast = 'boolean';
@@ -122,8 +137,8 @@
                                     @endswitch
                                 @else
                                     {{
-                                        isset($data->getCasts()[$theadKey]) &&
-                                        $data->getCasts()[$theadKey] == 'boolean'
+                                        isset($modelForCast->getCasts()[$castField]) &&
+                                        $modelForCast->getCasts()[$castField] == 'boolean'
                                         ? $booleanMessage[data_get($fields, $theadKey)] : data_get($fields, $theadKey)
                                     }}
                                 @endif

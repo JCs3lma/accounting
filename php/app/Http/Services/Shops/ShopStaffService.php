@@ -22,6 +22,11 @@ class ShopStaffService extends BaseService
         return $this->repository->findManyByStaffId($id);
     }
 
+    public function findOneByStaffAndShopId(int $id, int $shopId)
+    {
+        return $this->repository->findOneByStaffAndShopId($id, $shopId);
+    }
+
     public function create(array $params = [])
     {
         return $this->repository->create($params);
@@ -32,13 +37,13 @@ class ShopStaffService extends BaseService
         return $this->repository->update($id, $params);
     }
 
-    public function delete(int $id)
+    public function delete(int $id, int $shopId)
     {
-        return $this->repository->delete($id);
+        return $this->repository->delete($id, $shopId);
     }
 
-    public function dropdown()
+    public function dropdown(bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
     {
-        return $this->repository->dropdown();
+        return $this->repository->dropdown($isShowAll, $isShowActiveOnly, $isShowInactiveOnly);
     }
 }

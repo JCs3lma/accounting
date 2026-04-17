@@ -98,7 +98,7 @@ $thead = [
                     <span>Clear</span>
                 </x-button>
             </div>
-        </x-card>
+        </x-filter-form>
         <x-table
             :thead="$thead"
             :tbody="$suppliers"

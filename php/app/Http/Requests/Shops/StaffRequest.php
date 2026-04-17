@@ -23,6 +23,19 @@ class StaffRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->filled('staff_id')) {
+            return [
+                'staff_id' => 'required|exists:staffs,id',
+                'shop_ids' => 'required',
+                'is_active' => 'boolean',
+                'employment_status' => [
+                    'nullable',
+                    Rule::in(config('const.employment_status'))
+                ],
+                'hire_date' => 'nullable',
+            ];
+        }
+
         return [
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
@@ -37,7 +50,7 @@ class StaffRequest extends FormRequest
             'shop_ids' => 'required',
             'employment_status' => [
                 'nullable',
-                Rule::in(['Regular', 'Project Base', 'Seasonal', 'Probationary'])
+                Rule::in(config('const.employment_status'))
             ],
             'hire_date' => 'nullable',
         ];

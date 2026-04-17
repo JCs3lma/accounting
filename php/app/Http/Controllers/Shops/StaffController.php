@@ -25,7 +25,8 @@ class StaffController extends Controller
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $staffs = $this->service->all($params, $shop->id);
-        return view('pages.shops.manage.staffs.index', compact('shop','staffs'));
+        $staffDropdown = $this->service->dropdown($shop->id, false, true, false);
+        return view('pages.shops.manage.staffs.index', compact('shop','staffs', 'staffDropdown'));
     }
 
     public function show(Shop $shop, Staff $staff)
@@ -82,7 +83,7 @@ class StaffController extends Controller
      */
     public function destroy(Shop $shop, int $id)
     {
-        $result = $this->service->delete($id)->getData(true);
+        $result = $this->service->delete($id, $shop->id)->getData(true);
         if (isset($result['error'])) {
             return redirect()->route('shops.staffs.index')->withErrors([
                 'custom_error' => $result['error']

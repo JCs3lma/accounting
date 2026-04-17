@@ -1,34 +1,38 @@
-@php
-$thead = [
-    'name' => 'Name',
-    'email' => 'Email',
-    'email_verified_at' => 'Email Verified At',
-    'remember_token' =>'Remember Token',
-];
-@endphp
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
-        <x-table :thead="$thead" :tbody="$users" title="Latest Transactions" titleClass="text-lg font-semibold text-gray-800">
-            <x-slot:rightPocket>
-                <form method="POST" class="relative w-full lg:w-auto">
-                    @csrf
-                    <x-input
-                        name="search"
-                        type="search"
-                        placeholder="Search . . ."
-                    >
-                        <x-slot:icon>
-                            <x-search-icon />
-                        </x-slot:icon>
-                    </x-input>
-                </form>
-            </x-slot:rightPocket>
-            <x-slot:dataActions class="flex items-center justify-center" dataActionsClassHeader="flex items-center justify-center">
-                <x-nav-menu-icon />
-            </x-slot:dataActions>
-        </x-table>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <x-card class="rounded-md leading-none border-l-6 border-l-green-800 bg-green-500 text-white">
+            <h1 class="uppercase font-bold text-lg mb-0">15 Staffs</h1>
+            <span class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">No. of Staffs in all stores</span>
+            <x-card-footer class="p-0 mt-1"><x-button href="" variant="transparent">Show Staffs</x-button></x-card-footer>
+        </x-card>
+
+        <!-- Inventory Value -->
+        <x-card class="rounded-md leading-none border-l-6 border-l-blue-700 bg-blue-500 text-white">
+            <h1 class="uppercase font-bold text-lg mb-0">₱ 25,400</h1>
+            <span class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">Inventory Value</span>
+            <x-card-footer class="p-0 mt-1">
+                <x-button href="" variant="transparent">View Inventory</x-button>
+            </x-card-footer>
+        </x-card>
+
+        <!-- Low Stock -->
+        <x-card class="rounded-md leading-none border-l-6 border-l-yellow-700 bg-yellow-500 text-white">
+            <h1 class="uppercase font-bold text-lg mb-0">5 Items</h1>
+            <span class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">Low Stock</span>
+            <x-card-footer class="p-0 mt-1">
+                <x-button href="" variant="transparent">View Items</x-button>
+            </x-card-footer>
+        </x-card>
+
+        <!-- Pending PO -->
+        <x-card class="rounded-md leading-none border-l-6 border-l-red-700 bg-red-500 text-white">
+            <h1 class="uppercase font-bold text-lg mb-0">3 Orders</h1>
+            <span class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">Pending Purchase Orders</span>
+            <x-card-footer class="p-0 mt-1">
+                <x-button href="" variant="transparent">View Orders</x-button>
+            </x-card-footer>
+        </x-card>
     </div>
 @endsection

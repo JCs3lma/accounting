@@ -11,8 +11,11 @@ $thead = [
     'fullname' => 'Name',
     'email' => 'Email',
     'phone' => 'Phone',
-    'address' => 'Address',
-    'is_active' => [
+    'mobile' => 'mobile',
+    'shop.employment_status' => 'Status',
+    'shop.employment_status' => 'Status',
+    'shop.hire_date' => 'Date Hired',
+    'shop.is_active' => [
         'header' => 'Active',
         'cast' => 'span',
         'tdContentClass' => 'px-2 py-1 rounded-full text-xs font-semibold h-full',
@@ -26,16 +29,52 @@ $thead = [
         <x-filter-form 
             route="{{route('shops.staffs.index', $shop->id)}}"
         >
-            <x-input
-                id="search_name"
-                name="name"
-                type="text"
-                label="Name"
-                placeholder=" "
-                :showPlaceHolder="true"
-                value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
-            />
-            <div class="flex gap-3 w-full">
+            <div class="flex flex-col lg:flex-row gap-3 w-full">
+                <x-input
+                    id="search_name"
+                    name="name"
+                    type="text"
+                    label="Supplier Name"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('name') && request()->get('name') !== 'null' ? request()->get('name') : ''}}"
+                />
+                <x-input
+                    id="search_contact_person"
+                    name="contact_person"
+                    type="text"
+                    label="Contact Person"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('contact_person') && request()->get('contact_person') !== 'null' ? request()->get('contact_person') : ''}}"
+                />
+                <x-input
+                    id="search_email"
+                    name="email"
+                    type="text"
+                    label="Email"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('email') && request()->get('email') !== 'null' ? request()->get('email') : ''}}"
+                />
+                <x-input
+                    id="search_phone"
+                    name="phone"
+                    type="text"
+                    label="Phone"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('phone') && request()->get('phone') !== 'null' ? request()->get('phone') : ''}}"
+                />
+                <x-input
+                    id="search_mobile"
+                    name="mobile"
+                    type="text"
+                    label="Mobile"
+                    placeholder=" "
+                    :showPlaceHolder="true"
+                    value="{{request()->get('mobile') && request()->get('mobile') !== 'null' ? request()->get('mobile') : ''}}"
+                />
                 <x-select
                     id="search_is_active"
                     name="is_active"
@@ -52,7 +91,7 @@ $thead = [
                     <x-search-icon class="fill-white" />
                     <span>Search</span>
                 </x-button>
-                <x-button variant="default" href="{{ route('shops.staffs.index', $shop->id) }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                <x-button variant="default" href="{{ route('suppliers.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
                     <span>Clear</span>
                 </x-button>
             </div>
@@ -103,7 +142,7 @@ $thead = [
             if (addBtn) {
                 modalTitle.innerText = 'Add Staff';
                 modalContent.innerHTML = `
-                   <x-staff-form id="staffForm" :shop="$shop" method="POST" autocomplete="off"/>
+                   <x-staff-form id="staffForm" :shop="$shop" :staffDropdown="$staffDropdown" method="POST" autocomplete="off"/>
                 `;
 
                 const form = document.querySelector('#staffForm');
@@ -161,7 +200,7 @@ $thead = [
                 form.querySelector('[name="phone"]').value = rowData.phone;
                 form.querySelector('[name="mobile"]').value = rowData.mobile;
                 form.querySelector('[name="address"]').value = rowData.address;
-                form.querySelector('[id="is_active"]').checked = rowData.is_active;
+                form.querySelector('[id="is_active"]').checked = rowData.shop.is_active;
                 form.querySelector('[name="employment_status"]').value = rowData.shop.employment_status;
                 form.querySelector('[name="hire_date"]').value = rowData.shop.hire_date;
 

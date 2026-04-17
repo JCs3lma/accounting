@@ -23,7 +23,9 @@ class StaffRepository extends BaseRepository
     {
         try {
             $query = $this->model->with([
-                'shop'
+                'shop' => function ($q) use ($shopId) {
+                    $q->where('shop_id', $shopId);
+                }
             ])->whereHas('shop', function($shopQuery) use($shopId) {
                 $shopQuery->where('shop_id', $shopId);
             });
@@ -179,5 +181,30 @@ class StaffRepository extends BaseRepository
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
+    }
+
+    public function dropdown(int $shopId, bool $isShowAll = false, bool $isShowActiveOnly = false, bool $isShowInactiveOnly = false)
+    {
+        $query = $this->model->with([
+            'shop' => function ($q) use ($shopId) {
+                $q->where('shop_id', $shopId);
+            }
+        ])->whereHas('shop', function($shopQuery) use($shopId) {
+            $shopQuery->where('shop_id', '!=', $shopId);
+        });
+
+        if ($isShowAll) {
+            return $query->get();
+        }
+
+        if ($isShowActiveOnly) {
+            $query = $query->where('is_active', true);
+        }
+
+        if ($isShowInactiveOnly) {
+            $query = $query->where('is_active', false);
+        }
+
+        return $query->get();
     }
 }
