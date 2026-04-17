@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models\Products;
+namespace App\Models\Suppliers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Products\Product;
+use App\Models\Suppliers\Supplier;
 
 class Pricing extends Model
 {
@@ -14,8 +15,8 @@ class Pricing extends Model
 
     public $fillable = [
         'product_id',
-        'cost_price',
-        'selling_price',
+        'supplier_id',
+        'price',
         'is_active'
     ];
 
@@ -26,5 +27,10 @@ class Pricing extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 }

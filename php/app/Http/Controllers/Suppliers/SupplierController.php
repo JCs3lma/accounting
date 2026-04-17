@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Suppliers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Suppliers\Supplier;
-use App\Http\Services\SupplierService;
-use App\Http\Requests\SupplierRequest;
+use App\Http\Services\Suppliers\SupplierService;
+use App\Http\Requests\Suppliers\SupplierRequest;
 
 class SupplierController extends Controller
 {

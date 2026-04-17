@@ -5,7 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Products\CategoryController;
 use App\Http\Controllers\Products\BrandController;
 use App\Http\Controllers\Products\UnitsController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\Suppliers\SupplierController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Products\PricingController;
 use App\Http\Controllers\Shops\ShopController;
