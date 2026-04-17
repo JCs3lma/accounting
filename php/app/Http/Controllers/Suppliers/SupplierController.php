@@ -29,7 +29,7 @@ class SupplierController extends Controller
 
     public function show(Supplier $supplier)
     {
-        return view('pages.suppliers.manage.index', compact('supplier'));
+        return view('pages.suppliers.manage.dashboard', compact('supplier'));
     }
 
     /**

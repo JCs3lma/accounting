@@ -4,7 +4,7 @@
     <article>
         <div class="flex justify-between items-center">
             <div class="flex gap-2 items-center">
-                <img src="{{asset($shop->logo_path)}}" class="w-[3vw] max-w-[3vw] img-cover rounded-md" />
+                <img src="{{asset($shop->logo_path ?? 'images/default-avatar.png')}}" class="w-[3vw] max-w-[3vw] img-cover rounded-md" />
                 <h1>{{$shop->shop_name}}</h1>
             </div>
             <x-button variant="plain" class="w-20 h-8" href="{{route('shops.index')}}">Back</x-button>

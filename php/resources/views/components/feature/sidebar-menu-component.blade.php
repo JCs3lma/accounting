@@ -5,7 +5,6 @@
         case 'products.brands.index':
         case 'products.units.index':
         case 'products.index':
-        case 'products.pricing.index':
             $currentActiveMenu = 'products';
             break;
         case 'suppliers.index':
@@ -25,7 +24,6 @@
             <x-list-item><x-slot:link href="{{ route('products.brands.index') }}" class="{{request()->routeIs('products.brands.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Brand</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="{{ route('products.units.index') }}" class="{{request()->routeIs('products.units.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Units</x-slot:link></x-list-item>
             <x-list-item><x-slot:link href="{{ route('products.index') }}" class="{{request()->routeIs('products.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Product List</x-slot:link></x-list-item>
-            <x-list-item><x-slot:link href="{{ route('products.pricing.index') }}" class="{{request()->routeIs('products.pricing.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Pricing</x-slot:link></x-list-item>
         </x-dropdown-menu>
     </li>
     <x-list-item class="pl-0 {{$currentActiveMenu == 'suppliers' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('pages.suppliers.manage.app')
 @php
 $thead = [
     'product.name' => [
@@ -7,8 +7,8 @@ $thead = [
     ],
     'product.brand.name' => 'Brand',
     'product.category.name' => 'Category',
-    'cost_price' => 'Cost Price',
-    'selling_price' => 'Selling Price',
+    'product.unitDisplay' => 'Unit',
+    'price' => 'Price',
     'is_active' => [
         'header' => 'Active',
         'cast' => 'span',
@@ -19,10 +19,10 @@ $thead = [
 ];
 @endphp
 
-@section('content')
+@section('supplier_content')
     <article>
         <x-filter-form
-            route="{{route('products.pricing.index')}}"
+            route="{{route('suppliers.pricing.index', $supplier->id)}}"
         >
             <div class="flex flex-col lg:flex-row gap-3 w-full">
                 <x-input
@@ -72,7 +72,7 @@ $thead = [
                     <x-search-icon class="fill-white" />
                     <span>Search</span>
                 </x-button>
-                <x-button variant="default" href="{{ route('products.pricing.index') }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                <x-button variant="default" href="{{ route('suppliers.pricing.index', $supplier->id) }}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
                     <span>Clear</span>
                 </x-button>
             </div>
@@ -122,19 +122,18 @@ $thead = [
             if (addBtn) {
                 modalTitle.innerText = 'Add Pricing';
                 modalContent.innerHTML = `
-                   <x-pricing-form id="pricingForm" :dropdowns="$dropdowns" method="POST" autocomplete="off"/>
+                   <x-pricing-form id="pricingForm" :supplier="$supplier" :dropdowns="$dropdowns" method="POST" autocomplete="off"/>
                 `;
 
                 const form = document.querySelector('#pricingForm');
                 form.querySelector('[name="product_id"]').value = null;
-                form.querySelector('[name="cost_price"]').value = null;
-                form.querySelector('[name="selling_price"]').value = null;
+                form.querySelector('[name="price"]').value = null;
                 form.querySelector('[name="is_active"]').value = null;
                 
                 if(form.querySelector('input[name="_method"]')) {
                     form.querySelector('[name="_method"]').remove();
                 }
-                const baseUrl = "{{ route('products.pricing.store') }}"; // Blade generates base URL
+                const baseUrl = "{{ route('suppliers.pricing.store', $supplier->id) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 form.action = params ? `${baseUrl}?${params}` : baseUrl;
             }
@@ -146,12 +145,12 @@ $thead = [
                 // 1. Change Modal Header
                 modalTitle.innerText = 'Edit Price: ' + rowData.product.name;
                 modalContent.innerHTML = `
-                   <x-pricing-form id="pricingForm" method="POST" :dropdowns="$dropdowns" autocomplete="off"/>
+                   <x-pricing-form id="pricingForm" :supplier="$supplier" method="POST" :dropdowns="$dropdowns" autocomplete="off"/>
                 `;
                 const form = document.querySelector('#pricingForm');
                 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const baseUrl = "{{ route('products.pricing.update', [':id']) }}"; // Blade generates base URL
+                const baseUrl = "{{ route('suppliers.pricing.update', [$supplier->id, ':id']) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);
@@ -167,8 +166,7 @@ $thead = [
 
                 // 4. Fill Form Fields
                 form.querySelector('[name="product_id"]').value = rowData.product_id;
-                form.querySelector('[name="cost_price"]').value = rowData.cost_price;
-                form.querySelector('[name="selling_price"]').value = rowData.selling_price;
+                form.querySelector('[name="price"]').value = rowData.price;
                 form.querySelector('[id="is_active"]').checked = rowData.is_active;
 
                 modalElement.classList.remove('hidden');
@@ -188,7 +186,7 @@ $thead = [
                 const form = document.querySelector('#pricingForm');
 
                 // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
-                const baseUrl = "{{ route('products.pricing.destroy', [':id']) }}"; // Blade generates base URL
+                const baseUrl = "{{ route('suppliers.pricing.destroy', [$supplier->id, ':id']) }}"; // Blade generates base URL
                 const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                 const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                 form.action = urlTemplate.replace(':id', rowData.id);

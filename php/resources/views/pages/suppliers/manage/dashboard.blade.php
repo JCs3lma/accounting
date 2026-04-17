@@ -1,6 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
+@extends('pages.suppliers.manage.app')
+@section('supplier_content')
     <section class="flex flex-col flex-1 overflow-hidden min-h-0">
         <x-filter-form 
             route="{{route('suppliers.index')}}"

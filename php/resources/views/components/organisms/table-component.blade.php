@@ -122,10 +122,12 @@
                                             </<?= $tag ?>>
                                             @break
                                         @case('barcode')
-                                            <<?= $tag ?> class="flex flex-col items-center justify-center gap-1 {{$classCast}}">
-                                                {!! $content['img'] !!}
-                                                {{$content['value']}}
-                                            </<?= $tag ?>>
+                                            @if(isset($content['img']) && isset($content['value']))
+                                                <<?= $tag ?> class="flex flex-col items-center justify-center gap-1 {{$classCast}}">
+                                                    {!! $content['img'] !!}
+                                                    {{$content['value']}}
+                                                </<?= $tag ?>>
+                                            @endif
                                             @break
                                         @case('img')
                                             <<?= $tag ?> src="{{$content['src']}}" alt="{{$content['alt']}}" class="{{$classCast}}"></<?= $tag ?>>
@@ -137,6 +139,7 @@
                                     @endswitch
                                 @else
                                     {{
+                                        $modelForCast &&
                                         isset($modelForCast->getCasts()[$castField]) &&
                                         $modelForCast->getCasts()[$castField] == 'boolean'
                                         ? $booleanMessage[data_get($fields, $theadKey)] : data_get($fields, $theadKey)

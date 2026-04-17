@@ -1,8 +1,10 @@
 @props([
+    'supplier' => null,
     'dropdowns' => (object)[],
 ])
 <form {{$attributes->twMerge(['class' => 'my-2'])}}>
     @csrf
+    <x-input type="hidden" name="supplier_id" value="{{$supplier->id}}"/>
     <x-select
         name="product_id"
         label="Product"
@@ -15,18 +17,10 @@
     </x-select>
     <x-input
         class="mb-2"
-        name="cost_price"
+        name="price"
         type="text"
-        placeholder="Cost Price"
-        label="Cost Price"
-        required
-    />
-    <x-input
-        class="mb-2"
-        name="selling_price"
-        type="text"
-        placeholder="Selling Price"
-        label="Selling Price"
+        placeholder="Price"
+        label="Price"
         required
     />
     <x-input-isactive/>
