@@ -9,6 +9,8 @@
             break;
         case 'shops.index':
             $currentActiveMenu = 'shops';
+        case 'shops.purchase-orders.index':
+            $currentActiveMenu = 'purchase-orders';
             break;
     }
 @endphp
@@ -21,9 +23,9 @@
         <x-slot:icon class="iconMenu"><x-user-setting-icon class="{{$currentActiveMenu == 'staffs' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
         <x-slot:link href="{{ route('shops.staffs.index', $shop->id) }}" class="textMenu {{request()->routeIs('shops.staffs.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Staffs</x-slot:link>
     </x-list-item>
-    <x-list-item class="pl-0 {{$currentActiveMenu == 'suppliers' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
-        <x-slot:icon class="iconMenu"><x-purchasing-icon class="{{$currentActiveMenu == 'inventory' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
-        <x-slot:link href="{{ route('suppliers.index') }}" class="textMenu {{request()->routeIs('suppliers.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Purchase Orders</x-slot:link>
+    <x-list-item class="pl-0 {{$currentActiveMenu == 'purchase-orders' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
+        <x-slot:icon class="iconMenu"><x-purchasing-icon class="{{$currentActiveMenu == 'purchase-orders' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
+        <x-slot:link href="{{ route('shops.purchase-orders.index', $shop->id) }}" class="textMenu {{request()->routeIs('shops.purchase-orders.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Purchase Orders</x-slot:link>
     </x-list-item>
     <x-list-item class="pl-0 {{$currentActiveMenu == 'suppliers' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
         <x-slot:icon class="iconMenu"><x-reports-icon class="{{$currentActiveMenu == 'inventory' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>

@@ -14,9 +14,9 @@ use App\Http\Controllers\Suppliers\SuppliersProductController;
 
 use App\Http\Controllers\Shops\ShopController;
 use App\Http\Controllers\Shops\StaffController;
+use App\Http\Controllers\Shops\PurchaseOrderController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
 
 Route::group([
     'middleware' => 'throttle.writes:20,1', // 20 attempts per minute only to write methods
@@ -46,5 +46,6 @@ Route::group([
         'as' => 'shops.'
     ], function () {
         Route::resource('staffs', StaffController::class)->names('staffs');
+        Route::resource('purchase-orders', PurchaseOrderController::class)->names('purchase-orders')->except(['create', 'show', 'edit']);
     });
 });
