@@ -5,17 +5,20 @@ namespace App\Http\Repositories\Products;
 use DB;
 use Exception;
 use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Products\Product;
+use App\Helper\FileHelper;
 
 class ProductRepository extends BaseRepository
 {
     public function __construct()
     {
         $this->model = new Product();
+        $this->helper = new FileHelper();
     }
 
     public function all(array $params = [])

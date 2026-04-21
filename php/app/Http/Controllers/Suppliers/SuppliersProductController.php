@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Http\Controllers\Suppliers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests\Suppliers\SupplierProductRequest;
+use App\Models\Suppliers\Supplier;
+use App\Http\Services\Suppliers\SuppliersProductService;
+use App\Http\Services\Suppliers\PricingService;
+
+class SuppliersProductController extends Controller
+{
+    public function __construct()
+    {
+        $this->service = new SuppliersProductService();
+        $this->services = [
+            'pricing' => new PricingService()
+        ];
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Supplier $supplier, Request $request)
+    {
+        $params = $request->all();
+        $products = $this->service->dropdown($supplier->id);
+        $supplierProducts = $this->service->all($supplier->id, $params);
+        $dropdowns = $this->services['pricing']->dropdowns();
+        return view('pages.suppliers.manage.products.index', compact('supplier', 'products', 'supplierProducts', 'dropdowns'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Supplier $supplier, SupplierProductRequest $request)
+    {
+        $params = $request->validated();
+        $result = $this->service->insert($supplier->id, $params)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('suppliers.product.index')->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('suppliers.product.index', array_merge(
+            ['supplier' => $supplier],
+            array_filter(request()->query(), function($value) {
+                return $value !== null && $value !== '' && $value !== 'null';
+            }
+        )));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Supplier $supplier, string $id)
+    {
+        $result = $this->service->delete($id)->getData(true);
+        if (isset($result['error'])) {
+            return redirect()->route('suppliers.product.index', $supplier->id)->withErrors([
+                'custom_error' => $result['error']
+            ]);
+        }
+
+        session()->flash('success', $result['message']);
+        return redirect()->route('suppliers.product.index', array_merge(
+            ['supplier' => $supplier->id],
+            array_filter(request()->query(), function($value) {
+                return $value !== null && $value !== '' && $value !== 'null';
+            })
+        ));
+    }
+}

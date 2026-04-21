@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\Products\Brand;
 use App\Models\Products\Category;
 use App\Models\Products\Unit;
+use App\Models\Suppliers\SuppliersProduct;
 use App\Casts\ImageCast;
 use App\Casts\BarcodeCast;
 
@@ -52,11 +53,25 @@ class Product extends Model
         return $this->hasOne(Unit::class, 'id', 'unit_id');
     }
 
+    public function suppliersProducts()
+    {
+        return $this->hasMany(SuppliersProduct::class, 'product_id');
+    }
+
     protected function unitDisplay(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->unit && $this->unitR
                 ? "{$this->unit} {$this->unitR->abbreviation}"
+                : null,
+        );
+    }
+
+    protected function unitDisplayText(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->unit && $this->unitR
+                ? "{$this->unit} {$this->unitR->name}"
                 : null,
         );
     }

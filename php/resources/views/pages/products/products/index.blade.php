@@ -113,7 +113,7 @@ $thead = [
         <x-table
             :thead="$thead"
             :tbody="$products"
-            title="Products"
+            :title="'Products ('.count($products).')'"
             cardHeaderClass="flex flex-row py-3 px-4"
             titleClass="text-lg font-semibold text-gray-800"
             :booleanMessage="[0 => 'In Active', 1 => 'Active']"
@@ -211,7 +211,7 @@ $thead = [
                 form.querySelector('[name="unit"]').value = rowData.unit;
                 form.querySelector('[name="unit_id"]').value = rowData.unit_id ?? '';
                 form.querySelector('[name="serial_number"]').value = rowData.serial_number;
-                form.querySelector('[name="barcode"]').value = rowData.barcode.value;
+                form.querySelector('[name="barcode"]').value = rowData.barcode ? rowData.barcode.value : '';
                 form.querySelector('[name="sku"]').value = rowData.sku;
                 form.querySelector('[id="is_active"]').checked = rowData.is_active;
 

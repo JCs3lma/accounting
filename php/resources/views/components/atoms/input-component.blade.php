@@ -14,7 +14,7 @@
         isset($icon) ? 'pl-[42px]' : 'pl-4',
         isset($rightIcon) ? 'pr-[42px]' : 'pr-4'
     ];
-    $checkboxClass = ['peer h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500'];
+    $checkboxClass = ['peer h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer'];
     $labelInputClass = [
         isset($icon) ? 'ml-[42px]' : 'ml-4',
         'absolute left-0',
@@ -38,7 +38,7 @@
         'peer-placeholder-shown:text-sm',
         'peer-placeholder-shown:-translate-y-[50%]',
     ];
-    $labelCheckboxClass = ['text-gray-500 text-sm peer-focus:text-blue-600'];
+    $labelCheckboxClass = ['text-gray-500 text-sm peer-focus:text-blue-600 cursor-pointer'];
     $class = $inputAttributes['type'] != 'checkbox' ? $inputClass : $checkboxClass;
     $labelClass = $inputAttributes['type'] != 'checkbox' ? $labelInputClass : $labelCheckboxClass;
     $checkboxContainerClass = $inputAttributes['type'] == 'checkbox' ? 'flex flex-row items-center gap-1':'';

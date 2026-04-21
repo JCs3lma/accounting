@@ -42,6 +42,7 @@
             $class = 'border-gray-400 text-gray-700 hover:bg-gray-200';
             break;
     }
+    $class .= ' disabled:bg-gray-300 disabled:border-gray-200 disabled:cursor-not-allowed disabled:text-gray-500';
 @endphp
 @if(!isset($attributes['href']))
     <button {{$attributes->twMerge(['class' => [

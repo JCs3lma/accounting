@@ -40,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.svgs.search-component', 'search-icon');
         Blade::component('components.svgs.filter-component', 'filter-icon');
         Blade::component('components.svgs.supplier-component', 'supplier-icon');
+        Blade::component('components.svgs.trash-component', 'trash-icon');
 
         // Atom Components
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');
@@ -73,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.feature.action-menu-component', 'action-menu');
         Blade::component('components.feature.shop-sidebar-menu-component', 'shop-sidebar-menu');
         Blade::component('components.feature.supplier-sidebar-menu-component', 'supplier-sidebar-menu');
+        Blade::component('components.feature.product-card-component', 'product-card');
 
         // Forms
         Blade::component('components.forms.category.category-component', 'category-form');
@@ -92,5 +94,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.forms.shops.delete-shop-component', 'delete-shop-form');
         Blade::component('components.forms.staffs.staff-component', 'staff-form');
         Blade::component('components.forms.staffs.delete-staff-component', 'delete-staff-form');
+        Blade::component('components.forms.suppliers-product.delete-product-component', 'delete-supplier-product-form');
     }
 }
