@@ -14,16 +14,17 @@ return new class extends Migration
         Schema::create('product_pricings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->decimal('cost_price', 10, 2)->index();
-            $table->decimal('selling_price', 10, 2)->nullable()->index();
+            $table->unsignedBigInteger('supplier_id');
+            $table->decimal('price', 10, 2)->index();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
             // FOREIGN KEY
             $table->foreign('product_id')->references('id')->on('products')->onDelete('RESTRICT');
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('RESTRICT');
             // INDEXES
-            $table->index(['product_id', 'is_active']);
+            $table->index(['product_id','supplier_id', 'is_active']);
         });
     }
 

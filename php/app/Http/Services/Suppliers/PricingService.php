@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Services\Products;
+namespace App\Http\Services\Suppliers;
 
 use App\Http\Services\BaseService;
 use App\Http\Services\Products\BrandService;
 use App\Http\Services\Products\CategoryService;
 use App\Http\Services\Products\ProductService;
-use App\Http\Repositories\Products\PricingRepository;
+use App\Http\Repositories\Suppliers\PricingRepository;
 
 class PricingService extends BaseService
 {

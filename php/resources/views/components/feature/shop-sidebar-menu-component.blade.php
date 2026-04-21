@@ -15,7 +15,7 @@
 <ul class="flex flex-col gap-2">
     <x-list-item class="pl-0 {{$currentActiveMenu == 'dashboard' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
         <x-slot:icon class="iconMenu"><x-shop-icon class="{{$currentActiveMenu == 'dashboard' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
-        <x-slot:link href="{{ route('shops.index') }}" class="textMenu {{request()->routeIs('shops.show') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Dashboard</x-slot:link>
+        <x-slot:link href="{{ route('shops.show', $shop->id) }}" class="textMenu {{request()->routeIs('shops.show') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Dashboard</x-slot:link>
     </x-list-item>
     <x-list-item class="pl-0 {{$currentActiveMenu == 'shops' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
         <x-slot:icon class="iconMenu"><x-user-setting-icon class="{{$currentActiveMenu == 'staffs' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Products;
+namespace App\Http\Requests\Suppliers;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,8 +24,8 @@ class PricingRequest extends FormRequest
     {
         return [
             'product_id' => 'required|integer|exists:products,id',
-            'cost_price' => 'required|numeric',
-            'selling_price' => 'nullable|numeric',
+            'supplier_id' => 'required|integer|exists:suppliers,id',
+            'price' => 'required|numeric',
             'is_active' => 'boolean',
         ];
     }

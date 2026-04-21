@@ -21,6 +21,8 @@
             </div>
             @if(isset($shop) && (request()->routeIs('shops.*') || request()->routeIs('shops.show')))
                 <x-shop-sidebar-menu :shop="$shop"/>
+            @elseif(isset($supplier) && (request()->routeIs('suppliers.*') || request()->routeIs('suppliers.show')))
+                <x-supplier-sidebar-menu :supplier="$supplier"/>
             @else
                 <x-sidebar-menu />
             @endif

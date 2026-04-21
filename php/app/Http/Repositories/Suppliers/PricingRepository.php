@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Repositories\Products;
+namespace App\Http\Repositories\Suppliers;
 
 use DB;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
-use App\Models\Products\Pricing;
+use App\Models\Suppliers\Pricing;
 
 class PricingRepository extends BaseRepository
 {
@@ -19,7 +19,7 @@ class PricingRepository extends BaseRepository
     public function all(array $params = [])
     {
         try {
-            $query = $this->model->with(['product.brand', 'product.category']);
+            $query = $this->model->with(['product.brand', 'product.category', 'product.unitR']);
 
             $query = $this->filters($query, $params);
 
@@ -83,7 +83,6 @@ class PricingRepository extends BaseRepository
         try {
             DB::beginTransaction();
             if ($params['is_active']) {
-                Log::info('testing');
                 $this->model
                     ->where('product_id', $params['product_id'])
                     ->update(['is_active' => false]);
