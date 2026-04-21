@@ -5,8 +5,8 @@ namespace App\Http\Services\Suppliers;
 use App\Http\Services\BaseService;
 use App\Http\Services\Products\BrandService;
 use App\Http\Services\Products\CategoryService;
-use App\Http\Services\Products\ProductService;
 use App\Http\Repositories\Suppliers\PricingRepository;
+use App\Http\Services\Suppliers\SuppliersProductService;
 
 class PricingService extends BaseService
 {
@@ -16,7 +16,7 @@ class PricingService extends BaseService
         $this->services = [
             'brand' => new BrandService(),
             'category' => new CategoryService(),
-            'product' => new ProductService(),
+            'suppliersProduct' => new SuppliersProductService(),
         ];
     }
 
@@ -40,12 +40,12 @@ class PricingService extends BaseService
         return $this->repository->delete($id);
     }
 
-    public function dropdowns()
+    public function dropdowns(int $supplierId)
     {
         return [
             'brands' => $this->services['brand']->dropdown(false, true, false),
             'categories' => $this->services['category']->dropdown(false, true, false),
-            'products' => $this->services['product']->dropdown(false, true, false),
+            'products' => $this->services['suppliersProduct']->all($supplierId),
         ];
     }
 }

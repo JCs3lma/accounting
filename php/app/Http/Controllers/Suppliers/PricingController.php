@@ -24,7 +24,7 @@ class PricingController extends Controller
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $prices = $this->service->all($params);
-        $dropdowns = $this->service->dropdowns();
+        $dropdowns = $this->service->dropdowns($supplier->id);
         return view('pages.suppliers.manage.prices.index', compact('supplier', 'prices', 'dropdowns'));
     }
 

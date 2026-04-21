@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Products\Product;
 use App\Models\Suppliers\Supplier;
+use App\Casts\DateCast;
 
 class Pricing extends Model
 {
@@ -22,6 +23,7 @@ class Pricing extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'updated_at' => DateCast::class
     ];
 
     public function product()

@@ -3,6 +3,8 @@
 namespace App\Http\Services\Suppliers;
 
 use App\Http\Services\BaseService;
+use App\Http\Services\Products\BrandService;
+use App\Http\Services\Products\CategoryService;
 use App\Http\Repositories\Suppliers\SuppliersProductRepository;
 
 class SuppliersProductService extends BaseService
@@ -10,6 +12,10 @@ class SuppliersProductService extends BaseService
     public function __construct()
     {
         $this->repository = new SuppliersProductRepository();
+        $this->services = [
+            'brand' => new BrandService(),
+            'category' => new CategoryService(),
+        ];
     }
 
     public function all(int $supplierId, array $params = [])
@@ -39,5 +45,13 @@ class SuppliersProductService extends BaseService
     public function dropdown(int $supplierId)
     {
         return $this->repository->dropdown($supplierId);
+    }
+
+    public function dropdowns()
+    {
+        return [
+            'brands' => $this->services['brand']->dropdown(false, true, false),
+            'categories' => $this->services['category']->dropdown(false, true, false),
+        ];
     }
 }

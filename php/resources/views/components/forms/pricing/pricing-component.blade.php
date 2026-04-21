@@ -12,7 +12,7 @@
         class="mb-2"
     >
         @foreach($dropdowns['products'] as $product)
-            <option value="{{ $product->id }}" {{ request()->get('product_id') == $product->id ? 'selected' : '' }}>{{ $product->name }}</option>
+            <option value="{{ $product->product->id }}" {{ request()->get('product_id') == $product->product->id ? 'selected' : '' }}>{{ $product->product->name }}</option>
         @endforeach
     </x-select>
     <x-input

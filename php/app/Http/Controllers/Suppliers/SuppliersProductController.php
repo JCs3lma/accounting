@@ -7,16 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Suppliers\SupplierProductRequest;
 use App\Models\Suppliers\Supplier;
 use App\Http\Services\Suppliers\SuppliersProductService;
-use App\Http\Services\Suppliers\PricingService;
 
 class SuppliersProductController extends Controller
 {
     public function __construct()
     {
         $this->service = new SuppliersProductService();
-        $this->services = [
-            'pricing' => new PricingService()
-        ];
     }
 
     /**
@@ -27,7 +23,7 @@ class SuppliersProductController extends Controller
         $params = $request->all();
         $products = $this->service->dropdown($supplier->id);
         $supplierProducts = $this->service->all($supplier->id, $params);
-        $dropdowns = $this->services['pricing']->dropdowns();
+        $dropdowns = $this->service->dropdowns();
         return view('pages.suppliers.manage.products.index', compact('supplier', 'products', 'supplierProducts', 'dropdowns'));
     }
 
