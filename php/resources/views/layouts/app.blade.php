@@ -23,9 +23,9 @@
         <main class="flex h-screen overflow-hidden">
             @include('layouts.messages')
             @include('layouts.aside')
-            <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+            <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto min-h-0">
                 @include('layouts.header')
-                <section class="p-4 pb-20 md:p-6 md:pb-6 h-screen  flex flex-col">
+                <section class="p-4 flex flex-col flex-1 min-h-0 overflow-hidden">
                     @yield('content')
                 </section>
             </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="flex flex-col flex-1 overflow-hidden max-h-screen">
+    <section class="flex flex-col flex-1 overflow-hidden min-h-0 h-full">
         <x-filter-form 
             route="{{route('suppliers.index')}}"
         >
@@ -26,13 +26,13 @@
                 </x-button>
             </div>
         </x-filter-form>
-        <div class="flex-1 flex flex-col lg:flex-row gap-4">
+        <div class="flex-1 flex flex-col lg:flex-row gap-4 overflow-hidden min-h-0">
             <x-card class="w-full lg:w-[20vw] order-1 lg:order-2">
-                <x-card-header class="p-0">Add Products</x-card-header>
+                <x-card-header class="shrink-0 p-0">Add Products</x-card-header>
             </x-card>
             <x-card class="flex flex-col w-full order-2 lg:order-1 overflow-hidden">
                 <x-card-header class="shrink-0 p-0">Suppliers Products</x-card-header>
-                <div class="h-full flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto">
                     <h1>Juls</h1>
                     <h1>Juls</h1>
                     <h1>Juls</h1>
