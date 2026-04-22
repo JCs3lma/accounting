@@ -5,6 +5,8 @@ namespace App\Models\Shops;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Casts\DateCast;
+use App\Models\Shops\PurchaseOrderItem;
+use App\Models\Suppliers\Supplier;
 
 class PurchaseOrder extends Model
 {
@@ -29,4 +31,14 @@ class PurchaseOrder extends Model
         'order_date' => DateCast::class,
         'expected_date' => DateCast::class,
     ];
+
+    public function orders()
+    {
+        return $this->hasMany(PurchaseOrderItem::class, 'purchase_order_id', 'id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+    }
 }

@@ -13,7 +13,9 @@
         0 => 'False',
         1 => 'True'
     ],
-    'tableContainerClass' => ''
+    'tableContainerClass' => '',
+    'cardContainerID' => null,
+    'cardContainerClass' => null,
 ])
 @php
     $tableClass = !isset($title) ? 'p-5':'';
@@ -22,7 +24,7 @@
         'class' => $tableContainerClass
     ]);
 @endphp
-<x-card class="{{isset($title) ? 'p-0':''}}">
+<x-card class="{{isset($title) ? 'p-0':''}} {{$cardContainerClass}}" id="{{$cardContainerID ?? null}}">
     @if(isset($title))
         <x-card-header class="{{$cardHeaderClass}}">
             @if(isset($leftPocket))

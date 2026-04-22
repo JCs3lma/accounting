@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Shops\PurchaseOrder;
 
-class ShopRepository extends BaseRepository
+class PurchaseOrderRepository extends BaseRepository
 {
     public function __construct()
     {
@@ -20,7 +20,10 @@ class ShopRepository extends BaseRepository
     public function all(array $params = [])
     {
         try {
-            $query = $this->model->query();
+            $query = $this->model->with([
+                'orders.product',
+                'supplier'
+            ]);
 
             $query = $this->filters($query, $params);
 
@@ -39,41 +42,10 @@ class ShopRepository extends BaseRepository
             return $query;
         }
 
-        $shopNameParam = isset($params['shop_name']) ? $params['shop_name'] : null;
-        $contactPersonParam = isset($params['contact_person']) ? $params['contact_person'] : null;
-        $emailParam = isset($params['email']) ? $params['email'] : null;
-        $phoneParam = isset($params['phone']) ? $params['phone'] : null;
-        $mobileParam = isset($params['mobile']) ? $params['mobile'] : null;
-        $addressParam = isset($params['address']) ? $params['address'] : null;
-        $isActiveParam = isset($params['is_active']) ? $params['is_active'] : null;
+        $poNumberParam = isset($params['po_number']) ? $params['po_number'] : null;
 
-        if ($shopNameParam) {
-            $query->whereLike('shop_name', '%'.$shopNameParam.'%');
-        }
-
-        if ($contactPersonParam) {
-            $query->whereLike('contact_person', '%'.$contactPersonParam.'%');
-        }
-
-        if ($emailParam) {
-            $query->whereLike('email', '%'.$emailParam.'%');
-        }
-
-        if ($phoneParam) {
-            $query->whereLike('phone', '%'.$phoneParam.'%');
-        }
-
-        if ($mobileParam) {
-            $query->whereLike('mobile', '%'.$mobileParam.'%');
-        }
-
-        if ($addressParam) {
-            $query->whereLike('address', '%'.$addressParam.'%');
-        }
-
-        if ($isActiveParam && $isActiveParam !== 'All') {
-            $isActive = filter_var($isActiveParam, FILTER_VALIDATE_BOOLEAN);
-            $query->where('is_active', $isActive);
+        if ($poNumberParam) {
+            $query->where('po_number', $poNumberParam);
         }
 
         return $query;
@@ -87,14 +59,14 @@ class ShopRepository extends BaseRepository
 
         try {
             DB::beginTransaction();
-            $shop = $this->model->create($params);
+            $purchaseOrder = $this->model->create($params);
 
-            if ($shop) {
-                $shop->update(['po_number' => str_pad($shop->id, 4, '0', STR_PAD_LEFT)]);
+            if ($purchaseOrder) {
+                $purchaseOrder->update(['po_number' => str_pad($purchaseOrder->id, 4, '0', STR_PAD_LEFT)]);
             }
 
             DB::commit();
-            return $this->success($shop, 'Purchase Order created successfully!');
+            return $this->success($purchaseOrder, 'Purchase Order created successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -113,18 +85,18 @@ class ShopRepository extends BaseRepository
         }
 
         try {
-            $shop = $this->model->find($id);
+            $purchaseOrder = $this->model->find($id);
 
-            if (!isset($shop)) {
+            if (!isset($purchaseOrder)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
             DB::beginTransaction();
-            $shop->update($params);
+            $purchaseOrder->update($params);
 
-            $newShop = $this->model->find($id);
+            $newPurchaseOrder = $this->model->find($id);
             DB::commit();
-            return $this->success($newShop, 'Shop updated successfully!');
+            return $this->success($newPurchaseOrder, 'Purchase Order updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -139,15 +111,15 @@ class ShopRepository extends BaseRepository
         }
 
         try {
-            $shop = $this->model->find($id);
+            $purchaseOrder = $this->model->find($id);
 
-            if (!isset($shop)) {
+            if (!isset($purchaseOrder)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
-            $shop->delete();
+            $purchaseOrder->delete();
             DB::commit();
-            return $this->success([], 'Shop deleted successfully!');
+            return $this->success([], 'Purchase Order deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
@@ -157,6 +129,6 @@ class ShopRepository extends BaseRepository
 
     public function dropdown()
     {
-        return $this->model->where('is_active', true)->get();
+        return $this->model->where('status', 'Pending')->get();
     }
 }

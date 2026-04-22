@@ -5,6 +5,8 @@ namespace App\Models\Shops;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Casts\DateCast;
+use App\Models\Shops\PurchaseOrder;
+use App\Models\Products\Product;
 
 class PurchaseOrderItem extends Model
 {
@@ -20,4 +22,14 @@ class PurchaseOrderItem extends Model
         'price',
         'total',
     ];
+
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id', 'id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 }
