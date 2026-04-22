@@ -108,6 +108,7 @@ $thead = [
                     <form class="my-2 flex-1 flex flex-col min-h-0">
                         <div class="flex-1 min-h-0 overflow-y-auto">
                             <x-select
+                                id="supplier_id"
                                 name="supplier_id"
                                 label="Supplier"
                                 :showPlaceHolder="true"
@@ -149,6 +150,9 @@ $thead = [
                                     <option value="{{$status}}" {{ request()->get('status') === $status ? 'selected' : '' }}>{{$status}}</option>
                                 @endforeach
                             </x-select>
+                            <div id="multi-select-div">
+                                <x-multi-select label="Products" placeholder="Select Products" />
+                            </div>
                         </div>
                         <x-card-footer class="shrink-0 p-0 flex lg:flex-col gap-1 items-start">
                             <span>SubTotal: <input name="subtotal" value="0" readonly /></span>
@@ -169,7 +173,7 @@ $thead = [
             const panel = document.getElementById('purchaseOrderPanel');
             const panelContainer = document.getElementById('purchaseOrderPanelContainer');
             const tableContainer = document.getElementById('tableContainer');
-            const supplierAndProducts = `$dropdowns['suppliers']`;
+            const supplierAndProducts = @json($dropdowns['suppliers']);
 
             openBtn.addEventListener('click', function() {
                 panel.classList.remove('hidden');
@@ -204,6 +208,30 @@ $thead = [
                     tableContainer.classList.remove('hidden');
                     panel.removeEventListener('transitionend', handler);
                 });
+            });
+
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.id === 'supplier_id') {
+                    const optionsContainer = document.querySelector('#multi-select-div .multi-select-options');
+                    let foundSupplier = supplierAndProducts.find(s => s.id === parseInt(e.target.value));
+                    
+                    if (foundSupplier) {
+                        let html = '';
+                        foundSupplier.pricings.forEach(pricing => {
+                            html += `<x-input
+                                type="checkbox"
+                                name="product_ids[]"
+                                label="${pricing.product.name}"
+                                value="${pricing.product.id}" 
+                                id="multi-select-${pricing.product.id}" 
+                                class="rounded border-gray-300"
+                            />`;
+                        });
+                        optionsContainer.innerHTML = html;
+                    } else {
+                        optionsContainer.innerHTML = '<span>No Record Found</span>';
+                    }
+                }
             });
         });
     </script>

@@ -195,9 +195,10 @@ class SupplierRepository extends BaseRepository
 
         if ($isPricing) {
             $query->with([
-                'pricings.product' => function ($pricingQuery) {
+                'pricings' => function ($pricingQuery) {
                    $pricingQuery->where('is_active', true);
-                }
+                },
+                'pricings.product',
             ])->whereHas('pricings', function ($pricingQuery) {
                 $pricingQuery->where('is_active', true);
             });

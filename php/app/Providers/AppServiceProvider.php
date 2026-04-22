@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.svgs.filter-component', 'filter-icon');
         Blade::component('components.svgs.supplier-component', 'supplier-icon');
         Blade::component('components.svgs.trash-component', 'trash-icon');
+        Blade::component('components.svgs.chevron-down-component', 'chevron-down-icon');
 
         // Atom Components
         Blade::component('components.atoms.pulse-notif-component', 'pulse-notif');
@@ -56,10 +57,12 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.atoms.label-component', 'label');
         Blade::component('components.atoms.select-component', 'select');
         Blade::component('components.atoms.input-isactive', 'input-isactive');
+        Blade::component('components.atoms.selected-tag-component', 'selected-tag');
 
         // Molecules
         Blade::component('components.molecules.dropdown-menu-component', 'dropdown-menu');
         Blade::component('components.molecules.logo-uploader', 'logo-uploader');
+        Blade::component('components.molecules.multi-select-component', 'multi-select');
 
         // Organisms
         Blade::component('components.organisms.table-component', 'table');
