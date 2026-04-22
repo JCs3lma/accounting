@@ -23,7 +23,7 @@ class PricingController extends Controller
         $params = array_filter($params, function($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         });
-        $prices = $this->service->all($params);
+        $prices = $this->service->all($supplier->id, $params);
         $dropdowns = $this->service->dropdowns($supplier->id);
         return view('pages.suppliers.manage.prices.index', compact('supplier', 'prices', 'dropdowns'));
     }

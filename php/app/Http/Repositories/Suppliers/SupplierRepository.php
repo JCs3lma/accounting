@@ -176,8 +176,33 @@ class SupplierRepository extends BaseRepository
         }
     }
 
-    public function dropdown()
+    public function dropdown(array $params = [])
     {
-        return $this->model->where('is_active', true)->get();
+        $query = $this->model->where('is_active', true);
+
+        $query = $this->dropdownFilters($query, $params);
+
+        return $query->get();
+    }
+
+    private function dropdownFilters(Builder $query, array $params = [])
+    {
+        if (empty($params)) {
+            return $query;
+        }
+
+        $isPricing = isset($params['is_pricing']) ? $params['is_pricing'] : null;
+
+        if ($isPricing) {
+            $query->with([
+                'pricings.product' => function ($pricingQuery) {
+                   $pricingQuery->where('is_active', true);
+                }
+            ])->whereHas('pricings', function ($pricingQuery) {
+                $pricingQuery->where('is_active', true);
+            });
+        }
+
+        return $query;
     }
 }

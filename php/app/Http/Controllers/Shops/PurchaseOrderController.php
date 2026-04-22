@@ -23,7 +23,8 @@ class PurchaseOrderController extends Controller
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $purchaseOrders = $this->service->all($params);
-        return view('pages.shops.manage.purchase_orders.index', compact('shop', 'purchaseOrders'));
+        $dropdowns = $this->service->dropdowns();
+        return view('pages.shops.manage.purchase_orders.index', compact('shop', 'purchaseOrders', 'dropdowns'));
     }
 
     /**

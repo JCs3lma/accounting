@@ -10,9 +10,10 @@ $thead = [
 ];
 @endphp
 @section('shop_content')
-    <article>
+    <article class="flex flex-col flex-1 overflow-hidden min-h-0">
         <x-filter-form 
             route="{{route('shops.staffs.index', $shop->id)}}"
+            class="shrink-0"
         >
             <div class="flex flex-col lg:flex-row gap-3 w-full">
                 <x-input
@@ -73,7 +74,7 @@ $thead = [
                 </x-button>
             </div>
         </x-filter-form>
-        <div class="flex flex-row gap-2">
+        <div class="flex-1 flex flex-row gap-2 min-h-0 relative">
             <x-table
                 :thead="$thead"
                 :tbody="$purchaseOrders"
@@ -92,16 +93,69 @@ $thead = [
                     <x-action-menu />
                 </x-slot:dataActions>
             </x-table>
-            <div class="relative">
-                <x-card id="purchaseOrderPanel" class="hidden w-[400px] h-full transform translate-x-full transition-transform duration-300 ease-in-out z-50">
-                    <x-card-header class="flex justify-between items-center p-0">
+            <div id="purchaseOrderPanelContainer" class="relative min-h-0 lg:flex-none md:flex-none">
+                <x-card
+                    id="purchaseOrderPanel"
+                    class="hidden w-full lg:w-[400px] h-full min-h-0 flex-col transform translate-x-full transition-transform duration-300 ease-in-out z-50 min-h-0"
+                >
+                    <x-card-header class="flex justify-between items-center p-2 shrink-0">
                         <span>Add Purchase Order</span>
                         <x-button id="closePurchaseOrder" variant="default">
                             Close
                         </x-button>
                     </x-card-header>
 
-                    Slide out this card container from right when addPurchaseOrder is clicked
+                    <form class="my-2 flex-1 flex flex-col min-h-0">
+                        <div class="flex-1 min-h-0 overflow-y-auto">
+                            <x-select
+                                name="supplier_id"
+                                label="Supplier"
+                                :showPlaceHolder="true"
+                                class="mb-2"
+                                required
+                            >
+                                <option disabled selected value="">Select Supplier</option>
+                                @foreach($dropdowns['suppliers'] as $suppliers)
+                                    <option value="{{ $suppliers->id }}" {{ request()->get('supplier_id') == $suppliers->id ? 'selected' : '' }}>{{ $suppliers->name }}</option>
+                                @endforeach
+                            </x-select>
+                            <x-input
+                                class="mb-2"
+                                id="order_date"
+                                name="order_date"
+                                type="date"
+                                placeholder="Order Date"
+                                label="Order Date"
+                                required
+                                :value="\Carbon\Carbon::now()->format('Y-m-d')"
+                            />
+                            <x-input
+                                class="mb-2"
+                                id="expected_date"
+                                name="expected_date"
+                                type="date"
+                                placeholder="Expected Date"
+                                label="Expected Date"
+                                required
+                                :value="\Carbon\Carbon::now()->format('Y-m-d')"
+                            />
+                            <x-select
+                                id="status"
+                                name="status"
+                                label="Status"
+                                :showPlaceHolder="true"
+                            >
+                                @foreach(config('const.purchase_order_status') as $status)
+                                    <option value="{{$status}}" {{ request()->get('status') === $status ? 'selected' : '' }}>{{$status}}</option>
+                                @endforeach
+                            </x-select>
+                        </div>
+                        <x-card-footer class="shrink-0 p-0 flex lg:flex-col gap-1 items-start">
+                            <span>SubTotal: <input name="subtotal" value="0" readonly /></span>
+                            <span>Total: <input name="total" value="0" readonly /></span>
+                            <x-button variant="info-outline" type="submit" class="w-full mt-2">Create Purchase Order</x-button>
+                        </x-card-footer>
+                    </form>
                 </x-card>
             </div>
         </div>
@@ -113,9 +167,17 @@ $thead = [
             const openBtn = document.getElementById('addPurchaseOrder');
             const closeBtn = document.getElementById('closePurchaseOrder');
             const panel = document.getElementById('purchaseOrderPanel');
+            const panelContainer = document.getElementById('purchaseOrderPanelContainer');
+            const tableContainer = document.getElementById('tableContainer');
+            const supplierAndProducts = `$dropdowns['suppliers']`;
 
             openBtn.addEventListener('click', function() {
                 panel.classList.remove('hidden');
+                panel.classList.add('flex');
+                panelContainer.classList.add('flex-1');
+                tableContainer.classList.add('lg:block');
+                tableContainer.classList.add('md:block');
+                tableContainer.classList.add('hidden');
 
                 requestAnimationFrame(() => {
                     panel.classList.remove('translate-x-full');
@@ -128,10 +190,18 @@ $thead = [
                 panel.classList.add('-right-50');
                 panel.classList.add('translate-x-full');
 
+
                 panel.addEventListener('transitionend', function handler() {
                     panel.classList.add('hidden');
+                    panel.classList.remove('flex');
                     panel.classList.remove('absolute');
                     panel.classList.remove('-right-50');
+                
+                    panelContainer.classList.remove('flex-1');
+
+                    tableContainer.classList.remove('lg:block');
+                    tableContainer.classList.remove('md:block');
+                    tableContainer.classList.remove('hidden');
                     panel.removeEventListener('transitionend', handler);
                 });
             });

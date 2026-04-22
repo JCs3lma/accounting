@@ -5,6 +5,7 @@ namespace App\Models\Suppliers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Casts\ImageCast;
+use App\Models\Suppliers\Pricing;
 
 class Supplier extends Model
 {
@@ -27,4 +28,9 @@ class Supplier extends Model
         'logo_path' => ImageCast::class,
         'is_active' => 'boolean',
     ];
+
+    public function pricings()
+    {
+        return $this->hasMany(Pricing::class, 'supplier_id', 'id');
+    }
 }

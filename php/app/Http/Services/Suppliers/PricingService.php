@@ -20,9 +20,9 @@ class PricingService extends BaseService
         ];
     }
 
-    public function all(array $params = [])
+    public function all(int $supplierId, array $params = [])
     {
-        return $this->repository->all($params);
+        return $this->repository->all($supplierId, $params);
     }
 
     public function create(array $params = [])

@@ -32,8 +32,8 @@ class SupplierService extends BaseService
         return $this->repository->delete($id);
     }
 
-    public function dropdown()
+    public function dropdown(array $params = [])
     {
-        return $this->repository->dropdown();
+        return $this->repository->dropdown($params);
     }
 }

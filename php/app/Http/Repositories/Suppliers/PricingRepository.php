@@ -16,10 +16,14 @@ class PricingRepository extends BaseRepository
         $this->model = new Pricing();
     }
 
-    public function all(array $params = [])
+    public function all(?int $supplierId = null, array $params = [])
     {
         try {
-            $query = $this->model->with(['product.brand', 'product.category', 'product.unitR']);
+            $query = $this->model->with([
+                'product.brand',
+                'product.category',
+                'product.unitR'
+            ])->where('supplier_id', $supplierId);
 
             $query = $this->filters($query, $params);
 

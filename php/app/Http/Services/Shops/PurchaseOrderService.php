@@ -5,13 +5,17 @@ namespace App\Http\Services\Shops;
 use App\Http\Services\BaseService;
 use App\Http\Repositories\Shops\PurchaseOrderRepository;
 use App\Http\Services\Shops\PurchaseOrderItemService;
+use App\Http\Services\Suppliers\SupplierService;
 
 class PurchaseOrderService extends BaseService
 {
     public function __construct()
     {
         $this->repository = new PurchaseOrderRepository();
-        $this->service = new PurchaseOrderItemService();
+        $this->services = [
+            'po_item' => new PurchaseOrderItemService(),
+            'supplier' => new SupplierService(),
+        ];
     }
 
     public function all(array $params = [])
@@ -49,7 +53,7 @@ class PurchaseOrderService extends BaseService
             ];
         }, $params['products']);
         
-        $purchaseOrderItems = $this->service->insert($purchaseOrderId, $purchaseOrderItemsParams)->getData(true);
+        $purchaseOrderItems = $this->services['po_item']->insert($purchaseOrderId, $purchaseOrderItemsParams)->getData(true);
         if (isset($purchaseOrderItems['error'])) {
             return $this->repository->error('Failed to add purchase order items', [], $this->repository->internalServerError);
         }
@@ -72,5 +76,12 @@ class PurchaseOrderService extends BaseService
     public function dropdown()
     {
         return $this->repository->dropdown();
+    }
+
+    public function dropdowns()
+    {
+        return [
+            'suppliers' => $this->services['supplier']->dropdown(['is_pricing' => 1])
+        ];
     }
 }
