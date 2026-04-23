@@ -106,7 +106,7 @@ $thead = [
                     </x-card-header>
 
                     <form class="my-2 flex-1 flex flex-col min-h-0">
-                        <div class="flex-1 min-h-0 overflow-y-auto">
+                        <div class="flex-1 min-h-0 overflow-y-auto mb-2">
                             <x-select
                                 id="supplier_id"
                                 name="supplier_id"
@@ -151,12 +151,14 @@ $thead = [
                                 @endforeach
                             </x-select>
                             <div id="multi-select-div">
-                                <x-multi-select label="Products" placeholder="Select Products" />
+                                <x-multi-select label="Products" placeholder="Select Products" nodatamsg="Please select a supplier"/>
+                            </div>
+                            <div id="multiple-product-inputs" class="mt-2 flex flex-col gap-2">
                             </div>
                         </div>
                         <x-card-footer class="shrink-0 p-0 flex lg:flex-col gap-1 items-start">
-                            <span>SubTotal: <input name="subtotal" value="0" readonly /></span>
-                            <span>Total: <input name="total" value="0" readonly /></span>
+                            <span>SubTotal: <input name="subtotal" id="subtotal" value="0" readonly /></span>
+                            <span>Total: <input name="total" id="total" value="0" readonly /></span>
                             <x-button variant="info-outline" type="submit" class="w-full mt-2">Create Purchase Order</x-button>
                         </x-card-footer>
                     </form>
@@ -174,6 +176,7 @@ $thead = [
             const panelContainer = document.getElementById('purchaseOrderPanelContainer');
             const tableContainer = document.getElementById('tableContainer');
             const supplierAndProducts = @json($dropdowns['suppliers']);
+            let foundSupplier = null;
 
             openBtn.addEventListener('click', function() {
                 panel.classList.remove('hidden');
@@ -213,24 +216,92 @@ $thead = [
             document.addEventListener('change', function(e) {
                 if (e.target && e.target.id === 'supplier_id') {
                     const optionsContainer = document.querySelector('#multi-select-div .multi-select-options');
-                    let foundSupplier = supplierAndProducts.find(s => s.id === parseInt(e.target.value));
+                    foundSupplier = supplierAndProducts.find(s => s.id === parseInt(e.target.value));
                     
                     if (foundSupplier) {
                         let html = '';
                         foundSupplier.pricings.forEach(pricing => {
                             html += `<x-input
                                 type="checkbox"
-                                name="product_ids[]"
                                 label="${pricing.product.name}"
                                 value="${pricing.product.id}" 
                                 id="multi-select-${pricing.product.id}" 
+                                data-id="${pricing.product.id}"
                                 class="rounded border-gray-300"
                             />`;
                         });
                         optionsContainer.innerHTML = html;
                     } else {
-                        optionsContainer.innerHTML = '<span>No Record Found</span>';
+                        optionsContainer.innerHTML = '<span>Please select a supplier</span>';
                     }
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                const multiSelectContainer = e.target.closest('.multi-select-container');
+                const productQuantityContainer = document.getElementById('multiple-product-inputs');
+                const subtotalInput = document.getElementById('subtotal');
+                const totalInput = document.getElementById('total');
+                if (!multiSelectContainer) return;
+                const checkboxes = multiSelectContainer.querySelectorAll('input[type="checkbox"]');
+                const selected = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => ({
+                        id: cb.id,
+                        label: cb.nextElementSibling?.innerText || cb.value,
+                        value: cb.dataset.id
+                    }));
+                let html = '';
+                if (selected.length > 0) {
+                    let inputs = '';
+                    let subtotal = 0;
+                    let total = 0;
+                    for (var x = 0; x < selected.length; x++) {
+                        let id = selected[x].id;
+                        let label = selected[x].label;
+                        let value = parseInt(selected[x].value);
+                        let findProduct = foundSupplier.pricings.find((e) => {
+                            return e.product.id == value
+                        })
+                        let price = parseFloat(findProduct.price) || 0
+                        let qty = 1;
+
+                        inputs += `<div>
+                            <x-input
+                                type="hidden"
+                                name="product_ids[${id}]['product_id']"
+                                value="${label}"
+                                class="hidden"
+                            />
+                            <div class="flex flex-row gap-2 items-center justify-between">
+                                <div class="w-full overflow-hidden truncate">
+                                    <x-label class="whitespace-nowrap">${label}</x-label>
+                                </div>
+                                <x-input
+                                    label="Price"
+                                    value="${findProduct.price}"
+                                    inputContainerClass="!w-50"
+                                    disabled
+                                />
+                                <x-input
+                                    type="number"
+                                    name="product_ids[${id}]['quantity']"
+                                    label="Qty"
+                                    value="1"
+                                    inputContainerClass="!w-50"
+                                />
+                            </div>
+                        </div>`;
+
+                        let currentPrice = price * qty;
+                        subtotal = subtotal + currentPrice;
+                    }
+                    total = parseFloat(subtotal);
+                    subtotalInput.value = subtotal.toFixed(2);
+                    totalInput.value = total.toFixed(2);
+                    productQuantityContainer.innerHTML = inputs;
+                } else {
+                    productQuantityContainer.innerHTML = '';
                 }
             });
         });

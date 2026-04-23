@@ -2,7 +2,8 @@
     'label' => '',
     'placeholder' => '',
     'selections' => [],
-    'name' => ''
+    'name' => '',
+    'nodatamsg' => 'No Record Found'
 ])
 <div 
     {{$attributes->merge([
@@ -18,7 +19,7 @@
         @forelse($selections as $selection)
             <x-input type="checkbox" :name="$name" :label="$selection['name']" :id="'multi-select-'.$selection['id']" />
         @empty
-            <span>No Record Found</span>
+            <span>{{$nodatamsg}}</span>
         @endforelse
     </div>
 </div>
