@@ -29,7 +29,7 @@ class PurchaseOrderService extends BaseService
             'supplier_id' => $params['supplier_id'] ?? null,
             'order_date' => $params['order_date'] ?? null,
             'expected_date' => $params['expected_date'] ?? null,
-            'status' => $params['status'] ?? null,
+            'status' => 'Pending',
             'subtotal' => $params['subtotal'] ?? null,
             'tax' => $params['tax'] ?? null,
             'total' => $params['total'] ?? null,
@@ -51,7 +51,7 @@ class PurchaseOrderService extends BaseService
                 'price' => $value['price'],
                 'total' => $value['quantity'] * $value['price'],
             ];
-        }, $params['products']);
+        }, $params['product_ids']);
         
         $purchaseOrderItems = $this->services['po_item']->insert($purchaseOrderId, $purchaseOrderItemsParams)->getData(true);
         if (isset($purchaseOrderItems['error'])) {

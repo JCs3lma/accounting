@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Requests\Shops;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class PurchaseOrderRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'supplier_id' => 'required|exists:suppliers,id',
+            'order_date' => 'required|date',
+            'expected_date' => 'nullable|date',
+            'product_ids' => 'required',
+            'subtotal' => 'required',
+            'total' => 'required'
+        ];
+    }
+}

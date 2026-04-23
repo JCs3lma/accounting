@@ -105,7 +105,8 @@ $thead = [
                         </x-button>
                     </x-card-header>
 
-                    <form class="my-2 flex-1 flex flex-col min-h-0">
+                    <form class="my-2 flex-1 flex flex-col min-h-0" method="POST" action="{{route('shops.purchase-orders.store', $shop->id)}}">
+                        @csrf
                         <div class="flex-1 min-h-0 overflow-y-auto mb-2">
                             <x-select
                                 id="supplier_id"
@@ -140,16 +141,6 @@ $thead = [
                                 required
                                 :value="\Carbon\Carbon::now()->format('Y-m-d')"
                             />
-                            <x-select
-                                id="status"
-                                name="status"
-                                label="Status"
-                                :showPlaceHolder="true"
-                            >
-                                @foreach(config('const.purchase_order_status') as $status)
-                                    <option value="{{$status}}" {{ request()->get('status') === $status ? 'selected' : '' }}>{{$status}}</option>
-                                @endforeach
-                            </x-select>
                             <div id="multi-select-div">
                                 <x-multi-select label="Products" placeholder="Select Products" nodatamsg="Please select a supplier"/>
                             </div>
@@ -177,6 +168,27 @@ $thead = [
             const tableContainer = document.getElementById('tableContainer');
             const supplierAndProducts = @json($dropdowns['suppliers']);
             let foundSupplier = null;
+
+            function recalculateTotals() {
+                let subtotal = 0;
+
+                const productQuantityContainer = document.getElementById('multiple-product-inputs');
+                const rows = productQuantityContainer.querySelectorAll('.quantity-input');
+                const subtotalInput = document.getElementById('subtotal');
+                const totalInput = document.getElementById('total');
+
+                rows.forEach((input) => {
+                    let dataset = input.dataset;
+                    let id = dataset.productId;
+                    let qty = parseFloat(input.value || 0)
+                    let price = dataset.price;
+
+                    subtotal += price * qty;
+                });
+
+                subtotalInput.value = subtotal.toFixed(2);
+                totalInput.value = subtotal.toFixed(2);
+            }
 
             openBtn.addEventListener('click', function() {
                 panel.classList.remove('hidden');
@@ -235,6 +247,9 @@ $thead = [
                         optionsContainer.innerHTML = '<span>Please select a supplier</span>';
                     }
                 }
+                if (e.target && e.target.matches('.quantity-input')) {
+                    recalculateTotals();
+                }
             });
 
             document.addEventListener('click', function(e) {
@@ -247,9 +262,8 @@ $thead = [
                 const selected = Array.from(checkboxes)
                     .filter(cb => cb.checked)
                     .map(cb => ({
-                        id: cb.id,
                         label: cb.nextElementSibling?.innerText || cb.value,
-                        value: cb.dataset.id
+                        id: cb.dataset.id
                     }));
                 let html = '';
                 if (selected.length > 0) {
@@ -259,9 +273,8 @@ $thead = [
                     for (var x = 0; x < selected.length; x++) {
                         let id = selected[x].id;
                         let label = selected[x].label;
-                        let value = parseInt(selected[x].value);
                         let findProduct = foundSupplier.pricings.find((e) => {
-                            return e.product.id == value
+                            return e.product.id == id
                         })
                         let price = parseFloat(findProduct.price) || 0
                         let qty = 1;
@@ -269,8 +282,14 @@ $thead = [
                         inputs += `<div>
                             <x-input
                                 type="hidden"
-                                name="product_ids[${id}]['product_id']"
-                                value="${label}"
+                                name="product_ids[${id}][product_id]"
+                                value="${id}"
+                                class="hidden"
+                            />
+                            <x-input
+                                type="hidden"
+                                name="product_ids[${id}][price]"
+                                value="${price}"
                                 class="hidden"
                             />
                             <div class="flex flex-row gap-2 items-center justify-between">
@@ -285,10 +304,14 @@ $thead = [
                                 />
                                 <x-input
                                     type="number"
-                                    name="product_ids[${id}]['quantity']"
+                                    name="product_ids[${id}][quantity]"
+                                    class="quantity-input"
                                     label="Qty"
                                     value="1"
+                                    min="1"
                                     inputContainerClass="!w-50"
+                                    data-product-id="${id}"
+                                    data-price="${price}"
                                 />
                             </div>
                         </div>`;
