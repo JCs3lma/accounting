@@ -12,13 +12,12 @@ class PurchaseOrderItem extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'shops';
+    protected $table = 'purchase_order_items';
 
     public $fillable = [
         'purchase_order_id',
         'product_id',
         'quantity',
-        'received_quantity',
         'price',
         'total',
     ];

@@ -12,7 +12,7 @@
 >
     <x-label :for="$label" class="font-noto ml-4 absolute left-0 text-blue-600 text-xs bg-white -translate-y-[50%] z-5">{{$label}}</x-label>
     <div class="multi-select cursor-pointer peer shadow-theme-xs h-[42px] w-full rounded-lg border border-gray-300 bg-transparent py-2.5 text-sm text-gray-800 placeholder:text-gray-400 pl-4 pr-4 flex flex-row justify-between items-center relative">
-        <div class="selected flex flex-row gap-2">{{$placeholder}}</div>
+        <div class="selected flex flex-row gap-2 overflow-x-auto thin-scrollbar">{{$placeholder}}</div>
         <x-chevron-down-icon class="icon w-3 h-3 absolute right-1" />
     </div>
     <div class="multi-select-options hidden w-full absolute mt-1 z-9999 bg-white rounded-sm border border-gray-300 p-2 h-fit">

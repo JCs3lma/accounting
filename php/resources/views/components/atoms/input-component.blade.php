@@ -42,8 +42,14 @@
     $class = $inputAttributes['type'] != 'checkbox' ? $inputClass : $checkboxClass;
     $labelClass = $inputAttributes['type'] != 'checkbox' ? $labelInputClass : $labelCheckboxClass;
     $checkboxContainerClass = $inputAttributes['type'] == 'checkbox' ? 'flex flex-row items-center gap-1':'';
+    $containerClass = \Illuminate\Support\Arr::toCssClasses([
+        'relative',
+        'w-full',
+        $checkboxContainerClass,
+        $inputContainerClass,
+    ]);
 @endphp
-<div class="relative w-full {{$inputContainerClass}} {{$checkboxContainerClass}}">
+<div class="{{ twMerge('relative w-full ' . $checkboxContainerClass . ' ' . $inputContainerClass) }}">
     @if (isset($icon))
         <span {{$icon->attributes->merge(['class' => 'pointer-events-none absolute top-1/2 left-3 -translate-y-1/2'])->twMerge()}}>
             {{$icon}}

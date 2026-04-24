@@ -34,9 +34,9 @@ class SuppliersProductController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->insert($supplier->id, $params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('suppliers.product.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -55,9 +55,9 @@ class SuppliersProductController extends Controller
     public function destroy(Supplier $supplier, string $id)
     {
         $result = $this->service->delete($id)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('suppliers.product.index', $supplier->id)->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 

@@ -20,4 +20,15 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    .thin-scrollbar {
+        &::-webkit-scrollbar {
+            width: 2px;
+            height: 2px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+    }
 }

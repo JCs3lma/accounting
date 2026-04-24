@@ -34,9 +34,9 @@ class ProductController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('products.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -53,9 +53,9 @@ class ProductController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('products.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -71,9 +71,9 @@ class ProductController extends Controller
     public function destroy(int $id)
     {
         $result = $this->service->delete($id)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('products.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 

@@ -35,9 +35,9 @@ class PricingController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -57,9 +57,9 @@ class PricingController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -78,9 +78,9 @@ class PricingController extends Controller
     public function destroy(Supplier $supplier, int $id)
     {
         $result = $this->service->delete($id)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 

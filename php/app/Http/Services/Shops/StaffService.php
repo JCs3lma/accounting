@@ -36,8 +36,8 @@ class StaffService extends BaseService
                 'is_active' => true,
             ];
             $staffResult = $this->repository->create($staffParams)->getData(true);
-            if (isset($staffResult['error'])) {
-                return $this->repository->error('Failed to create staff', [], $this->repository->internalServerError);
+            if (isset($staffResult['errors'])) {
+                return $this->repository->error('Failed to create staff', $staffResult['errors'], $this->repository->internalServerError);
             }
             $staffId = $staffResult['data']['id'];
         }
@@ -68,8 +68,8 @@ class StaffService extends BaseService
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $staffResult = $this->repository->update($id, $staffParams)->getData(true);
-        if (isset($staffResult['error'])) {
-            return $this->repository->error('Failed to update staff', [], $this->repository->internalServerError);
+        if (isset($staffResult['errors'])) {
+            return $this->repository->error('Failed to update staff', $staffResult['errors'], $this->repository->internalServerError);
         }
         $shopStaffParams = [
             'shop_id' => $params['shop_ids'][0],

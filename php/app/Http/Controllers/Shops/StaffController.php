@@ -41,9 +41,9 @@ class StaffController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('shops.staffs.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -63,9 +63,9 @@ class StaffController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('shops.staffs.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 
@@ -84,9 +84,9 @@ class StaffController extends Controller
     public function destroy(Shop $shop, int $id)
     {
         $result = $this->service->delete($id, $shop->id)->getData(true);
-        if (isset($result['error'])) {
+        if (isset($result['errors']) && !empty($result['errors'])) {
             return redirect()->route('shops.staffs.index')->withErrors([
-                'custom_error' => $result['error']
+                'custom_error' => $result['errors']
             ]);
         }
 

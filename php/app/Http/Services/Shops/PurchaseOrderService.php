@@ -30,16 +30,16 @@ class PurchaseOrderService extends BaseService
             'order_date' => $params['order_date'] ?? null,
             'expected_date' => $params['expected_date'] ?? null,
             'status' => 'Pending',
-            'subtotal' => $params['subtotal'] ?? null,
-            'tax' => $params['tax'] ?? null,
-            'total' => $params['total'] ?? null,
-            'notes' => $params['notes'] ?? null,
+            'subtotal' => $params['subtotal'] ?? 0,
+            'tax' => $params['tax'] ?? 0,
+            'total' => $params['total'] ?? 0,
+            'notes' => $params['notes'] ?? '',
             'created_by' => $params['created_by'] ?? null,
         ];
 
         $purchaseOrder = $this->repository->create($purchaseOrderParams)->getData(true);
-        if (isset($purchaseOrder['error'])) {
-            return $this->repository->error('Failed to create purchase order', [], $this->repository->internalServerError);
+        if (isset($purchaseOrder['errors'])) {
+            return $this->repository->error('Failed to create purchase order', $purchaseOrder['errors'], $this->repository->internalServerError);
         }
         $purchaseOrderId = $purchaseOrder['data']['id'];
 
@@ -54,8 +54,8 @@ class PurchaseOrderService extends BaseService
         }, $params['product_ids']);
         
         $purchaseOrderItems = $this->services['po_item']->insert($purchaseOrderId, $purchaseOrderItemsParams)->getData(true);
-        if (isset($purchaseOrderItems['error'])) {
-            return $this->repository->error('Failed to add purchase order items', [], $this->repository->internalServerError);
+        if (isset($purchaseOrderItems['errors'])) {
+            return $this->repository->error('Failed to add purchase order items', $purchaseOrderItems['errors'], $this->repository->internalServerError);
         }
 
         return $this->repository->success($purchaseOrder['data'], $purchaseOrder['message']);

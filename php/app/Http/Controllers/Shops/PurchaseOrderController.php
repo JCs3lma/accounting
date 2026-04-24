@@ -35,16 +35,19 @@ class PurchaseOrderController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
-        if (isset($result['error'])) {
-            return redirect()->route('shops.index')->withErrors([
-                'custom_error' => $result['error']
-            ]);
+        if (isset($result['errors']) && !empty($result['errors'])) {
+            return redirect()->route('shops.purchase-orders.index', [
+                'shop' => $shop->id
+            ])->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('shops.index', array_filter(request()->query(), function($value) {
-            return $value !== null && $value !== '' && $value !== 'null';
-        }));
+        return redirect()->route('shops.purchase-orders.index', array_merge(
+            ['shop' => $shop->id],
+            array_filter(request()->query(), function($value) {
+                return $value !== null && $value !== '' && $value !== 'null';
+            }
+        )));
     }
 
     /**

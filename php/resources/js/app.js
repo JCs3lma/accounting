@@ -6,16 +6,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     [errorCard, successCard].forEach(card => {
         if (card) {
+            const listItems = card.querySelectorAll('li');
             // trigger slide down + fade in
             setTimeout(() => {
                 card.classList.remove('-translate-y-10', 'opacity-0');
-                card.classList.add('translate-y-[155%]', 'opacity-100');
+                card.classList.add('translate-y-[90px]', 'opacity-100');
             }, 100); // small delay to ensure transition runs
 
             // auto hide after 2 seconds
             setTimeout(() => {
-                card.classList.remove('translate-y-[155%]', 'opacity-100');
+                card.classList.remove('translate-y-[90px]', 'opacity-100');
                 card.classList.add('-translate-y-10', 'opacity-0');
+                listItems.forEach(li => li.remove());
             }, 2200);
         }
     });

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('po_number')->nullable->unique();
+            $table->string('po_number')->nullable()->unique();
             $table->unsignedBigInteger('supplier_id');
             $table->date('order_date');
             $table->date('expected_date')->nullable();

@@ -239,7 +239,7 @@ $thead = [
                                 value="${pricing.product.id}" 
                                 id="multi-select-${pricing.product.id}" 
                                 data-id="${pricing.product.id}"
-                                class="rounded border-gray-300"
+                                class="rounded border-gray-300 whitespace-nowrap"
                             />`;
                         });
                         optionsContainer.innerHTML = html;
@@ -293,13 +293,13 @@ $thead = [
                                 class="hidden"
                             />
                             <div class="flex flex-row gap-2 items-center justify-between">
-                                <div class="w-full overflow-hidden truncate">
+                                <div class="w-full overflow-hidden truncate flex-1">
                                     <x-label class="whitespace-nowrap">${label}</x-label>
                                 </div>
                                 <x-input
                                     label="Price"
                                     value="${findProduct.price}"
-                                    inputContainerClass="!w-50"
+                                    inputContainerClass="w-full max-w-20 lg:w-50 shrink-0"
                                     disabled
                                 />
                                 <x-input
@@ -309,7 +309,7 @@ $thead = [
                                     label="Qty"
                                     value="1"
                                     min="1"
-                                    inputContainerClass="!w-50"
+                                    inputContainerClass="w-full max-w-20 lg:w-50 shrink-0"
                                     data-product-id="${id}"
                                     data-price="${price}"
                                 />

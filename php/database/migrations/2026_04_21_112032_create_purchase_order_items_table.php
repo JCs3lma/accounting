@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
 
             $table->integer('quantity');
-            $table->integer('received_quantity')->default(0);
 
             $table->decimal('price', 12, 2);
             $table->decimal('total', 12, 2);

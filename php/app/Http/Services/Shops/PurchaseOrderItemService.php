@@ -19,7 +19,7 @@ class PurchaseOrderItemService extends BaseService
 
     public function insert(int $purchaseOrderId, array $params = [])
     {
-        return $this->repository->insert($params);
+        return $this->repository->insert($purchaseOrderId, $params);
     }
 
     public function update(int $id, array $params = [])
