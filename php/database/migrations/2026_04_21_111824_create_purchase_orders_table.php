@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id');
             $table->date('order_date');
             $table->date('expected_date')->nullable();
-            $table->enum('status', ['Pending', 'Approved', 'Received', 'Cancelled'])->default('Pending');
+            $table->enum('status', ['Draft', 'Pending', 'Approved', 'Received', 'Cancelled'])->default('Pending');
 
             $table->decimal('subtotal', 12, 2)->default(0);
             $table->decimal('tax', 12, 2)->default(0);

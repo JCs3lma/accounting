@@ -22,7 +22,7 @@ $thead = [
 @section('shop_content')
     <article class="flex flex-col flex-1 overflow-hidden min-h-0">
         <x-filter-form 
-            route="{{route('shops.staffs.index', $shop->id)}}"
+            route="{{route('shops.purchase-orders.index', $shop->id)}}"
             class="shrink-0"
         >
             <div class="flex flex-col lg:flex-row gap-3 w-full">
@@ -79,7 +79,7 @@ $thead = [
                     <x-search-icon class="fill-white" />
                     <span>Search</span>
                 </x-button>
-                <x-button variant="default" href="{{route('shops.staffs.index', $shop->id)}}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
+                <x-button variant="default" href="{{route('shops.purchase-orders.index', $shop->id)}}" class="rounded-md flex gap-2 items-center flex-1 lg:flex-initial">
                     <span>Clear</span>
                 </x-button>
             </div>
@@ -95,7 +95,7 @@ $thead = [
                 titleClass="text-lg font-semibold text-gray-800"
                 :booleanMessage="[0 => 'In Active', 1 => 'Active']"
                 customNoDataMessage="No purchased orders found. Please adjust your filters or change page."
-                tableContainerClass="flex-1 lg:overflow-y-none {{count($purchaseOrders) < 5 ? 'h-full' : ''}}"
+                tableContainerClass="flex-1 lg:overflow-y-none {{$purchaseOrders && count($purchaseOrders) < 5 ? 'h-full' : ''}}"
             >
                 <x-slot:rightPocket>
                     <x-button id="addPurchaseOrder" variant="success" class="rounded-md text-md">Add</x-button>
