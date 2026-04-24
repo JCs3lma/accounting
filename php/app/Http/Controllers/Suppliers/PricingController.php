@@ -36,9 +36,7 @@ class PricingController extends Controller
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -58,9 +56,7 @@ class PricingController extends Controller
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -79,9 +75,7 @@ class PricingController extends Controller
     {
         $result = $this->service->delete($id)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.pricing.index', $supplier->id)->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);

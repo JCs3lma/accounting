@@ -27,11 +27,6 @@ class PurchaseOrder extends Model
         'created_by',
     ];
 
-    protected $casts = [
-        'order_date' => DateCast::class,
-        'expected_date' => DateCast::class,
-    ];
-
     public function orders()
     {
         return $this->hasMany(PurchaseOrderItem::class, 'purchase_order_id', 'id');

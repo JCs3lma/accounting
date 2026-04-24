@@ -35,9 +35,7 @@ class UnitsController extends Controller
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('products.brands.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('products.brands.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -54,9 +52,7 @@ class UnitsController extends Controller
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('products.brands.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('products.brands.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -72,9 +68,7 @@ class UnitsController extends Controller
     {
         $result = $this->service->delete($id)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('products.brands.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('products.brands.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);

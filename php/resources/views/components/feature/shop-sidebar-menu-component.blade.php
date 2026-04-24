@@ -10,6 +10,7 @@
         case 'shops.index':
             $currentActiveMenu = 'shops';
         case 'shops.purchase-orders.index':
+        case 'shops.purchase-orders.show':
             $currentActiveMenu = 'purchase-orders';
             break;
     }
@@ -25,7 +26,7 @@
     </x-list-item>
     <x-list-item class="pl-0 {{$currentActiveMenu == 'purchase-orders' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
         <x-slot:icon class="iconMenu"><x-purchasing-icon class="{{$currentActiveMenu == 'purchase-orders' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>
-        <x-slot:link href="{{ route('shops.purchase-orders.index', $shop->id) }}" class="textMenu {{request()->routeIs('shops.purchase-orders.index') ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Purchase Orders</x-slot:link>
+        <x-slot:link href="{{ route('shops.purchase-orders.index', $shop->id) }}" class="textMenu {{$currentActiveMenu == 'purchase-orders'  ? 'bg-blue-500 text-white hover:text-gray-800' : ''}}">Purchase Orders</x-slot:link>
     </x-list-item>
     <x-list-item class="pl-0 {{$currentActiveMenu == 'suppliers' ? 'group stroke-white group-hover:stroke-gray-500' : ''}}">
         <x-slot:icon class="iconMenu"><x-reports-icon class="{{$currentActiveMenu == 'inventory' ? 'fill-white group-hover:fill-gray-700' : ''}}"/></x-slot:icon>

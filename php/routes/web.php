@@ -46,6 +46,6 @@ Route::group([
         'as' => 'shops.'
     ], function () {
         Route::resource('staffs', StaffController::class)->names('staffs');
-        Route::resource('purchase-orders', PurchaseOrderController::class)->names('purchase-orders')->except(['create', 'show', 'edit']);
+        Route::resource('purchase-orders', PurchaseOrderController::class)->names('purchase-orders')->except(['create', 'edit']);
     });
 });

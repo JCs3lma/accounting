@@ -3,10 +3,20 @@
 $thead = [
     'po_number' =>  'PO #',
     'supplier.name' => 'Supplier',
-    'order_date' => 'Date Order',
-    'expected_date' => 'Expected Date',
+    'order_date' => [
+        'header' => 'Date Order',
+        'format' => 'date'
+    ],
+    'expected_date' => [
+        'header' => 'Expected Date',
+        'format' => 'date'
+    ],
     'status' => 'Status',
-    'total' => 'Total',
+    'total' => [
+        'header' => 'Total',
+        'prefix' => config('const.money').' ',
+        'format' => 'money'
+    ],
 ];
 @endphp
 @section('shop_content')
@@ -85,12 +95,13 @@ $thead = [
                 titleClass="text-lg font-semibold text-gray-800"
                 :booleanMessage="[0 => 'In Active', 1 => 'Active']"
                 customNoDataMessage="No purchased orders found. Please adjust your filters or change page."
+                tableContainerClass="flex-1 lg:overflow-y-none {{count($purchaseOrders) < 5 ? 'h-full' : ''}}"
             >
                 <x-slot:rightPocket>
                     <x-button id="addPurchaseOrder" variant="success" class="rounded-md text-md">Add</x-button>
                 </x-slot:rightPocket>
                 <x-slot:dataActions class="relative w-20 mx-auto" dataActionsClassHeader="flex items-center justify-end w-20">
-                    <x-action-menu />
+                    <x-action-menu :isIncludeManage="true"/>
                 </x-slot:dataActions>
             </x-table>
             <div id="purchaseOrderPanelContainer" class="relative min-h-0 lg:flex-none md:flex-none">
@@ -158,9 +169,18 @@ $thead = [
         </div>
     </article>
 @endsection
+
+@section('footer')
+    <x-modal header="Edit Purchase Order" headerClass="modalTitle">
+        <div id="modalContent"></div>
+    </x-modal>
+@endsection
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const modalElement = document.querySelector('#modal');
+            const modalContent = document.querySelector('#modalContent');
+            const modalTitle = modalElement.querySelector('.modalTitle');
             const openBtn = document.getElementById('addPurchaseOrder');
             const closeBtn = document.getElementById('closePurchaseOrder');
             const panel = document.getElementById('purchaseOrderPanel');
@@ -254,77 +274,146 @@ $thead = [
 
             document.addEventListener('click', function(e) {
                 const multiSelectContainer = e.target.closest('.multi-select-container');
-                const productQuantityContainer = document.getElementById('multiple-product-inputs');
-                const subtotalInput = document.getElementById('subtotal');
-                const totalInput = document.getElementById('total');
-                if (!multiSelectContainer) return;
-                const checkboxes = multiSelectContainer.querySelectorAll('input[type="checkbox"]');
-                const selected = Array.from(checkboxes)
-                    .filter(cb => cb.checked)
-                    .map(cb => ({
-                        label: cb.nextElementSibling?.innerText || cb.value,
-                        id: cb.dataset.id
-                    }));
-                let html = '';
-                if (selected.length > 0) {
-                    let inputs = '';
-                    let subtotal = 0;
-                    let total = 0;
-                    for (var x = 0; x < selected.length; x++) {
-                        let id = selected[x].id;
-                        let label = selected[x].label;
-                        let findProduct = foundSupplier.pricings.find((e) => {
-                            return e.product.id == id
-                        })
-                        let price = parseFloat(findProduct.price) || 0
-                        let qty = 1;
+                const editBtn = e.target.closest('.editActionButton');
+                const deleteBtn = e.target.closest('.deleteActionButton');
+                const manageBtn = e.target.closest('.manageActionButton');
+                if (multiSelectContainer) {
+                    const productQuantityContainer = document.getElementById('multiple-product-inputs');
+                    const subtotalInput = document.getElementById('subtotal');
+                    const totalInput = document.getElementById('total');
+                    const checkboxes = multiSelectContainer.querySelectorAll('input[type="checkbox"]');
+                    const selected = Array.from(checkboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => ({
+                            label: cb.nextElementSibling?.innerText || cb.value,
+                            id: cb.dataset.id
+                        }));
+                    let html = '';
+                    if (selected.length > 0) {
+                        let inputs = '';
+                        let subtotal = 0;
+                        let total = 0;
+                        for (var x = 0; x < selected.length; x++) {
+                            let id = selected[x].id;
+                            let label = selected[x].label;
+                            let findProduct = foundSupplier.pricings.find((e) => {
+                                return e.product.id == id
+                            })
+                            let price = parseFloat(findProduct.price) || 0
+                            let qty = 1;
 
-                        inputs += `<div>
-                            <x-input
-                                type="hidden"
-                                name="product_ids[${id}][product_id]"
-                                value="${id}"
-                                class="hidden"
-                            />
-                            <x-input
-                                type="hidden"
-                                name="product_ids[${id}][price]"
-                                value="${price}"
-                                class="hidden"
-                            />
-                            <div class="flex flex-row gap-2 items-center justify-between">
-                                <div class="w-full overflow-hidden truncate flex-1">
-                                    <x-label class="whitespace-nowrap">${label}</x-label>
+                            inputs += `<div>
+                                <x-input
+                                    type="hidden"
+                                    name="product_ids[${id}][product_id]"
+                                    value="${id}"
+                                    class="hidden"
+                                />
+                                <x-input
+                                    type="hidden"
+                                    name="product_ids[${id}][price]"
+                                    value="${price}"
+                                    class="hidden"
+                                />
+                                <div class="flex flex-row gap-2 items-center justify-between">
+                                    <div class="w-full overflow-hidden truncate flex-1">
+                                        <x-label class="whitespace-nowrap">${label}</x-label>
+                                    </div>
+                                    <x-input
+                                        label="Price"
+                                        value="${findProduct.price}"
+                                        inputContainerClass="w-full max-w-20 lg:w-50 shrink-0"
+                                        disabled
+                                    />
+                                    <x-input
+                                        type="number"
+                                        name="product_ids[${id}][quantity]"
+                                        class="quantity-input"
+                                        label="Qty"
+                                        value="1"
+                                        min="1"
+                                        inputContainerClass="w-full max-w-20 lg:w-50 shrink-0"
+                                        data-product-id="${id}"
+                                        data-price="${price}"
+                                    />
                                 </div>
-                                <x-input
-                                    label="Price"
-                                    value="${findProduct.price}"
-                                    inputContainerClass="w-full max-w-20 lg:w-50 shrink-0"
-                                    disabled
-                                />
-                                <x-input
-                                    type="number"
-                                    name="product_ids[${id}][quantity]"
-                                    class="quantity-input"
-                                    label="Qty"
-                                    value="1"
-                                    min="1"
-                                    inputContainerClass="w-full max-w-20 lg:w-50 shrink-0"
-                                    data-product-id="${id}"
-                                    data-price="${price}"
-                                />
-                            </div>
-                        </div>`;
+                            </div>`;
 
-                        let currentPrice = price * qty;
-                        subtotal = subtotal + currentPrice;
+                            let currentPrice = price * qty;
+                            subtotal = subtotal + currentPrice;
+                        }
+                        total = parseFloat(subtotal);
+                        subtotalInput.value = subtotal.toFixed(2);
+                        totalInput.value = total.toFixed(2);
+                        productQuantityContainer.innerHTML = inputs;
+                    } else {
+                        productQuantityContainer.innerHTML = '';
                     }
-                    total = parseFloat(subtotal);
-                    subtotalInput.value = subtotal.toFixed(2);
-                    totalInput.value = total.toFixed(2);
-                    productQuantityContainer.innerHTML = inputs;
-                } else {
-                    productQuantityContainer.innerHTML = '';
+                }
+
+                // --- EDIT Logic ---
+                if (editBtn) {
+                    const rowData = JSON.parse(editBtn.closest('td').getAttribute('data-pass'));
+                    
+                    // 1. Change Modal Header
+                    modalTitle.innerText = 'Edit PO #: ' + rowData.po_number;
+                    modalContent.innerHTML = `
+                        <x-purchase-order-form id="purchaseOrderForm" :shop="$shop" method="POST" autocomplete="off"/>
+                    `;
+                    const form = document.querySelector('#purchaseOrderForm');
+                                        
+                    const baseUrl = "{{ route('shops.purchase-orders.update', [$shop->id, ':id']) }}";
+                    const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                    const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
+                    form.action = urlTemplate.replace(':id', rowData.id);
+                    
+                    // 3. Inject Method Spoofing for PUT
+                    if(!form.querySelector('input[name="_method"]')) {
+                        const methodInput = document.createElement('input');
+                        methodInput.type = 'hidden';
+                        methodInput.name = '_method';
+                        methodInput.value = 'PUT';
+                        form.appendChild(methodInput);
+                    }
+                    // 4. Fill Form Fields
+                    form.querySelector('#order_date_form').value = rowData.order_date ?? '';
+                    form.querySelector('#expected_date_form').value = rowData.expected_date ?? '';
+                    form.querySelector('#status_form').value = rowData.status;
+                    form.querySelector('#notes_form').value = rowData.notes;
+
+                    modalElement.classList.remove('hidden');
+                    modalElement.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                }
+
+                // --- DELETE Logic ---
+                if (deleteBtn) {
+                    const rowData = JSON.parse(deleteBtn.closest('td').getAttribute('data-pass'));
+                    
+                    // 1. Change Modal Header
+                    modalTitle.innerText = 'Delete PO #: ' + rowData.po_number;
+                    modalContent.innerHTML = `
+                        <x-delete-purchase-order-form id="staffForm" method="POST"/>
+                    `;
+                    const form = document.querySelector('#staffForm');
+
+                    // 2. Change Form Action to Update URL (Assuming standard Laravel resource)
+                    const baseUrl = "{{ route('shops.purchase-orders.destroy', [$shop->id, ':id']) }}"; // Blade generates base URL
+                    const params = new URLSearchParams(@json(request()->query())).toString(); // JS
+                    const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
+                    form.action = urlTemplate.replace(':id', rowData.id);
+
+                    modalElement.classList.remove('hidden');
+                    modalElement.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                }
+
+                // --- MANAGE Logic ---
+                if (manageBtn) {
+                    const rowData = JSON.parse(manageBtn.closest('td').getAttribute('data-pass'));
+                    const baseUrl = "{{ route('shops.purchase-orders.show', [$shop->id, ':id']) }}";
+                    const newURL = baseUrl.replace(':id', rowData.id);
+                    window.location.href = newURL;
                 }
             });
         });

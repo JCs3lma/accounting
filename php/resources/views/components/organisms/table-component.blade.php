@@ -73,6 +73,9 @@
                     <tr class="hover:bg-gray-50 cursor-pointer">
                         @foreach($thead as $theadKey => $value)
                             <td class="py-3 pr-5 whitespace-nowrap text-ellipsis {{$value['tdClass'] ?? ''}}">
+                                @if(isset($value['prefix']))
+                                    {{$value['prefix']}}
+                                @endif
                                 @php
                                     $castField = $theadKey;
                                     $modelForCast = $data;
@@ -140,12 +143,24 @@
                                             </<?= $tag ?>>
                                     @endswitch
                                 @else
-                                    {{
+                                    @if(
                                         $modelForCast &&
                                         isset($modelForCast->getCasts()[$castField]) &&
                                         $modelForCast->getCasts()[$castField] == 'boolean'
-                                        ? $booleanMessage[data_get($fields, $theadKey)] : data_get($fields, $theadKey)
-                                    }}
+                                    )
+                                        {{$booleanMessage[data_get($fields, $theadKey)]}}
+                                    @elseif (isset($value['format']))
+                                        @switch($value['format'])
+                                            @case('money')
+                                                {{number_format(data_get($fields, $theadKey), 2, '.', ',')}}
+                                                @break
+                                            @case('date')
+                                                {{\Carbon\Carbon::parse(data_get($fields, $theadKey))->format($value['dateFormat'] ?? 'M d, Y')}}
+                                                @break
+                                        @endswitch
+                                    @else
+                                        {{data_get($fields, $theadKey)}}
+                                    @endif
                                 @endif
                             </td>
                         @endforeach

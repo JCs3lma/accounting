@@ -35,9 +35,7 @@ class SuppliersProductController extends Controller
         $params = $request->validated();
         $result = $this->service->insert($supplier->id, $params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.product.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.product.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -56,9 +54,7 @@ class SuppliersProductController extends Controller
     {
         $result = $this->service->delete($id)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.product.index', $supplier->id)->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.product.index', $supplier->id)->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);

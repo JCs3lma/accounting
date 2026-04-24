@@ -63,7 +63,7 @@ class PurchaseOrderService extends BaseService
 
     public function update(int $id, array $params = [])
     {
-        return $this->repository->update($id, $params)->getData(true);
+        return $this->repository->update($id, $params);
     }
 
     public function delete(int $id)

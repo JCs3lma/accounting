@@ -40,9 +40,7 @@ class SupplierController extends Controller
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -59,9 +57,7 @@ class SupplierController extends Controller
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
@@ -77,9 +73,7 @@ class SupplierController extends Controller
     {
         $result = $this->service->delete($id)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('suppliers.index')->withErrors([
-                'custom_error' => $result['errors']
-            ]);
+            return redirect()->route('suppliers.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
