@@ -11,6 +11,7 @@ use App\Models\Products\Unit;
 use App\Models\Suppliers\SuppliersProduct;
 use App\Casts\ImageCast;
 use App\Casts\BarcodeCast;
+use App\Models\Shops\PurchaseOrderItem;
 
 class Product extends Model
 {
@@ -56,6 +57,11 @@ class Product extends Model
     public function suppliersProducts()
     {
         return $this->hasMany(SuppliersProduct::class, 'product_id');
+    }
+
+    public function purchaseOrderItems()
+    {
+        return $this->hasMany(PurchaseOrderItem::class, 'product_id', 'id');
     }
 
     protected function unitDisplay(): Attribute

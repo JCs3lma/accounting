@@ -119,6 +119,7 @@ class PricingRepository extends BaseRepository
             if ($params['is_active']) {
                 $this->model
                     ->where('product_id', $params['product_id'])
+                    ->where('supplier_id', $params['supplier_id'])
                     ->update(['is_active' => false]);
             }
 

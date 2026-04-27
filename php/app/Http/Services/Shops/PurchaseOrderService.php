@@ -78,10 +78,10 @@ class PurchaseOrderService extends BaseService
         return $this->repository->dropdown();
     }
 
-    public function dropdowns()
+    public function dropdowns(array $params = [])
     {
         return [
-            'suppliers' => $this->services['supplier']->dropdown(['is_pricing' => 1])
+            'suppliers' => $this->services['supplier']->dropdown($params)
         ];
     }
 }

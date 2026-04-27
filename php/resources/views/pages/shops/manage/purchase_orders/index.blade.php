@@ -11,7 +11,11 @@ $thead = [
         'header' => 'Expected Date',
         'format' => 'date'
     ],
-    'status' => 'Status',
+    'status' => [
+        'header' => 'Status',
+        'cast' => 'span',
+        'tdContentClass' => 'px-2 py-1 rounded-full text-xs font-semibold h-full'
+    ],
     'total' => [
         'header' => 'Total',
         'prefix' => config('const.money').' ',

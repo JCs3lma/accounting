@@ -1,6 +1,7 @@
 @props([
     'header' => null,
     'headerClass' => '',
+    'modalContainerClass' => ''
 ])
 <div
     {{$attributes->merge([
@@ -11,7 +12,7 @@
     ])->twMerge()}}
 >
     <div class="absolute inset-0 bg-back-drop" aria-description="modal overlay" data-modal-close></div>
-    <div class="max-w-[465px] relative w-full max-h-full z-[2] flex flex-col gap-2 items-end">
+    <div class="max-w-[465px] relative w-full max-h-full z-[2] flex flex-col gap-2 items-end {{$modalContainerClass}}">
         <x-button
             variant="close"
             class="rounded-[3px] w-8 h-8 p-0 cursor-pointer flex items-center justify-center"

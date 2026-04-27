@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Casts\ImageCast;
 use App\Models\Suppliers\Pricing;
+use App\Models\Shops\PurchaseOrder;
 
 class Supplier extends Model
 {
@@ -32,5 +33,10 @@ class Supplier extends Model
     public function pricings()
     {
         return $this->hasMany(Pricing::class, 'supplier_id', 'id');
+    }
+
+    public function purchaseOrder()
+    {
+        return $this->hasOne(PurchaseOrder::class, 'supplier_id', 'id');
     }
 }

@@ -59,7 +59,12 @@ class PurchaseOrderController extends Controller
         $purchase_order->load([
             'orders.product',
         ]);
-        return view('pages.shops.manage.purchase_orders.manage.purchase_order_items.index', compact('shop', 'purchase_order'));
+        $dropdowns = $this->service->dropdowns([
+            'is_pricing' => 1,
+            'is_no_selected_products' => true,
+            'supplier_id' => $purchase_order->supplier_id
+        ]);
+        return view('pages.shops.manage.purchase_orders.manage.purchase_order_items.index', compact('shop', 'purchase_order', 'dropdowns'));
     }
 
     /**

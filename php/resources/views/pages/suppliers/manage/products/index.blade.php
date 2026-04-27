@@ -113,12 +113,11 @@
                     id: id,
                     name: name
                 };
-                console.log(['rowData', rowData])
                 
                 // 1. Change Modal Header
                 modalTitle.innerText = 'Remove Product: ' + rowData.name;
                 modalContent.innerHTML = `
-                   <x-delete-supplier-product-form id="supplierProductForm" method="POST"/>
+                   <x-delete-product-form id="supplierProductForm" method="POST"/>
                 `;
                 const form = document.querySelector('#supplierProductForm');
 

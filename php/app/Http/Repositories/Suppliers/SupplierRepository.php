@@ -191,16 +191,30 @@ class SupplierRepository extends BaseRepository
             return $query;
         }
 
+
         $isPricing = isset($params['is_pricing']) ? $params['is_pricing'] : null;
+        $isNoSelectedItems = isset($params['is_no_selected_products']) ? $params['is_no_selected_products'] : null;
+        $supplierId = isset($params['supplier_id']) ? $params['supplier_id'] : null;
+
+        if ($supplierId) {
+            $query->where('id', $supplierId);
+        }
 
         if ($isPricing) {
             $query->with([
-                'pricings' => function ($pricingQuery) {
-                   $pricingQuery->where('is_active', true);
+                'pricings' => function ($pricingQuery) use ($isNoSelectedItems, $isPricing) {
+                    $pricingQuery->where('is_active', $isPricing);
+
+                    if ($isNoSelectedItems) {
+                        $pricingQuery->when($isNoSelectedItems, function ($q) {
+                            $q->whereDoesntHave('product.purchaseOrderItems');
+                        });
+                    }
                 },
                 'pricings.product',
-            ])->whereHas('pricings', function ($pricingQuery) {
-                $pricingQuery->where('is_active', true);
+            ])
+            ->whereHas('pricings', function ($pricingQuery) use ($isPricing) {
+                $pricingQuery->where('is_active', $isPricing);
             });
         }
 
