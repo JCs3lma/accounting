@@ -20,8 +20,6 @@ $thead = [
         'thHeaderClass' => 'hidden lg:block',
         'cast' => 'div',
     ],
-    'serial_number' => 'Serial Number',
-    'sku' => 'SKU',
     'is_active' => [
         'header' => 'Active',
         'cast' => 'span',
@@ -80,15 +78,6 @@ $thead = [
                         <option value="{{ $unit->id }}" {{ request()->get('unit_id') == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
                     @endforeach
                 </x-select>
-                <x-input
-                    id="search_serial_number"
-                    name="serial_number"
-                    type="text"
-                    label="Serial Number"
-                    placeholder=" "
-                    :showPlaceHolder="true"
-                    value="{{request()->get('serial_number') && request()->get('serial_number') !== 'null' ? request()->get('serial_number') : ''}}"
-                />
                 <x-select
                     id="search_is_active"
                     name="is_active"
@@ -123,7 +112,7 @@ $thead = [
                 <x-button id="addProduct" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>
             </x-slot:rightPocket>
             <x-slot:dataActions class="relative w-20 mx-auto" dataActionsClassHeader="flex items-center justify-end w-20">
-                <x-action-menu />
+                <x-action-menu :isIncludeManage="true"/>
             </x-slot:dataActions>
         </x-table>
     </article>
@@ -145,6 +134,7 @@ $thead = [
             const btn = e.target.closest('.actionButton');
             const addBtn = e.target.closest('#addProduct');
             const editBtn = e.target.closest('.editActionButton');
+            const manageBtn = e.target.closest('.manageActionButton');
             const deleteBtn = e.target.closest('.deleteActionButton');
             const logoInput = document.getElementById('logo_path');
             const logoPreviewContainer = document.getElementById('logoPreviewContainer');
@@ -165,9 +155,7 @@ $thead = [
                 form.querySelector('[name="category_id"]').value = '';
                 form.querySelector('[name="unit"]').value = '';
                 form.querySelector('[name="unit_id"]').value = '';
-                form.querySelector('[name="serial_number"]').value = '';
                 form.querySelector('[name="barcode"]').value = '';
-                form.querySelector('[name="sku"]').value = '';
                 form.querySelector('[id="is_active"]').checked = '';
                 
                 if(form.querySelector('input[name="_method"]')) {
@@ -210,9 +198,7 @@ $thead = [
                 form.querySelector('[name="category_id"]').value = rowData.category_id ?? '';
                 form.querySelector('[name="unit"]').value = rowData.unit;
                 form.querySelector('[name="unit_id"]').value = rowData.unit_id ?? '';
-                form.querySelector('[name="serial_number"]').value = rowData.serial_number;
                 form.querySelector('[name="barcode"]').value = rowData.barcode ? rowData.barcode.value : '';
-                form.querySelector('[name="sku"]').value = rowData.sku;
                 form.querySelector('[id="is_active"]').checked = rowData.is_active;
 
                 modalElement.classList.remove('hidden');
@@ -283,6 +269,14 @@ $thead = [
                 modalElement.classList.remove('hidden');
                 modalElement.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
+            }
+
+            // --- MANAGE Logic ---
+            if (manageBtn) {
+                const rowData = JSON.parse(manageBtn.closest('td').getAttribute('data-pass'));
+                const baseUrl = "{{ route('products.serial_number.index', [':id']) }}";
+                const newURL = baseUrl.replace(':id', rowData.id);
+                window.location.href = newURL;
             }
 
             // --- LOGO PREVIEW Logic ---

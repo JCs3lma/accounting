@@ -21,8 +21,6 @@ return new class extends Migration
             $table->integer('unit')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->string('barcode', 50)->nullable()->unique();
-            $table->string('serial_number', 100)->nullable()->unique();
-            $table->string('sku', 100)->nullable()->unique();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();

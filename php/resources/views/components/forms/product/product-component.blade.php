@@ -61,32 +61,13 @@
             @endforeach
         </x-select>
     </div>
-    <div class="flex gap-2 mb-2">
-        <x-input
-            class="mb-2"
-            name="barcode"
-            type="text"
-            placeholder="Barcode"
-            label="Barcode"
-            value="{{request()->get('barcode') && request()->get('barcode') !== 'null' ? request()->get('barcode') : ''}}"
-        />
-        <x-input
-            name="serial_number"
-            type="text"
-            label="Serial Number"
-            placeholder="Serial Number"
-            class="mb-2"
-            value="{{request()->get('serial_number') && request()->get('serial_number') !== 'null' ? request()->get('serial_number') : ''}}"
-        />
-    </div>
     <x-input
         class="mb-2"
-        id="sku"
-        name="sku"
+        name="barcode"
         type="text"
-        placeholder="SKU"
-        label="SKU"
-        value="{{request()->get('sku') && request()->get('sku') !== 'null' ? request()->get('sku') : ''}}"
+        placeholder="Barcode"
+        label="Barcode"
+        value="{{request()->get('barcode') && request()->get('barcode') !== 'null' ? request()->get('barcode') : ''}}"
     />
     <!-- Checkbox -->
     <x-input-isactive />

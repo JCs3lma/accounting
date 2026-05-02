@@ -7,6 +7,7 @@ use App\Http\Controllers\Products\CategoryController;
 use App\Http\Controllers\Products\BrandController;
 use App\Http\Controllers\Products\UnitsController;
 use App\Http\Controllers\Products\ProductController;
+use App\Http\Controllers\Products\SerialNumberController;
 
 use App\Http\Controllers\Suppliers\SupplierController;
 use App\Http\Controllers\Suppliers\PricingController as SupplierPricingController;
@@ -29,6 +30,9 @@ Route::group([
         Route::resource('categories', CategoryController::class)->names('categories')->except(['create', 'show', 'edit']);
         Route::resource('brands', BrandController::class)->names('brands')->except(['create', 'show', 'edit']);
         Route::resource('units', UnitsController::class)->names('units')->except(['create', 'show', 'edit']);
+        Route::group(['prefix' => '/{product}'], function () {
+            Route::resource('serial_number', SerialNumberController::class)->names('serial_number')->except(['create', 'show', 'edit']);
+        });
     });
     
     Route::resource('suppliers', SupplierController::class)->names('suppliers')->except(['create', 'edit']);

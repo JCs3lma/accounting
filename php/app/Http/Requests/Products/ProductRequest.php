@@ -39,18 +39,6 @@ class ProductRequest extends FormRequest
                 'max:50',
                 Rule::unique('products', 'barcode')->ignore($productId),
             ],
-            'serial_number' => [
-                'nullable',
-                'string',
-                'max:100',
-                Rule::unique('products', 'serial_number')->ignore($productId),
-            ],
-            'sku' => [
-                'nullable',
-                'string',
-                'max:100',
-                Rule::unique('products', 'sku')->ignore($productId),
-            ],
             'logo_path_remove' => 'boolean',
             'is_active' => 'boolean'
         ];

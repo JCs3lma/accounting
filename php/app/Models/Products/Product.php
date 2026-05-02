@@ -28,8 +28,6 @@ class Product extends Model
         'unit',
         'unit_id',
         'barcode',
-        'serial_number',
-        'sku',
         'is_active',
     ];
 
